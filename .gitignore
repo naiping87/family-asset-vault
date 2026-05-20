@@ -40,3 +40,7 @@ next-env.d.ts
 
 # supabase
 /supabase/.temp
+/supabase/.branches
+
+# Original prototype (kept for reference)
+design-prototype.html
