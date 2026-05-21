@@ -91,6 +91,18 @@ export interface Insurance {
   updated_at: string;
 }
 
+export interface DashboardStats {
+  user_id: string;
+  total_properties: number;
+  rented_count: number;
+  vacant_count: number;
+  non_rental_count: number;
+  total_value: number;
+  total_loan: number;
+  monthly_rental_income: number;
+  active_insurances: number;
+}
+
 export interface AppFile {
   id: string;
   user_id: string;

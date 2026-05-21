@@ -1,89 +1,73 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { FilterPills } from "@/components/ui/FilterPills";
 import { PropertyCard } from "@/components/ui/PropertyCard";
+import { Card } from "@/components/ui/Card";
+import { getProperties } from "@/lib/api/properties";
+import { formatCurrency } from "@/lib/utils/formatters";
+import type { Property } from "@/types/database";
 
-const filters = [
-  { key: "all", label: "全部", count: 4 },
-  { key: "vacant", label: "自住" },
-  { key: "rented", label: "出租中" },
-  { key: "non_rental", label: "空置" },
-];
-
-export default function PropertiesPage() {
-  const [activeFilter, setActiveFilter] = useState("all");
+export default async function PropertiesPage() {
+  const properties = await getProperties();
 
   return (
     <>
       <div className="page-header">
         <div>
           <div className="page-title">🏘️ 我的房产</div>
-          <div className="page-subtitle">共 4 处房产 · 总估值 RM 2.85M</div>
+          <div className="page-subtitle">
+            共 {properties.length} 处房产
+            {properties.length > 0 && ` · 总估值 ${formatCurrency(
+              properties.reduce((sum: number, p: Property) => sum + (p.current_value || 0), 0)
+            )}`}
+          </div>
         </div>
         <Link href="/dashboard/properties/new">
           <Button variant="primary">+ 添加房产</Button>
         </Link>
       </div>
 
-      <FilterPills
-        pills={filters}
-        activeKey={activeFilter}
-        onChange={setActiveFilter}
-      />
-
-      <div className="content-grid-3">
-        <Link href="/dashboard/properties/skyvue" style={{ textDecoration: "none", color: "inherit" }}>
-          <PropertyCard
-            name="SkyVue 高级公寓"
-            address="Jalan SkyVue, Kuala Lumpur"
-            badge={<Badge color="green">出租中</Badge>}
-            finance={[
-              { label: "估值", value: "RM 850K" },
-              { label: "月租", value: "RM 3,500" },
-            ]}
-          />
-        </Link>
-
-        <Link href="/dashboard/properties/ss3" style={{ textDecoration: "none", color: "inherit" }}>
-          <PropertyCard
-            name="SS3 半独立洋房"
-            address="Jalan SS3/14, Petaling Jaya"
-            badge={<Badge color="blue">自住</Badge>}
-            finance={[
-              { label: "估值", value: "RM 1.2M" },
-              { label: "贷款余额", value: "RM 450K" },
-            ]}
-          />
-        </Link>
-
-        <Link href="/dashboard/properties/kampung" style={{ textDecoration: "none", color: "inherit" }}>
-          <PropertyCard
-            name="Kampung 村屋"
-            address="Kampung Baru, Pahang"
-            badge={<Badge color="gray">空置</Badge>}
-            finance={[
-              { label: "估值", value: "RM 300K" },
-              { label: "土地面积", value: "5,000 sqft" },
-            ]}
-          />
-        </Link>
-
-        <Link href="/dashboard/properties/seksyen51" style={{ textDecoration: "none", color: "inherit" }}>
-          <PropertyCard
-            name="Seksyen 51 商铺"
-            address="Jalan 51/205, Petaling Jaya"
-            badge={<Badge color="green">出租中</Badge>}
-            finance={[
-              { label: "估值", value: "RM 500K" },
-              { label: "月租", value: "RM 5,000" },
-            ]}
-          />
-        </Link>
-      </div>
+      {properties.length === 0 ? (
+        <Card variant="intense" style={{ padding: 48, textAlign: "center" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🏠</div>
+          <h3 style={{ marginBottom: 8 }}>还没有添加房产</h3>
+          <p style={{ color: "var(--text-secondary)", marginBottom: 20 }}>
+            开始记录您的房产资产吧
+          </p>
+          <Link href="/dashboard/properties/new">
+            <Button>+ 添加第一处房产</Button>
+          </Link>
+        </Card>
+      ) : (
+        <div className="content-grid-2">
+          {properties.map((p: Property) => (
+            <Link
+              key={p.id}
+              href={`/dashboard/properties/${p.id}`}
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <PropertyCard
+                name={p.name}
+                address={[p.city, p.state].filter(Boolean).join(", ") || p.address || ""}
+                badge={
+                  <Badge
+                    color={
+                      p.status === "rented" ? "green" : p.status === "vacant" ? "amber" : "blue"
+                    }
+                  >
+                    {p.status === "rented" ? "出租中" : p.status === "vacant" ? "空置" : "自住"}
+                  </Badge>
+                }
+                finance={[
+                  { label: "估值", value: formatCurrency(p.current_value || 0) },
+                  { label: "贷款余额", value: formatCurrency(p.loan_balance || 0) },
+                ]}
+              />
+            </Link>
+          ))}
+        </div>
+      )}
     </>
   );
 }

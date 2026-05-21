@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
+import { signIn } from "@/lib/auth/actions";
 
 export default function LoginPage() {
   return (
@@ -30,16 +31,20 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <form>
+        <form action={signIn}>
           <FormInput
             label="邮箱地址"
+            name="email"
             type="email"
             placeholder="your@email.com"
+            required
           />
           <FormInput
             label="密码"
+            name="password"
             type="password"
             placeholder="请输入密码"
+            required
           />
 
           <Button type="submit" style={{ width: "100%", marginTop: 8, justifyContent: "center" }}>

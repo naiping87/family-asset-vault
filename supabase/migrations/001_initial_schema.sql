@@ -115,6 +115,57 @@ CREATE TABLE files (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Auto-update trigger function
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Apply triggers
+CREATE TRIGGER trg_properties_updated_at BEFORE UPDATE ON properties FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER trg_tenancies_updated_at BEFORE UPDATE ON tenancies FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER trg_taxes_updated_at BEFORE UPDATE ON taxes FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER trg_insurances_updated_at BEFORE UPDATE ON insurances FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER trg_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+-- Auto-create profile on signup
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO profiles (id, full_name, display_name)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1)),
+    COALESCE(NEW.raw_user_meta_data->>'full_name', split_part(NEW.email, '@', 1))
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trg_new_user_profile
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
+
+-- Dashboard stats view
+CREATE OR REPLACE VIEW dashboard_stats AS
+SELECT
+  p.user_id,
+  COUNT(DISTINCT p.id) AS total_properties,
+  COUNT(DISTINCT p.id) FILTER (WHERE p.status = 'rented') AS rented_count,
+  COUNT(DISTINCT p.id) FILTER (WHERE p.status = 'vacant') AS vacant_count,
+  COUNT(DISTINCT p.id) FILTER (WHERE p.status = 'non_rental') AS non_rental_count,
+  COALESCE(SUM(p.current_value), 0) AS total_value,
+  COALESCE(SUM(p.loan_balance), 0) AS total_loan,
+  COALESCE(SUM(t.monthly_rent) FILTER (WHERE t.status = 'active'), 0) AS monthly_rental_income,
+  COALESCE(COUNT(DISTINCT i.id) FILTER (WHERE i.status = 'active'), 0) AS active_insurances
+FROM properties p
+LEFT JOIN tenancies t ON t.property_id = p.id
+LEFT JOIN insurances i ON i.user_id = p.user_id
+GROUP BY p.user_id;
+
 -- Indexes
 CREATE INDEX idx_properties_user_id ON properties(user_id);
 CREATE INDEX idx_co_owners_property_id ON co_owners(property_id);

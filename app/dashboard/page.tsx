@@ -2,88 +2,88 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
-import { getGreeting, formatFullDate } from "@/lib/utils/formatters";
 import { PropertyCard } from "@/components/ui/PropertyCard";
+import { getGreeting, formatFullDate, formatCurrency } from "@/lib/utils/formatters";
+import { getDashboardStats, getReminders, getRecentProperties } from "@/lib/api/dashboard";
+import { createClient } from "@/lib/supabase/server";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
   const greeting = getGreeting();
   const today = formatFullDate(new Date());
+  const stats = await getDashboardStats();
+  const reminders = await getReminders();
+  const recentProperties = await getRecentProperties(4);
+
+  const displayName = user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "用户";
 
   return (
     <>
       <div className="greeting">
         <div className="greeting-text">
-          {greeting}，张先生 👋
+          {greeting}，{displayName} 👋
         </div>
         <div className="greeting-date">{today}</div>
       </div>
 
-      {/* Stats Grid */}
       <div className="stats-grid">
         <StatsCard
           icon="📊"
           iconColor="blue"
           label="总资产估值"
-          value="RM 2.85M"
-          sub="↑ 5.2% 较去年"
-          subUp
+          value={stats ? formatCurrency(stats.total_value) : "RM 0"}
+          sub={stats ? `${stats.total_properties} 处房产` : "暂无数据"}
         />
         <StatsCard
           icon="🏠"
           iconColor="green"
           label="房产数量"
-          value="4"
-          sub="2 出租 · 1 自住 · 1 空置"
+          value={stats ? String(stats.total_properties) : "0"}
+          sub={stats ? `${stats.rented_count} 出租 · ${stats.non_rental_count} 自住 · ${stats.vacant_count} 空置` : "暂无数据"}
         />
         <StatsCard
           icon="💰"
           iconColor="amber"
           label="月租金收入"
-          value="RM 8,500"
-          sub="年化 RM 102,000"
+          value={stats ? formatCurrency(stats.monthly_rental_income) : "RM 0"}
+          sub={stats ? `年化 ${formatCurrency(stats.monthly_rental_income * 12)}` : "暂无数据"}
         />
         <StatsCard
           icon="🛡️"
           iconColor="purple"
           label="保单数量"
-          value="3"
-          sub="1 份即将到期"
+          value={stats ? String(stats.active_insurances) : "0"}
+          sub={stats && stats.active_insurances > 0 ? "管理您的保险" : "暂无保单"}
         />
       </div>
 
-      {/* Reminders & Quick Actions */}
       <div className="content-grid-2">
         <Card variant="intense" className="section-panel">
           <div className="section-header">
             <div className="section-title">⏰ 待办提醒</div>
           </div>
-          <div className="reminder-list">
-            <div className="reminder-item">
-              <div className="reminder-dot danger" />
-              <div className="reminder-info">
-                <div className="reminder-title">房屋保险即将到期</div>
-                <div className="reminder-sub">Etiqa · HI-2025-045 · SkyVue 高级公寓</div>
-              </div>
-              <span className="reminder-days danger">已过期 5 天</span>
+          {reminders.length === 0 ? (
+            <div style={{ padding: 32, textAlign: "center", color: "var(--text-secondary)" }}>
+              暂无待办事项 🎉
             </div>
-            <div className="reminder-item">
-              <div className="reminder-dot warning" />
-              <div className="reminder-info">
-                <div className="reminder-title">火险即将到期</div>
-                <div className="reminder-sub">Allianz · FL-2026-001 · SkyVue 高级公寓</div>
-              </div>
-              <span className="reminder-days warning">225 天</span>
+          ) : (
+            <div className="reminder-list">
+              {reminders.map((r, i) => (
+                <div className="reminder-item" key={i}>
+                  <div className={`reminder-dot ${r.type}`} />
+                  <div className="reminder-info">
+                    <div className="reminder-title">{r.title}</div>
+                    <div className="reminder-sub">{r.sub}</div>
+                  </div>
+                  <span className={`reminder-days ${r.type}`}>
+                    {r.days < 0 ? `已过期 ${Math.abs(r.days)} 天` : `${r.days} 天`}
+                  </span>
+                </div>
+              ))}
             </div>
-            <div className="reminder-item">
-              <div className="reminder-dot info" />
-              <div className="reminder-info">
-                <div className="reminder-title">门牌税缴付截止</div>
-                <div className="reminder-sub">DBKL · 账号 A-2024-00123 · SS3 半独立洋房</div>
-              </div>
-              <span className="reminder-days info">45 天</span>
-            </div>
-          </div>
+          )}
         </Card>
 
         <Card variant="intense" className="section-panel">
@@ -111,7 +111,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Recent Properties */}
       <Card variant="intense" className="section-panel">
         <div className="section-header">
           <div className="section-title">🏘️ 最近房产</div>
@@ -119,30 +118,40 @@ export default function DashboardPage() {
             <Badge color="blue">查看全部 →</Badge>
           </Link>
         </div>
-        <div className="content-grid-2">
-          <Link href="/dashboard/properties/skyvue" style={{ textDecoration: "none", color: "inherit" }}>
-            <PropertyCard
-              name="SkyVue 高级公寓"
-              address="Jalan SkyVue, Kuala Lumpur"
-              badge={<Badge color="green">出租中</Badge>}
-              finance={[
-                { label: "估值", value: "RM 850K" },
-                { label: "月租", value: "RM 3,500" },
-              ]}
-            />
-          </Link>
-          <Link href="/dashboard/properties/ss3" style={{ textDecoration: "none", color: "inherit" }}>
-            <PropertyCard
-              name="SS3 半独立洋房"
-              address="Jalan SS3/14, Petaling Jaya"
-              badge={<Badge color="blue">自住</Badge>}
-              finance={[
-                { label: "估值", value: "RM 1.2M" },
-                { label: "贷款余额", value: "RM 450K" },
-              ]}
-            />
-          </Link>
-        </div>
+        {recentProperties.length === 0 ? (
+          <div style={{ padding: 32, textAlign: "center", color: "var(--text-secondary)" }}>
+            <p style={{ marginBottom: 16 }}>还没有添加房产</p>
+            <Link href="/dashboard/properties/new">
+              <Badge color="blue">+ 添加第一处房产</Badge>
+            </Link>
+          </div>
+        ) : (
+          <div className="content-grid-2">
+            {recentProperties.map((p: Record<string, unknown>) => (
+              <Link
+                key={String(p.id)}
+                href={`/dashboard/properties/${p.id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <PropertyCard
+                  name={String(p.name ?? "")}
+                  address={[p.city, p.state].filter(Boolean).join(", ") || String(p.address ?? "")}
+                  badge={
+                    <Badge color={p.status === "rented" ? "green" : p.status === "vacant" ? "amber" : "blue"}>
+                      {p.status === "rented" ? "出租中" : p.status === "vacant" ? "空置" : "自住"}
+                    </Badge>
+                  }
+                  finance={[
+                    { label: "估值", value: formatCurrency(Number(p.current_value) || 0) },
+                    ...(p.status === "rented"
+                      ? [{ label: "月租", value: formatCurrency(0) }]
+                      : [{ label: "贷款余额", value: formatCurrency(Number(p.loan_balance) || 0) }]),
+                  ]}
+                />
+              </Link>
+            ))}
+          </div>
+        )}
       </Card>
     </>
   );
