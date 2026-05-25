@@ -2,11 +2,19 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { FormInput } from "@/components/ui/FormInput";
 import { signOut } from "@/lib/auth/actions";
+import { updateProfile } from "@/lib/api/profiles";
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  async function handleSave(formData: FormData) {
+    "use server";
+    await updateProfile(formData);
+    revalidatePath("/dashboard/settings");
+  }
 
   return (
     <>
@@ -20,7 +28,7 @@ export default async function SettingsPage() {
       <div className="content-grid-2">
         <Card variant="intense" className="section-panel">
           <div className="section-title" style={{ marginBottom: 20 }}>👤 个人资料</div>
-          <form>
+          <form action={handleSave}>
             <FormInput
               label="邮箱"
               name="email"
