@@ -5,8 +5,9 @@ import { Card } from "@/components/ui/Card";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { DataTable } from "@/components/ui/DataTable";
 import { getProperty } from "@/lib/api/properties";
-import { formatCurrency, formatFullDate } from "@/lib/utils/formatters";
+import { formatCurrency } from "@/lib/utils/formatters";
 import { notFound } from "next/navigation";
+import type { CoOwner } from "@/types/database";
 
 const taxColumns = [
   { key: "tax_type", label: "税种" },
@@ -123,7 +124,7 @@ export default async function PropertyDetailPage({
         <Card variant="intense" className="section-panel">
           <div className="section-title" style={{ marginBottom: 16 }}>👥 持有人</div>
           {property.co_owners && property.co_owners.length > 0 ? (
-            property.co_owners.map((owner: Record<string, unknown>, i: number) => (
+            property.co_owners.map((owner: CoOwner, i: number) => (
               <div className="owner-item" key={i}>
                 <div
                   className="owner-avatar"

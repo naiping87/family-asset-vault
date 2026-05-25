@@ -73,7 +73,7 @@ export default async function InsurancesPage() {
                     : String(ins.insurance_type) === "mortgage" ? "房贷保险"
                     : String(ins.insurance_type)}
                 </div>
-                {ins.properties && (
+                {ins.properties != null && (
                   <div style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>
                     🏢 {String((ins.properties as Record<string, unknown>).name ?? "")}
                   </div>

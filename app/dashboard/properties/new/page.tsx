@@ -10,7 +10,7 @@ export default function NewPropertyPage() {
   async function handleSubmit(formData: FormData) {
     "use server";
     const result = await createProperty(formData);
-    if (result.error) return result;
+    if (result.error) return;
     redirect("/dashboard/properties");
   }
 
