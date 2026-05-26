@@ -15,7 +15,7 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="bottom-nav glass-intense mobile-only">
+    <nav className="bottom-nav glass-intense">
       {items.map((item) => (
         <Link
           key={item.href}

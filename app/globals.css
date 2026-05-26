@@ -109,7 +109,7 @@ body::before {
   position: fixed;
   left: 8px;
   top: 8px;
-  bottom: 8px;
+  bottom: 68px;
   display: flex;
   flex-direction: column;
   padding: 28px 20px;
@@ -131,7 +131,7 @@ body::before {
 }
 
 .main-inner {
-  padding: 28px 32px;
+  padding: 28px 32px 90px 32px;
   overflow-y: auto;
   min-height: calc(100vh - 16px);
 }
@@ -746,14 +746,14 @@ body::before {
   margin-bottom: 16px;
 }
 
-/* ===== Bottom Nav (mobile) ===== */
+/* ===== Bottom Nav ===== */
 .bottom-nav {
-  display: none;
+  display: flex;
   position: fixed;
-  bottom: 8px;
-  left: 8px;
-  right: 8px;
-  padding: 8px 20px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 0;
   justify-content: space-around;
   z-index: 90;
 }
@@ -979,7 +979,6 @@ body::before {
 @media (max-width: 1023px) {
   .sidebar { display: none; }
   .top-bar { display: flex; }
-  .bottom-nav { display: flex; }
   .desktop-only { display: none; }
   .mobile-only { display: block; }
 
