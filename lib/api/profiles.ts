@@ -10,12 +10,11 @@ export async function updateProfile(formData: FormData) {
 
   const { error } = await supabase
     .from("profiles")
-    .upsert({
-      id: user.id,
+    .update({
       display_name: displayName,
-      preferred_currency: "MYR",
       updated_at: new Date().toISOString(),
-    });
+    })
+    .eq("id", user.id);
 
   if (error) return { error: error.message };
   return { success: true, name: displayName || user.email?.split("@")[0] || "用户" };
