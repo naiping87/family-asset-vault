@@ -24,6 +24,8 @@ export interface Property {
   loan_balance?: number;
   loan_bank?: string;
   title_deed_no?: string;
+  spa_file_url?: string;
+  geran_file_url?: string;
   status: "rented" | "vacant" | "non_rental" | "sold";
   created_at: string;
   updated_at: string;
@@ -52,6 +54,7 @@ export interface Tenancy {
   deposit?: number;
   status: "active" | "expired" | "terminated";
   contract_file_url?: string;
+  tenant_passport_url?: string;
   notes?: string;
   created_at: string;
   updated_at: string;
@@ -86,6 +89,8 @@ export interface Insurance {
   end_date?: string;
   status: "active" | "expired" | "cancelled";
   policy_file_url?: string;
+  agent_name?: string;
+  agent_phone?: string;
   notes?: string;
   created_at: string;
   updated_at: string;

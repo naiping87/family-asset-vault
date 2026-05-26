@@ -70,6 +70,14 @@ export default async function NewInsurancePage() {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
+          <div className="section-title" style={{ marginBottom: 20 }}>👤 保险代理人</div>
+          <div className="form-row">
+            <FormInput label="代理人姓名" name="agent_name" placeholder="例如：陈先生" />
+            <FormInput label="代理人电话" name="agent_phone" placeholder="例如：012-3456789" />
+          </div>
+        </Card>
+
+        <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>📅 有效期限</div>
           <div className="form-row">
             <FormInput label="开始日期" name="start_date" type="date" required />

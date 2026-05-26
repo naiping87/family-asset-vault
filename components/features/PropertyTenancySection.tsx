@@ -52,6 +52,10 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
             <FormInput label="月租 (RM)" name="monthly_rent" type="number" placeholder="0.00" />
             <FormInput label="押金 (RM)" name="deposit" type="number" placeholder="0.00" />
           </div>
+          <div className="form-row">
+            <FormInput label="租赁合同文件链接" name="contract_file_url" placeholder="上传合同后粘贴链接" />
+            <FormInput label="租客护照/身份证链接" name="tenant_passport_url" placeholder="上传护照样本后粘贴链接" />
+          </div>
           <div style={{ marginTop: 12 }}>
             <Button variant="primary" size="sm" type="submit">保存</Button>
           </div>

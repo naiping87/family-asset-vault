@@ -43,6 +43,8 @@ export async function createInsurance(formData: FormData) {
     annual_premium: formData.get("annual_premium") ? Number(formData.get("annual_premium")) : null,
     start_date: formData.get("start_date") as string,
     end_date: formData.get("end_date") as string,
+    agent_name: (formData.get("agent_name") as string) || null,
+    agent_phone: (formData.get("agent_phone") as string) || null,
     status: formData.get("status") as string || "active",
   };
 

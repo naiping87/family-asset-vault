@@ -16,6 +16,8 @@ export async function createTenancy(formData: FormData) {
     end_date: formData.get("end_date") as string,
     monthly_rent: formData.get("monthly_rent") ? Number(formData.get("monthly_rent")) : null,
     deposit: formData.get("deposit") ? Number(formData.get("deposit")) : null,
+    contract_file_url: (formData.get("contract_file_url") as string) || null,
+    tenant_passport_url: (formData.get("tenant_passport_url") as string) || null,
     status: "active",
   };
 

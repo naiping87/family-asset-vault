@@ -755,7 +755,7 @@ body::before {
   right: 0;
   padding: 10px 0;
   justify-content: space-around;
-  z-index: 90;
+  z-index: 110;
 }
 
 .bottom-nav-item {

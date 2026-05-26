@@ -74,6 +74,12 @@ export default function NewPropertyPage() {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
+          <div className="section-title" style={{ marginBottom: 20 }}>📄 法律文件</div>
+          <FormInput label="SPA 买卖合同链接" name="spa_file_url" placeholder="上传SPA文件后粘贴链接" />
+          <FormInput label="地契/Geran 文件链接" name="geran_file_url" placeholder="上传地契后粘贴链接" />
+        </Card>
+
+        <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>📊 状态</div>
           <div className="form-group">
             <select className="form-input" name="status" defaultValue="vacant">
