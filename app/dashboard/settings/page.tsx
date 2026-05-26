@@ -4,7 +4,7 @@ import { FormInput } from "@/components/ui/FormInput";
 import { signOut } from "@/lib/auth/actions";
 import { updateProfile } from "@/lib/api/profiles";
 import { createClient } from "@/lib/supabase/server";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -23,8 +23,7 @@ export default async function SettingsPage() {
   async function handleSave(formData: FormData) {
     "use server";
     await updateProfile(formData);
-    revalidatePath("/dashboard/settings");
-    revalidatePath("/dashboard", "layout");
+    redirect("/dashboard");  // redirect forces layout to re-fetch user data
   }
 
   return (

@@ -751,7 +751,7 @@ body::before {
   display: flex;
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: 296px;
   right: 0;
   padding: 10px 0;
   justify-content: space-around;
@@ -979,6 +979,7 @@ body::before {
 @media (max-width: 1023px) {
   .sidebar { display: none; }
   .top-bar { display: flex; }
+  .bottom-nav { left: 0; }
   .desktop-only { display: none; }
   .mobile-only { display: block; }
 
