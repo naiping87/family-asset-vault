@@ -10,10 +10,20 @@ export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Fetch profile for display name
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("display_name")
+    .eq("id", user?.id ?? "")
+    .single();
+
+  const displayName = profile?.display_name || user?.user_metadata?.full_name || "";
+
   async function handleSave(formData: FormData) {
     "use server";
     await updateProfile(formData);
     revalidatePath("/dashboard/settings");
+    revalidatePath("/dashboard", "layout");
   }
 
   return (
@@ -40,8 +50,16 @@ export default async function SettingsPage() {
               label="显示名称"
               name="display_name"
               placeholder="您的显示名称"
-              defaultValue={user?.user_metadata?.full_name ?? ""}
+              defaultValue={displayName}
             />
+            <div className="form-group">
+              <label className="form-label">语言</label>
+              <select className="form-input" name="language" defaultValue="zh">
+                <option value="zh">中文</option>
+                <option value="en">English</option>
+                <option value="ms">Bahasa Melayu</option>
+              </select>
+            </div>
             <div style={{ marginTop: 16 }}>
               <Button variant="primary" type="submit">保存更改</Button>
             </div>
@@ -54,10 +72,6 @@ export default async function SettingsPage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>夜间模式</span>
               <span style={{ color: "var(--text-secondary)", fontSize: 14 }}>通过顶部切换</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span>语言</span>
-              <span style={{ color: "var(--text-secondary)", fontSize: 14 }}>中文</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>货币单位</span>

@@ -1,10 +1,13 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { UserInfo } from "./UserInfo";
 import { ThemeToggle } from "./ThemeToggle";
+import { createClient } from "@/lib/supabase/client";
+import { signOut } from "@/lib/auth/actions";
 
 interface NavItem {
   icon: string;
@@ -15,7 +18,7 @@ interface NavItem {
 
 const mainNav: NavItem[] = [
   { icon: "📊", label: "仪表盘", href: "/dashboard" },
-  { icon: "🏘️", label: "我的房产", href: "/dashboard/properties", badge: "4" },
+  { icon: "🏘️", label: "我的房产", href: "/dashboard/properties" },
   { icon: "🛡️", label: "我的保险", href: "/dashboard/insurances" },
 ];
 
@@ -25,6 +28,45 @@ const otherNav: NavItem[] = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [user, setUser] = useState<{ name: string; email: string; initial: string }>({
+    name: "用户",
+    email: "",
+    initial: "U",
+  });
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) {
+        const name = data.user.user_metadata?.full_name
+          || data.user.user_metadata?.display_name
+          || data.user.email?.split("@")[0]
+          || "用户";
+        setUser({
+          name,
+          email: data.user.email ?? "",
+          initial: name.charAt(0).toUpperCase(),
+        });
+      }
+    });
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        const name = session.user.user_metadata?.full_name
+          || session.user.user_metadata?.display_name
+          || session.user.email?.split("@")[0]
+          || "用户";
+        setUser({
+          name,
+          email: session.user.email ?? "",
+          initial: name.charAt(0).toUpperCase(),
+        });
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <aside className="sidebar">
@@ -41,11 +83,10 @@ export function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
-            className={cn("nav-item", pathname === item.href && "active")}
+            className={cn("nav-item", pathname.startsWith(item.href) && "active")}
           >
             <span className="icon">{item.icon}</span>
             {item.label}
-            {item.badge && <span className="nav-badge">{item.badge}</span>}
           </Link>
         ))}
       </div>
@@ -65,11 +106,13 @@ export function Sidebar() {
       </div>
 
       <div className="sidebar-footer">
-        <UserInfo name="张先生" email="zhang@email.com" initial="张" />
+        <UserInfo name={user.name} email={user.email} initial={user.initial} />
         <ThemeToggle />
-        <button className="logout-btn">
-          <span>🚪</span> 退出登录
-        </button>
+        <form action={signOut}>
+          <button className="logout-btn" type="submit">
+            <span>🚪</span> 退出登录
+          </button>
+        </form>
       </div>
     </aside>
   );

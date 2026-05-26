@@ -6,17 +6,24 @@ export async function updateProfile(formData: FormData) {
   if (!user) return { error: "未登录" };
 
   const displayName = (formData.get("display_name") as string) || undefined;
-  const preferredCurrency = (formData.get("preferred_currency") as string) || undefined;
+  const language = (formData.get("language") as string) || undefined;
 
-  const { error } = await supabase
+  // Update profiles table
+  const { error: profileError } = await supabase
     .from("profiles")
     .upsert({
       id: user.id,
       display_name: displayName,
-      preferred_currency: preferredCurrency,
       updated_at: new Date().toISOString(),
     });
 
-  if (error) return { error: error.message };
+  if (profileError) return { error: profileError.message };
+
+  // Also update auth metadata so sidebar updates in real-time
+  const { error: authError } = await supabase.auth.updateUser({
+    data: { full_name: displayName, display_name: displayName },
+  });
+
+  if (authError) return { error: authError.message };
   return { success: true };
 }
