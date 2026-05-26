@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Original prototype (kept for reference)
 design-prototype.html
+.cjs
+screenshots/
+screenshot.cjs
