@@ -1,19 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
 import { UserInfo } from "./UserInfo";
 import { ThemeToggle } from "./ThemeToggle";
-import { createClient } from "@/lib/supabase/client";
 import { signOut } from "@/lib/auth/actions";
 
 interface NavItem {
   icon: string;
   label: string;
   href: string;
-  badge?: string;
 }
 
 const mainNav: NavItem[] = [
@@ -26,47 +23,12 @@ const otherNav: NavItem[] = [
   { icon: "⚙️", label: "账户设置", href: "/dashboard/settings" },
 ];
 
-export function Sidebar() {
+interface Props {
+  userInfo: { name: string; email: string; initial: string };
+}
+
+export function Sidebar({ userInfo }: Props) {
   const pathname = usePathname();
-  const [user, setUser] = useState<{ name: string; email: string; initial: string }>({
-    name: "用户",
-    email: "",
-    initial: "U",
-  });
-
-  useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      if (data?.user) {
-        const name = data.user.user_metadata?.full_name
-          || data.user.user_metadata?.display_name
-          || data.user.email?.split("@")[0]
-          || "用户";
-        setUser({
-          name,
-          email: data.user.email ?? "",
-          initial: name.charAt(0).toUpperCase(),
-        });
-      }
-    });
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        const name = session.user.user_metadata?.full_name
-          || session.user.user_metadata?.display_name
-          || session.user.email?.split("@")[0]
-          || "用户";
-        setUser({
-          name,
-          email: session.user.email ?? "",
-          initial: name.charAt(0).toUpperCase(),
-        });
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   return (
     <aside className="sidebar">
@@ -106,7 +68,7 @@ export function Sidebar() {
       </div>
 
       <div className="sidebar-footer">
-        <UserInfo name={user.name} email={user.email} initial={user.initial} />
+        <UserInfo name={userInfo.name} email={userInfo.email} initial={userInfo.initial} />
         <ThemeToggle />
         <form action={signOut}>
           <button className="logout-btn" type="submit">

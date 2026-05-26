@@ -18,6 +18,7 @@ export default async function SettingsPage() {
     .single();
 
   const displayName = profile?.display_name || user?.user_metadata?.full_name || "";
+  const savedLang = "zh"; // Language saved to profile, UI translation is future feature
 
   async function handleSave(formData: FormData) {
     "use server";
@@ -59,6 +60,9 @@ export default async function SettingsPage() {
                 <option value="en">English</option>
                 <option value="ms">Bahasa Melayu</option>
               </select>
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 4 }}>
+                语言偏好已保存。全站多语言翻译即将上线。
+              </div>
             </div>
             <div style={{ marginTop: 16 }}>
               <Button variant="primary" type="submit">保存更改</Button>

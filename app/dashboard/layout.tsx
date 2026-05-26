@@ -1,28 +1,30 @@
-"use client";
+import { DashboardShell } from "@/components/layout/DashboardShell";
+import { createClient } from "@/lib/supabase/server";
 
-import { useState } from "react";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { TopBar } from "@/components/layout/TopBar";
-import { BottomNav } from "@/components/layout/BottomNav";
-import { MobileMenu } from "@/components/layout/MobileMenu";
-
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
-  return (
-    <div className="app-container">
-      <Sidebar />
-      <TopBar onMenuToggle={() => setMenuOpen(true)} />
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <BottomNav />
+  // Fetch profile for display name
+  let profileName = "";
+  if (user) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .single();
+    profileName = profile?.display_name || "";
+  }
 
-      <div className="main-content">
-        <div className="main-inner">{children}</div>
-      </div>
-    </div>
-  );
+  const userInfo = {
+    name: profileName || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "用户",
+    email: user?.email ?? "",
+    initial: (profileName || user?.user_metadata?.full_name || user?.email || "U").charAt(0).toUpperCase(),
+  };
+
+  return <DashboardShell userInfo={userInfo}>{children}</DashboardShell>;
 }
