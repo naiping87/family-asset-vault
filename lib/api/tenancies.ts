@@ -31,6 +31,29 @@ export async function createTenancy(formData: FormData) {
   return { tenancy: data as Tenancy };
 }
 
+export async function updateTenancy(id: string, formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "未登录" };
+
+  const entry: Record<string, unknown> = {};
+  const fields = ["tenant_name", "tenant_ic", "tenant_phone", "tenant_email", "start_date", "end_date", "contract_file_url", "tenant_passport_url"];
+  for (const f of fields) {
+    const v = formData.get(f);
+    if (v !== null && v !== "") entry[f] = v;
+  }
+  if (formData.get("monthly_rent")) entry.monthly_rent = Number(formData.get("monthly_rent"));
+  if (formData.get("deposit")) entry.deposit = Number(formData.get("deposit"));
+
+  const { error } = await supabase
+    .from("tenancies")
+    .update(entry)
+    .eq("id", id);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
 export async function deleteTenancy(id: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

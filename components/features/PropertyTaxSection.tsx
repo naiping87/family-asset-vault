@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
 import { DataTable } from "@/components/ui/DataTable";
 import { formatCurrency } from "@/lib/utils/formatters";
-import { addTaxAction, markTaxPaidAction } from "@/app/dashboard/properties/[id]/tax-actions";
+import { addTaxAction, markTaxPaidAction, deleteTaxAction } from "@/app/dashboard/properties/[id]/tax-actions";
 import type { Tax } from "@/types/database";
 
 const taxTypeLabels: Record<string, string> = {
@@ -29,44 +29,35 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
     { key: "tax_type", label: "税种" },
     { key: "authority", label: "机构" },
     { key: "account_no", label: "账号" },
-    {
-      key: "amount",
-      label: "金额",
-      render: (v: unknown) => formatCurrency(Number(v) || 0),
-    },
+    { key: "amount", label: "金额", render: (v: unknown) => formatCurrency(Number(v) || 0) },
     { key: "due_date", label: "截止日期" },
     {
-      key: "status",
-      label: "状态",
+      key: "status", label: "状态",
       render: (value: unknown) => {
         const s = String(value ?? "");
-        const colorMap: Record<string, string> = { paid: "green", unpaid: "amber", overdue: "red" };
-        const labelMap: Record<string, string> = { paid: "已缴", unpaid: "未缴", overdue: "逾期" };
-        return <Badge color={colorMap[s] as "green" | "amber" | "red"}>{labelMap[s]}</Badge>;
+        const c: Record<string, string> = { paid: "green", unpaid: "amber", overdue: "red" };
+        const l: Record<string, string> = { paid: "已缴", unpaid: "未缴", overdue: "逾期" };
+        return <Badge color={c[s] as "green" | "amber" | "red"}>{l[s]}</Badge>;
       },
     },
     {
-      key: "actions",
-      label: "操作",
-      render: (_: unknown, row: Record<string, unknown>) => {
-        if (row.status === "paid") return null;
-        return (
-          <div style={{ display: "flex", gap: 6 }}>
-            <form action={async () => {
-              await markTaxPaidAction(propertyId, String(row.id));
-            }}>
+      key: "actions", label: "操作",
+      render: (_: unknown, row: Record<string, unknown>) => (
+        <div style={{ display: "flex", gap: 6 }}>
+          {row.status !== "paid" && (
+            <form action={markTaxPaidAction.bind(null, propertyId, String(row.id))}>
               <Button variant="secondary" size="xs" type="submit">标记已缴</Button>
             </form>
-          </div>
-        );
-      },
+          )}
+          <form action={deleteTaxAction.bind(null, propertyId, String(row.id))}>
+            <Button variant="danger" size="xs" type="submit">删除</Button>
+          </form>
+        </div>
+      ),
     },
   ];
 
-  const tableData = taxes.map((t) => ({
-    ...t,
-    tax_type: taxTypeLabels[t.tax_type] ?? t.tax_type,
-  }));
+  const tableData = taxes.map((t) => ({ ...t, tax_type: taxTypeLabels[t.tax_type] ?? t.tax_type }));
 
   return (
     <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
@@ -76,19 +67,9 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
           {showForm ? "取消" : "+ 添加税务记录"}
         </Button>
       </div>
-
       {showForm && (
-        <form
-          action={async (formData: FormData) => {
-            await addTaxAction(propertyId, formData);
-          }}
-          style={{
-            marginBottom: 20,
-            padding: 16,
-            background: "var(--glass-bg)",
-            borderRadius: "var(--radius)",
-          }}
-        >
+        <form action={addTaxAction.bind(null, propertyId)}
+          style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">税种</label>
@@ -111,13 +92,10 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
           </div>
         </form>
       )}
-
       {tableData.length > 0 ? (
         <DataTable columns={taxColumns} data={tableData} />
       ) : (
-        <p style={{ color: "var(--text-secondary)", fontSize: 14, textAlign: "center", padding: 20 }}>
-          暂无税务记录
-        </p>
+        <p style={{ color: "var(--text-secondary)", fontSize: 14, textAlign: "center", padding: 20 }}>暂无税务记录</p>
       )}
     </Card>
   );

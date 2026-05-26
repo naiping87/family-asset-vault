@@ -2,9 +2,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { getInsurances } from "@/lib/api/insurances";
+import { getInsurances, deleteInsurance } from "@/lib/api/insurances";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { daysUntil } from "@/lib/utils/formatters";
+import { revalidatePath } from "next/cache";
 
 const insuranceTypeIcons: Record<string, string> = {
   fire: "🔥",
@@ -95,7 +96,12 @@ export default async function InsurancesPage() {
                     </div>
                   </div>
                 </div>
-                <Badge color={statusColor}>{statusText}</Badge>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <Badge color={statusColor}>{statusText}</Badge>
+                  <form action={async () => { "use server"; await deleteInsurance(String(ins.id)); revalidatePath("/dashboard/insurances"); }}>
+                    <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "var(--text-muted)", padding: "2px 6px" }} title="删除">🗑️</button>
+                  </form>
+                </div>
               </Card>
             );
           })}

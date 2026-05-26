@@ -1,12 +1,20 @@
 "use server";
 
-import { createTenancy } from "@/lib/api/tenancies";
+import { createTenancy, updateTenancy, deleteTenancy } from "@/lib/api/tenancies";
 import { revalidatePath } from "next/cache";
 
 export async function addTenancyAction(propertyId: string, formData: FormData) {
   formData.set("property_id", propertyId);
-  const result = await createTenancy(formData);
-  if (result.error) return { error: result.error };
+  await createTenancy(formData);
   revalidatePath(`/dashboard/properties/${propertyId}`);
-  return { success: true };
+}
+
+export async function editTenancyAction(propertyId: string, tenancyId: string, formData: FormData) {
+  await updateTenancy(tenancyId, formData);
+  revalidatePath(`/dashboard/properties/${propertyId}`);
+}
+
+export async function deleteTenancyAction(propertyId: string, tenancyId: string) {
+  await deleteTenancy(tenancyId);
+  revalidatePath(`/dashboard/properties/${propertyId}`);
 }

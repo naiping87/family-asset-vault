@@ -22,19 +22,9 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
           {showForm ? "取消" : "+ 添加持有人"}
         </Button>
       </div>
-
       {showForm && (
-        <form
-          action={async (formData: FormData) => {
-            await addCoOwnerAction(propertyId, formData);
-          }}
-          style={{
-            marginBottom: 12,
-            padding: 16,
-            background: "var(--glass-bg)",
-            borderRadius: "var(--radius)",
-          }}
-        >
+        <form action={addCoOwnerAction.bind(null, propertyId)}
+          style={{ marginBottom: 12, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <div className="form-row">
             <FormInput label="姓名" name="name" placeholder="持有人姓名" required />
             <FormInput label="邮箱" name="email" type="email" placeholder="email@example.com" />
@@ -45,20 +35,12 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
           </div>
         </form>
       )}
-
       {coOwners.length === 0 ? (
         <p style={{ color: "var(--text-secondary)", fontSize: 14 }}>暂无持有人信息</p>
       ) : (
         coOwners.map((owner, i) => (
           <div className="owner-item" key={owner.id}>
-            <div
-              className="owner-avatar"
-              style={{
-                background: i === 0
-                  ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
-                  : "linear-gradient(135deg, #ec4899, #f472b6)",
-              }}
-            >
+            <div className="owner-avatar" style={{ background: i === 0 ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "linear-gradient(135deg, #ec4899, #f472b6)" }}>
               {owner.name.charAt(0)}
             </div>
             <div className="owner-info">
@@ -66,11 +48,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
               <div className="owner-role">{owner.is_primary ? "主要持有人" : "共同持有人"}</div>
             </div>
             <div className="owner-pct">{owner.ownership_pct}%</div>
-            <form
-              action={async () => {
-                await removeCoOwnerAction(propertyId, owner.id);
-              }}
-            >
+            <form action={removeCoOwnerAction.bind(null, propertyId, owner.id)}>
               <button className="owner-remove" type="submit">✕</button>
             </form>
           </div>
