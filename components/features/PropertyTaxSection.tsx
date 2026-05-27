@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
 import { DataTable } from "@/components/ui/DataTable";
+import { showToast } from "@/components/ui/Toast";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { addTaxAction, markTaxPaidAction, deleteTaxAction } from "@/app/dashboard/properties/[id]/tax-actions";
 import type { Tax } from "@/types/database";
@@ -24,6 +25,41 @@ interface Props {
 
 export function PropertyTaxSection({ propertyId, taxes }: Props) {
   const [showForm, setShowForm] = useState(false);
+  const [pending, startTransition] = useTransition();
+
+  function handleAdd(formData: FormData) {
+    startTransition(async () => {
+      const result = await addTaxAction(propertyId, formData);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("税务记录已添加", "success");
+        setShowForm(false);
+      }
+    });
+  }
+
+  function handleMarkPaid(taxId: string) {
+    startTransition(async () => {
+      const result = await markTaxPaidAction(propertyId, taxId);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("已标记为已缴", "success");
+      }
+    });
+  }
+
+  function handleDelete(taxId: string) {
+    startTransition(async () => {
+      const result = await deleteTaxAction(propertyId, taxId);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("税务记录已删除", "success");
+      }
+    });
+  }
 
   const taxColumns = [
     { key: "tax_type", label: "税种" },
@@ -45,13 +81,13 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
       render: (_: unknown, row: Record<string, unknown>) => (
         <div style={{ display: "flex", gap: 6 }}>
           {row.status !== "paid" && (
-            <form action={markTaxPaidAction.bind(null, propertyId, String(row.id))}>
-              <Button variant="secondary" size="xs" type="submit">标记已缴</Button>
-            </form>
+            <Button variant="secondary" size="xs" onClick={() => handleMarkPaid(String(row.id))} disabled={pending}>
+              标记已缴
+            </Button>
           )}
-          <form action={deleteTaxAction.bind(null, propertyId, String(row.id))}>
-            <Button variant="danger" size="xs" type="submit">删除</Button>
-          </form>
+          <Button variant="danger" size="xs" onClick={() => handleDelete(String(row.id))} disabled={pending}>
+            删除
+          </Button>
         </div>
       ),
     },
@@ -68,7 +104,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
         </Button>
       </div>
       {showForm && (
-        <form action={addTaxAction.bind(null, propertyId)}
+        <form action={handleAdd}
           style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <div className="form-row">
             <div className="form-group">
@@ -88,7 +124,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
           </div>
           <FormInput label="截止日期" name="due_date" type="date" />
           <div style={{ marginTop: 12 }}>
-            <Button variant="primary" size="sm" type="submit">保存</Button>
+            <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
           </div>
         </form>
       )}

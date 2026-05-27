@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
+import { showToast } from "@/components/ui/Toast";
 import { deletePropertyAction } from "@/app/dashboard/properties/[id]/actions";
 
 export function DeletePropertyButton({ propertyId }: { propertyId: string }) {
@@ -13,7 +14,7 @@ export function DeletePropertyButton({ propertyId }: { propertyId: string }) {
     startTransition(async () => {
       const result = await deletePropertyAction(propertyId);
       if (result?.error) {
-        alert("删除失败: " + result.error);
+        showToast("删除失败: " + result.error, "error");
       }
     });
   }

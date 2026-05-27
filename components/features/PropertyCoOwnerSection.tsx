@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { FormInput } from "@/components/ui/FormInput";
+import { showToast } from "@/components/ui/Toast";
 import { addCoOwnerAction, removeCoOwnerAction } from "@/app/dashboard/properties/[id]/co-owner-actions";
 import type { CoOwner } from "@/types/database";
 
@@ -13,6 +14,30 @@ interface Props {
 
 export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
   const [showForm, setShowForm] = useState(false);
+  const [pending, startTransition] = useTransition();
+
+  function handleAdd(formData: FormData) {
+    startTransition(async () => {
+      const result = await addCoOwnerAction(propertyId, formData);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("持有人已添加", "success");
+        setShowForm(false);
+      }
+    });
+  }
+
+  function handleRemove(ownerId: string) {
+    startTransition(async () => {
+      const result = await removeCoOwnerAction(propertyId, ownerId);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("持有人已移除", "success");
+      }
+    });
+  }
 
   return (
     <>
@@ -23,7 +48,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
         </Button>
       </div>
       {showForm && (
-        <form action={addCoOwnerAction.bind(null, propertyId)}
+        <form action={handleAdd}
           style={{ marginBottom: 12, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <div className="form-row">
             <FormInput label="姓名" name="name" placeholder="持有人姓名" required />
@@ -31,7 +56,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
           </div>
           <FormInput label="持有比例 (%)" name="ownership_pct" type="number" placeholder="50" />
           <div style={{ marginTop: 12 }}>
-            <Button variant="primary" size="sm" type="submit">保存</Button>
+            <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
           </div>
         </form>
       )}
@@ -48,9 +73,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
               <div className="owner-role">{owner.is_primary ? "主要持有人" : "共同持有人"}</div>
             </div>
             <div className="owner-pct">{owner.ownership_pct}%</div>
-            <form action={removeCoOwnerAction.bind(null, propertyId, owner.id)}>
-              <button className="owner-remove" type="submit">✕</button>
-            </form>
+            <button className="owner-remove" type="button" onClick={() => handleRemove(owner.id)} disabled={pending}>✕</button>
           </div>
         ))
       )}

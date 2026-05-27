@@ -4,19 +4,19 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-export async function signIn(formData: FormData) {
+export async function signIn(_prevState: unknown, formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return;
+  if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
   redirect("/dashboard");
 }
 
-export async function signUp(formData: FormData) {
+export async function signUp(_prevState: unknown, formData: FormData) {
   const supabase = await createClient();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -27,7 +27,7 @@ export async function signUp(formData: FormData) {
     password,
     options: { data: { full_name: fullName } },
   });
-  if (error) return;
+  if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
   redirect("/dashboard");

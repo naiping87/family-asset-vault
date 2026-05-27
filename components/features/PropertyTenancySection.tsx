@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
+import { showToast } from "@/components/ui/Toast";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { addTenancyAction, editTenancyAction, deleteTenancyAction } from "@/app/dashboard/properties/[id]/tenancy-actions";
 import type { Tenancy } from "@/types/database";
@@ -17,6 +18,42 @@ interface Props {
 export function PropertyTenancySection({ propertyId, tenancies }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  function handleAdd(formData: FormData) {
+    startTransition(async () => {
+      const result = await addTenancyAction(propertyId, formData);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("租约已添加", "success");
+        setShowForm(false);
+      }
+    });
+  }
+
+  function handleEdit(tenancyId: string, formData: FormData) {
+    startTransition(async () => {
+      const result = await editTenancyAction(propertyId, tenancyId, formData);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("租约已更新", "success");
+        setEditingId(null);
+      }
+    });
+  }
+
+  function handleDelete(tenancyId: string) {
+    startTransition(async () => {
+      const result = await deleteTenancyAction(propertyId, tenancyId);
+      if (result?.error) {
+        showToast(result.error, "error");
+      } else {
+        showToast("租约已删除", "success");
+      }
+    });
+  }
 
   return (
     <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
@@ -27,7 +64,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
         </Button>
       </div>
       {showForm && !editingId && (
-        <form action={addTenancyAction.bind(null, propertyId)}
+        <form action={handleAdd}
           style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <FormInput label="租户姓名" name="tenant_name" placeholder="例如：陈小明" required />
           <div className="form-row">
@@ -48,7 +85,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
             <FormInput label="租客护照/身份证链接" name="tenant_passport_url" placeholder="上传护照样本后粘贴链接" />
           </div>
           <div style={{ marginTop: 12 }}>
-            <Button variant="primary" size="sm" type="submit">保存</Button>
+            <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
           </div>
         </form>
       )}
@@ -58,7 +95,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
         tenancies.map((t) => (
           <Card variant="default" key={t.id} className="tenancy-card" style={{ marginBottom: 12 }}>
             {editingId === t.id ? (
-              <form action={editTenancyAction.bind(null, propertyId, t.id)} style={{ padding: 4 }}>
+              <form action={(formData: FormData) => handleEdit(t.id, formData)} style={{ padding: 4 }}>
                 <FormInput label="租户姓名" name="tenant_name" defaultValue={t.tenant_name} required />
                 <div className="form-row">
                   <FormInput label="IC 号码" name="tenant_ic" defaultValue={t.tenant_ic ?? ""} />
@@ -74,7 +111,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
                   <FormInput label="押金 (RM)" name="deposit" type="number" defaultValue={t.deposit ? String(t.deposit) : ""} />
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-                  <Button variant="primary" size="sm" type="submit">保存</Button>
+                  <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
                   <Button variant="secondary" size="sm" onClick={() => setEditingId(null)}>取消</Button>
                 </div>
               </form>
@@ -89,9 +126,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
                   </div>
                   <div style={{ display: "flex", gap: 6 }}>
                     <Button variant="secondary" size="xs" onClick={() => setEditingId(t.id)}>编辑</Button>
-                    <form action={deleteTenancyAction.bind(null, propertyId, t.id)}>
-                      <Button variant="danger" size="xs" type="submit">删除</Button>
-                    </form>
+                    <Button variant="danger" size="xs" onClick={() => handleDelete(t.id)} disabled={pending}>删除</Button>
                   </div>
                 </div>
                 <div className="tenancy-body">

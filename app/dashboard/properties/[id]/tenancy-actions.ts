@@ -5,16 +5,22 @@ import { revalidatePath } from "next/cache";
 
 export async function addTenancyAction(propertyId: string, formData: FormData) {
   formData.set("property_id", propertyId);
-  await createTenancy(formData);
+  const result = await createTenancy(formData);
+  if (result.error) return { error: result.error };
   revalidatePath(`/dashboard/properties/${propertyId}`);
+  return { success: true };
 }
 
 export async function editTenancyAction(propertyId: string, tenancyId: string, formData: FormData) {
-  await updateTenancy(tenancyId, formData);
+  const result = await updateTenancy(tenancyId, formData);
+  if (result.error) return { error: result.error };
   revalidatePath(`/dashboard/properties/${propertyId}`);
+  return { success: true };
 }
 
 export async function deleteTenancyAction(propertyId: string, tenancyId: string) {
-  await deleteTenancy(tenancyId);
+  const result = await deleteTenancy(tenancyId);
+  if (result.error) return { error: result.error };
   revalidatePath(`/dashboard/properties/${propertyId}`);
+  return { success: true };
 }

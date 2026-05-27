@@ -1,11 +1,7 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
-import { FormInput } from "@/components/ui/FormInput";
-import { MapPlaceholder } from "@/components/ui/MapPlaceholder";
-import { Breadcrumb } from "@/components/ui/Breadcrumb";
-import { getProperty, updateProperty } from "@/lib/api/properties";
-import { notFound, redirect } from "next/navigation";
+import { PropertyForm } from "@/components/features/PropertyForm";
+import { DeletePropertyButton } from "@/components/features/DeletePropertyButton";
+import { getProperty } from "@/lib/api/properties";
+import { notFound } from "next/navigation";
 
 export default async function EditPropertyPage({
   params,
@@ -16,123 +12,12 @@ export default async function EditPropertyPage({
   const property = await getProperty(id);
   if (!property) notFound();
 
-  async function handleSubmit(formData: FormData) {
-    "use server";
-    const result = await updateProperty(id, formData);
-    if (result.error) return;
-    redirect("/dashboard/properties/" + id);
-  }
-
   return (
     <>
-      <Breadcrumb
-        items={[
-          { label: "房产列表", href: "/dashboard/properties" },
-          { label: property.name, href: "/dashboard/properties/" + id },
-          { label: "编辑" },
-        ]}
-      />
-
-      <div className="page-header">
-        <div>
-          <div className="page-title">✏️ 编辑房产</div>
-          <div className="page-subtitle">{property.name}</div>
-        </div>
+      <PropertyForm property={property} mode="edit" />
+      <div style={{ marginTop: 24 }}>
+        <DeletePropertyButton propertyId={id} />
       </div>
-
-      <form action={handleSubmit}>
-        <div className="content-grid-2" style={{ marginBottom: 28 }}>
-          <Card variant="intense" className="section-panel">
-            <div className="section-title" style={{ marginBottom: 20 }}>📋 基本信息</div>
-            <FormInput
-              label="房产名称" name="name" placeholder="例如：SkyVue 高级公寓"
-              defaultValue={property.name ?? ""} required
-            />
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label">房产类型</label>
-                <select className="form-input" name="property_type" defaultValue={property.property_type ?? "apartment"}>
-                  <option value="apartment">公寓</option>
-                  <option value="landed">有地房产</option>
-                  <option value="land">土地</option>
-                  <option value="shop">商铺</option>
-                  <option value="factory">工厂</option>
-                </select>
-              </div>
-              <FormInput
-                label="地契编号" name="title_deed_no" placeholder="HS(D) 12345/2020"
-                defaultValue={property.title_deed_no ?? ""}
-              />
-            </div>
-            <div className="form-row">
-              <FormInput label="城市" name="city" placeholder="Kuala Lumpur" defaultValue={property.city ?? ""} />
-              <FormInput label="州属" name="state" placeholder="Selangor" defaultValue={property.state ?? ""} />
-            </div>
-            <FormInput
-              label="详细地址" name="address" placeholder="Jalan, Taman, Poskod"
-              defaultValue={property.address ?? ""}
-            />
-            <FormInput
-              label="邮编号码" name="postcode" placeholder="47300"
-              defaultValue={property.postcode ?? ""}
-            />
-          </Card>
-
-          <Card variant="intense" className="section-panel">
-            <div className="section-title" style={{ marginBottom: 20 }}>📍 地图定位</div>
-            <MapPlaceholder />
-          </Card>
-        </div>
-
-        <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>💰 财务信息</div>
-          <div className="form-row-3">
-            <FormInput
-              label="购买价格" name="purchase_price" type="number" placeholder="0.00"
-              defaultValue={property.purchase_price ? String(property.purchase_price) : ""}
-            />
-            <FormInput
-              label="当前估值" name="current_value" type="number" placeholder="0.00"
-              defaultValue={property.current_value ? String(property.current_value) : ""}
-            />
-            <FormInput
-              label="贷款余额" name="loan_balance" type="number" placeholder="0.00"
-              defaultValue={property.loan_balance ? String(property.loan_balance) : ""}
-            />
-          </div>
-          <div style={{ marginTop: 16 }}>
-            <FormInput
-              label="贷款银行" name="loan_bank" placeholder="例如：Maybank"
-              defaultValue={property.loan_bank ?? ""}
-            />
-          </div>
-        </Card>
-
-        <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📄 法律文件</div>
-          <FormInput label="SPA 买卖合同链接" name="spa_file_url" placeholder="上传SPA文件后粘贴链接" defaultValue={property.spa_file_url ?? ""} />
-          <FormInput label="地契/Geran 文件链接" name="geran_file_url" placeholder="上传地契后粘贴链接" defaultValue={property.geran_file_url ?? ""} />
-        </Card>
-
-        <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📊 状态</div>
-          <div className="form-group">
-            <select className="form-input" name="status" defaultValue={property.status ?? "vacant"}>
-              <option value="rented">出租中</option>
-              <option value="non_rental">自住</option>
-              <option value="vacant">空置</option>
-              <option value="sold">已售</option>
-            </select>
-          </div>
-        </Card>
-
-        <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-          <Link href={"/dashboard/properties/" + id}>
-            <Button variant="secondary">取消</Button>
-          </Link>
-          <Button variant="primary" type="submit">保存更改</Button>
-        </div>
-      </form>
     </>
   );
 }
