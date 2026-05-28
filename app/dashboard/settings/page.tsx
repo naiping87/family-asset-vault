@@ -10,15 +10,15 @@ export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Fetch profile for display name
+  // Fetch profile for display name and language
   const { data: profile } = await supabase
     .from("profiles")
-    .select("display_name")
+    .select("display_name, language")
     .eq("id", user?.id ?? "")
     .single();
 
   const displayName = profile?.display_name || user?.user_metadata?.full_name || "";
-  const savedLang = "zh"; // Language saved to profile, UI translation is future feature
+  const savedLang = profile?.language || "zh";
 
   async function handleSave(formData: FormData) {
     "use server";
@@ -54,7 +54,7 @@ export default async function SettingsPage() {
             />
             <div className="form-group">
               <label className="form-label">语言</label>
-              <select className="form-input" name="language" defaultValue="zh">
+              <select className="form-input" name="language" defaultValue={savedLang}>
                 <option value="zh">中文</option>
                 <option value="en">English</option>
                 <option value="ms">Bahasa Melayu</option>

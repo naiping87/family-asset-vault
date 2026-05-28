@@ -18,11 +18,18 @@ export function daysUntil(date: Date | string): number {
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 }
 
-export function getGreeting(): string {
+const greetings: Record<string, [string, string, string]> = {
+  zh: ["早上好", "下午好", "晚上好"],
+  en: ["Good morning", "Good afternoon", "Good evening"],
+  ms: ["Selamat pagi", "Selamat petang", "Selamat malam"],
+};
+
+export function getGreeting(lang: string = "zh"): string {
   const hour = new Date().getHours();
-  if (hour < 12) return "早上好";
-  if (hour < 18) return "下午好";
-  return "晚上好";
+  const g = greetings[lang] ?? greetings.zh;
+  if (hour < 12) return g[0];
+  if (hour < 18) return g[1];
+  return g[2];
 }
 
 export function formatFullDate(date: Date | string): string {

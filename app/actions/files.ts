@@ -2,6 +2,8 @@
 
 import { createClient } from "@/lib/supabase/server";
 
+const SIGNED_URL_EXPIRY = 60 * 60 * 24 * 7; // 7 days
+
 export async function uploadFileAction(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -21,9 +23,11 @@ export async function uploadFileAction(formData: FormData) {
 
   if (uploadError) return { error: uploadError.message };
 
-  const { data: publicUrlData } = supabase.storage
+  const { data: signedData, error: signedError } = await supabase.storage
     .from(bucket)
-    .getPublicUrl(filePath);
+    .createSignedUrl(filePath, SIGNED_URL_EXPIRY);
+
+  if (signedError || !signedData?.signedUrl) return { error: "获取文件链接失败" };
 
   const { data, error } = await supabase
     .from("files")
@@ -42,7 +46,7 @@ export async function uploadFileAction(formData: FormData) {
   if (error) return { error: error.message };
 
   return {
-    url: publicUrlData.publicUrl,
+    url: signedData.signedUrl,
     file: { id: data.id, name: file.name, size: file.size, type: file.type } as UploadedFileInfo,
   };
 }
@@ -89,19 +93,23 @@ export async function getPropertyFilesAction(propertyId: string) {
 
   if (!data) return [];
 
-  return data.map((f) => {
-    const { data: publicUrlData } = supabase.storage
-      .from(f.bucket_name)
-      .getPublicUrl(f.file_path);
-    return {
-      id: f.id,
-      name: f.file_name,
-      size: f.file_size,
-      type: f.mime_type,
-      url: publicUrlData.publicUrl,
-      created_at: f.created_at,
-    };
-  });
+  const result = await Promise.all(
+    data.map(async (f) => {
+      const { data: signedData } = await supabase.storage
+        .from(f.bucket_name)
+        .createSignedUrl(f.file_path, SIGNED_URL_EXPIRY);
+      return {
+        id: f.id,
+        name: f.file_name,
+        size: f.file_size,
+        type: f.mime_type,
+        url: signedData?.signedUrl || "",
+        created_at: f.created_at,
+      };
+    })
+  );
+
+  return result;
 }
 
 export interface UploadedFileInfo {
