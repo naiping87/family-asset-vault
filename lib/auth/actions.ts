@@ -5,6 +5,10 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { validatePassword } from "@/lib/auth/validation";
 
+function isNextRedirect(e: unknown): boolean {
+  return e instanceof Error && "digest" in e && (e as Record<string, unknown>).digest === "NEXT_REDIRECT";
+}
+
 export async function signIn(_prevState: unknown, formData: FormData) {
   try {
     const supabase = await createClient();
@@ -19,6 +23,7 @@ export async function signIn(_prevState: unknown, formData: FormData) {
     revalidatePath("/", "layout");
     redirect("/dashboard");
   } catch (e) {
+    if (isNextRedirect(e)) throw e;
     return { error: "登录失败: " + (e instanceof Error ? e.message : "未知错误") };
   }
 }
@@ -50,6 +55,7 @@ export async function signUp(_prevState: unknown, formData: FormData) {
     revalidatePath("/", "layout");
     redirect("/dashboard");
   } catch (e) {
+    if (isNextRedirect(e)) throw e;
     return { error: "注册失败: " + (e instanceof Error ? e.message : "未知错误") };
   }
 }
@@ -58,11 +64,11 @@ export async function signOut() {
   try {
     const supabase = await createClient();
     await supabase.auth.signOut();
-    revalidatePath("/", "layout");
-    redirect("/login");
-  } catch (e) {
-    redirect("/login");
+  } catch {
+    // ignore
   }
+  revalidatePath("/", "layout");
+  redirect("/login");
 }
 
 export async function resetPassword(_prevState: unknown, formData: FormData) {
@@ -72,7 +78,7 @@ export async function resetPassword(_prevState: unknown, formData: FormData) {
     if (!email) return { error: "请输入邮箱地址" };
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || ""}/login/reset-password`,
+      redirectTo: `https://family-asset-vault.vercel.app/login/reset-password`,
     });
     if (error) return { error: error.message };
 
@@ -96,6 +102,7 @@ export async function updatePassword(_prevState: unknown, formData: FormData) {
     revalidatePath("/", "layout");
     redirect("/login");
   } catch (e) {
+    if (isNextRedirect(e)) throw e;
     return { error: "更新失败: " + (e instanceof Error ? e.message : "未知错误") };
   }
 }
