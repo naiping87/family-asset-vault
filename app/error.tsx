@@ -1,11 +1,11 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 
 export default function ErrorPage({ reset }: { error: Error; reset: () => void }) {
-  const t = useTranslations();
+  const { t } = useT();
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: 16 }}>
       <Card variant="intense" style={{ maxWidth: 420, padding: 36, textAlign: "center" }}>

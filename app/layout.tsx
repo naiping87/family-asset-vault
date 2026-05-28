@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
+import { I18nProvider } from "@/lib/i18n/provider";
+import { getLocale } from "@/lib/i18n/server";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -10,13 +10,8 @@ export const metadata: Metadata = {
   description: "一站式管理您的房产、保险、租约与税务",
 };
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
-  const messages = await getMessages();
 
   return (
     <html lang={locale} className="dark" suppressHydrationWarning>
@@ -24,15 +19,12 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{
           __html: `(function(){try{var t=localStorage.getItem("theme");if(t==="light")document.documentElement.classList.remove("dark")}catch(e){}})()`,
         }} />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <NextIntlClientProvider locale={locale} messages={messages}>
+        <I18nProvider locale={locale}>
           {children}
-        </NextIntlClientProvider>
+        </I18nProvider>
       </body>
     </html>
   );

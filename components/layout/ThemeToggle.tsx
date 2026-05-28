@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { Icon } from "@/lib/utils/icons";
 
 export function ThemeToggle() {
-  const t = useTranslations();
+  const { t } = useT();
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {

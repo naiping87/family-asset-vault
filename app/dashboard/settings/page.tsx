@@ -6,12 +6,12 @@ import { updateProfile } from "@/lib/api/profiles";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { getTranslations } from "next-intl/server";
+import { getT } from "@/lib/i18n/server";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const t = await getTranslations();
+  const t = await getT();
 
   const { data: profile } = await supabase
     .from("profiles")

@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getT } from "@/lib/i18n/server";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 
 export default async function ConfirmPage() {
-  const t = await getTranslations();
+  const t = await getT();
   return (
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", padding: 16 }}>
       <Card variant="intense" style={{ width: "100%", maxWidth: 420, padding: 36, textAlign: "center" }}>

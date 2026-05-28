@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { uploadFileAction, deleteFileAction } from "@/app/actions/files";
 import { showToast } from "@/components/ui/Toast";
 
@@ -40,7 +40,7 @@ export function FileUpload({
   onUploaded,
   onDelete,
 }: FileUploadProps) {
-  const t = useTranslations();
+  const { t } = useT();
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [files, setFiles] = useState<UploadedFile[]>(existingFiles);

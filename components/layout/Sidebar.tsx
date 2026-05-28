@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 import { Icon } from "@/lib/utils/icons";
 import { UserInfo } from "./UserInfo";
@@ -21,7 +21,7 @@ interface Props {
 
 export function Sidebar({ userInfo }: Props) {
   const pathname = usePathname();
-  const t = useTranslations();
+  const { t } = useT();
 
   const mainNav: NavItem[] = [
     { icon: "Dashboard", label: t("nav.dashboard"), href: "/dashboard" },

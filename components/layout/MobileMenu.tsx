@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 import { Icon } from "@/lib/utils/icons";
 import { signOut } from "@/lib/auth/actions";
@@ -15,7 +15,7 @@ interface MobileMenuProps {
 
 export function MobileMenu({ open, onClose, userInfo }: MobileMenuProps) {
   const pathname = usePathname();
-  const t = useTranslations();
+  const { t } = useT();
 
   if (!open) return null;
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export function PropertyTaxSection({ propertyId, taxes }: Props) {
-  const t = useTranslations();
+  const { t } = useT();
   const [showForm, setShowForm] = useState(false);
   const [pending, startTransition] = useTransition();
   const [receiptUrl, setReceiptUrl] = useState("");

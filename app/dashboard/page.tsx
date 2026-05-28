@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getT } from "@/lib/i18n/server";
 import { Card } from "@/components/ui/Card";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Badge } from "@/components/ui/Badge";
@@ -12,7 +12,7 @@ import { LayoutDashboard, Building2, Wallet, Shield, Plus, List, FileText, Clock
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  const t = await getTranslations();
+  const t = await getT();
 
   const { data: profile } = await supabase
     .from("profiles")

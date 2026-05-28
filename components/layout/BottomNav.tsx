@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { cn } from "@/lib/utils/cn";
 import { Icon } from "@/lib/utils/icons";
 
 export function BottomNav() {
   const pathname = usePathname();
-  const t = useTranslations();
+  const { t } = useT();
 
   const items = [
     { icon: "Dashboard", label: t("nav.dashboard"), href: "/dashboard" },

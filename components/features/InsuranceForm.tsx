@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
@@ -16,7 +16,7 @@ interface Props {
 }
 
 export function InsuranceForm({ properties }: Props) {
-  const t = useTranslations();
+  const { t } = useT();
   const [state, formAction, isPending] = useActionState(createInsuranceAction, null);
   const [policyFileUrl, setPolicyFileUrl] = useState("");
 
