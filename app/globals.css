@@ -131,7 +131,7 @@ body::before {
 }
 
 .sidebar {
-  width: 280px;
+  width: 220px;
   height: 100vh;
   position: fixed;
   left: 8px;
@@ -139,7 +139,7 @@ body::before {
   bottom: 68px;
   display: flex;
   flex-direction: column;
-  padding: 28px 20px;
+  padding: 24px 16px;
   overflow-y: auto;
   background: var(--glass-bg-intense);
   backdrop-filter: blur(40px);
@@ -151,7 +151,7 @@ body::before {
 }
 
 .main-content {
-  margin-left: 296px;
+  margin-left: 236px;
   flex: 1;
   padding: 8px 8px 8px 0;
   min-height: 100vh;
@@ -216,8 +216,8 @@ body::before {
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 10px 12px;
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -778,9 +778,9 @@ body::before {
   display: flex;
   position: fixed;
   bottom: 0;
-  left: 296px;
+  left: 236px;
   right: 0;
-  padding: 10px 0;
+  padding: 8px 0;
   justify-content: space-around;
   z-index: 110;
 }
@@ -789,8 +789,8 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 8px 16px;
+  gap: 2px;
+  padding: 6px 14px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 11px;
@@ -1053,21 +1053,24 @@ body::before {
   .sidebar { display: none; }
   .top-bar { display: flex; }
   .bottom-nav { left: 0; padding: 6px 0; }
-  .bottom-nav-item { padding: 4px 12px; gap: 2px; font-size: 11px; }
-  .bottom-nav-item .icon svg { width: 18px; height: 18px; }
+  .bottom-nav-item { padding: 6px 10px; gap: 0; }
+  .bottom-nav-item .icon svg { width: 20px; height: 20px; }
   .desktop-only { display: none; }
   .mobile-only { display: block; }
   .desktop-hidden { display: flex; }
 
   .main-content { margin-left: 0; padding: 0; }
-  .main-inner { padding: 16px 16px 70px 16px; }
+  .main-inner { padding: 12px 12px 60px 12px; }
 
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .content-grid-2 { grid-template-columns: 1fr; gap: 12px; }
+  .section-panel { padding: 16px !important; }
+  .stat-card { padding: 14px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .content-grid-2 { grid-template-columns: 1fr; gap: 10px; }
   .content-grid-3 { grid-template-columns: 1fr; gap: 8px; }
   .form-row, .form-row-3 { grid-template-columns: 1fr; }
-  .stat-value { font-size: 24px; }
-  .page-title { font-size: 22px; }
+  .stat-value { font-size: 22px; }
+  .page-title { font-size: 20px; }
+  .data-table th, .data-table td { padding: 8px 10px; font-size: 13px; }
 }
 
 @media (max-width: 639px) {

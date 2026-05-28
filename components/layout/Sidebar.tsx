@@ -45,7 +45,6 @@ export function Sidebar({ userInfo }: Props) {
       </div>
 
       <div className="nav-section">
-        <div className="nav-label">{t("nav.mainNav")}</div>
         {mainNav.map((item) => (
           <Link
             key={item.href}
@@ -56,10 +55,6 @@ export function Sidebar({ userInfo }: Props) {
             {item.label}
           </Link>
         ))}
-      </div>
-
-      <div className="nav-section">
-        <div className="nav-label">{t("nav.other")}</div>
         {otherNav.map((item) => (
           <Link
             key={item.href}
