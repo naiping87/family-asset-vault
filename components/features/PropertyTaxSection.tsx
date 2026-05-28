@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
+import { FileUpload } from "@/components/ui/FileUpload";
 import { DataTable } from "@/components/ui/DataTable";
 import { showToast } from "@/components/ui/Toast";
 import { formatCurrency } from "@/lib/utils/formatters";
@@ -26,6 +27,7 @@ interface Props {
 export function PropertyTaxSection({ propertyId, taxes }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [receiptUrl, setReceiptUrl] = useState("");
 
   function handleAdd(formData: FormData) {
     startTransition(async () => {
@@ -123,6 +125,17 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
             <FormInput label="金额 (RM)" name="amount" type="number" placeholder="0.00" />
           </div>
           <FormInput label="截止日期" name="due_date" type="date" />
+          <div style={{ marginBottom: 12 }}>
+            <label className="form-label">收据/账单文件</label>
+            <FileUpload
+              propertyId={propertyId}
+              accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={receiptUrl ? [{ id: "", name: "收据文件", size: 0, type: "application/pdf", url: receiptUrl }] : []}
+              onUploaded={setReceiptUrl}
+              onDelete={() => setReceiptUrl("")}
+            />
+            <input type="hidden" name="receipt_url" value={receiptUrl} />
+          </div>
           <div style={{ marginTop: 12 }}>
             <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
           </div>

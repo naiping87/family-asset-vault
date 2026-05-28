@@ -1,8 +1,9 @@
 import { cn } from "@/lib/utils/cn";
 import { Card } from "./Card";
+import type { ReactNode } from "react";
 
 interface StatsCardProps {
-  icon: string;
+  icon: ReactNode;
   iconColor: "blue" | "green" | "amber" | "purple";
   label: string;
   value: string;

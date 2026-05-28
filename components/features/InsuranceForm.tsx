@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
+import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
 import { createInsuranceAction } from "@/app/dashboard/insurances/new/actions";
 
@@ -15,6 +16,7 @@ interface Props {
 
 export function InsuranceForm({ properties }: Props) {
   const [state, formAction, isPending] = useActionState(createInsuranceAction, null);
+  const [policyFileUrl, setPolicyFileUrl] = useState("");
 
   useEffect(() => {
     if (state?.error) {
@@ -89,6 +91,17 @@ export function InsuranceForm({ properties }: Props) {
             <FormInput label="开始日期" name="start_date" type="date" required />
             <FormInput label="结束日期" name="end_date" type="date" required />
           </div>
+        </Card>
+
+        <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
+          <div className="section-title" style={{ marginBottom: 20 }}>📎 保单文件</div>
+          <FileUpload
+            accept=".pdf,.jpg,.jpeg,.png"
+            existingFiles={policyFileUrl ? [{ id: "", name: "保单文件", size: 0, type: "application/pdf", url: policyFileUrl }] : []}
+            onUploaded={setPolicyFileUrl}
+            onDelete={() => setPolicyFileUrl("")}
+          />
+          <input type="hidden" name="policy_file_url" value={policyFileUrl} />
         </Card>
 
         <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>

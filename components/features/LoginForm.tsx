@@ -8,6 +8,17 @@ import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
 import { showToast } from "@/components/ui/Toast";
 import { signIn } from "@/lib/auth/actions";
+import { createClient } from "@/lib/supabase/client";
+
+async function handleGoogleSignIn() {
+  const supabase = createClient();
+  await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+}
 
 export function LoginForm() {
   const [state, formAction, isPending] = useActionState(signIn, null);
@@ -60,6 +71,12 @@ export function LoginForm() {
             required
           />
 
+          <div style={{ textAlign: "right", marginTop: -8, marginBottom: 8 }}>
+            <Link href="/login/forgot-password" style={{ fontSize: 13, color: "var(--text-secondary)" }}>
+              忘记密码?
+            </Link>
+          </div>
+
           <Button type="submit" disabled={isPending} style={{ width: "100%", marginTop: 8, justifyContent: "center" }}>
             {isPending ? "登录中..." : "登 录"}
           </Button>
@@ -67,7 +84,7 @@ export function LoginForm() {
 
         <div className="divider">或</div>
 
-        <button className="google-btn" type="button">
+        <button className="google-btn" type="button" onClick={handleGoogleSignIn}>
           <svg width="20" height="20" viewBox="0 0 24 24">
             <path
               fill="#4285F4"

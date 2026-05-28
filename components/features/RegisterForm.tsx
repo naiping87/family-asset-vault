@@ -1,22 +1,26 @@
 "use client";
 
 import { useActionState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
 import { showToast } from "@/components/ui/Toast";
 import { signUp } from "@/lib/auth/actions";
+import { passwordStrength } from "@/lib/auth/validation";
 
 export function RegisterForm() {
   const [state, formAction, isPending] = useActionState(signUp, null);
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     if (state?.error) {
       showToast(state.error, "error");
     }
   }, [state]);
+
+  const strength = password ? passwordStrength(password) : null;
 
   return (
     <div
@@ -61,9 +65,32 @@ export function RegisterForm() {
             label="密码"
             name="password"
             type="password"
-            placeholder="至少6位字符"
+            placeholder="至少8位字符，需包含字母和数字"
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
+          {strength && (
+            <div style={{ marginTop: -8, marginBottom: 16 }}>
+              <div style={{ display: "flex", gap: 4 }}>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    style={{
+                      flex: 1,
+                      height: 4,
+                      borderRadius: 2,
+                      background: i <= strength.score ? strength.color : "var(--glass-border)",
+                      transition: "background 0.2s",
+                    }}
+                  />
+                ))}
+              </div>
+              <span style={{ fontSize: 12, color: strength.color, marginTop: 4, display: "inline-block" }}>
+                密码强度: {strength.label}
+              </span>
+            </div>
+          )}
 
           <Button type="submit" disabled={isPending} style={{ width: "100%", marginTop: 8, justifyContent: "center" }}>
             {isPending ? "注册中..." : "注 册"}

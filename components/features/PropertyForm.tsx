@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState } from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
 import { MapPlaceholder } from "@/components/ui/MapPlaceholder";
+import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
 import { createPropertyAction } from "@/app/dashboard/properties/new/actions";
 import { updatePropertyAction } from "@/app/dashboard/properties/[id]/edit/actions";
@@ -20,6 +21,8 @@ interface Props {
 export function PropertyForm({ property, mode }: Props) {
   const serverAction = mode === "new" ? createPropertyAction : updatePropertyAction.bind(null, property?.id ?? "");
   const [state, formAction, isPending] = useActionState(serverAction, null);
+  const [spaFileUrl, setSpaFileUrl] = useState(property?.spa_file_url ?? "");
+  const [geranFileUrl, setGeranFileUrl] = useState(property?.geran_file_url ?? "");
 
   useEffect(() => {
     if (state?.error) {
@@ -120,8 +123,28 @@ export function PropertyForm({ property, mode }: Props) {
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>📄 法律文件</div>
-          <FormInput label="SPA 买卖合同链接" name="spa_file_url" placeholder="上传SPA文件后粘贴链接" defaultValue={property?.spa_file_url ?? ""} />
-          <FormInput label="地契/Geran 文件链接" name="geran_file_url" placeholder="上传地契后粘贴链接" defaultValue={property?.geran_file_url ?? ""} />
+          <div style={{ marginBottom: 16 }}>
+            <label className="form-label">SPA 买卖合同</label>
+            <FileUpload
+              propertyId={property?.id}
+              accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={spaFileUrl ? [{ id: "", name: "SPA文件", size: 0, type: "application/pdf", url: spaFileUrl }] : []}
+              onUploaded={setSpaFileUrl}
+              onDelete={() => setSpaFileUrl("")}
+            />
+            <input type="hidden" name="spa_file_url" value={spaFileUrl} />
+          </div>
+          <div>
+            <label className="form-label">地契 / Geran</label>
+            <FileUpload
+              propertyId={property?.id}
+              accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={geranFileUrl ? [{ id: "", name: "地契文件", size: 0, type: "application/pdf", url: geranFileUrl }] : []}
+              onUploaded={setGeranFileUrl}
+              onDelete={() => setGeranFileUrl("")}
+            />
+            <input type="hidden" name="geran_file_url" value={geranFileUrl} />
+          </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>

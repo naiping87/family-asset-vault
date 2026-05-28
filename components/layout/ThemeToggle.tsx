@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Icon } from "@/lib/utils/icons";
 
 export function ThemeToggle() {
   const [isDark, setIsDark] = useState(true);
@@ -23,8 +24,11 @@ export function ThemeToggle() {
 
   return (
     <div className="theme-row" onClick={toggle}>
-      <span>{isDark ? "☀️ 浅色模式" : "🌙 深色模式"}</span>
-      <div className="theme-toggle" />
+      <Icon name={isDark ? "Moon" : "Sun"} size={18} />
+      <span>{isDark ? "暗色模式" : "亮色模式"}</span>
+      <div className={`theme-toggle ${isDark ? "on" : ""}`}>
+        <div className="theme-toggle-knob" />
+      </div>
     </div>
   );
 }

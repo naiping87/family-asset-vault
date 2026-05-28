@@ -3,20 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
+import { Icon } from "@/lib/utils/icons";
+import { signOut } from "@/lib/auth/actions";
 
 interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
+  userInfo: { name: string; email: string; initial: string };
 }
 
 const navItems = [
-  { icon: "📊", label: "仪表盘", href: "/dashboard" },
-  { icon: "🏘️", label: "我的房产", href: "/dashboard/properties" },
-  { icon: "🛡️", label: "我的保险", href: "/dashboard/insurances" },
-  { icon: "⚙️", label: "账户设置", href: "/dashboard/settings" },
+  { icon: "Dashboard", label: "仪表盘", href: "/dashboard" },
+  { icon: "Properties", label: "我的房产", href: "/dashboard/properties" },
+  { icon: "Shield", label: "我的保险", href: "/dashboard/insurances" },
+  { icon: "Settings", label: "账户设置", href: "/dashboard/settings" },
 ];
 
-export function MobileMenu({ open, onClose }: MobileMenuProps) {
+export function MobileMenu({ open, onClose, userInfo }: MobileMenuProps) {
   const pathname = usePathname();
 
   if (!open) return null;
@@ -36,6 +39,8 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           borderRight: "1px solid var(--glass-border)",
           overflowY: "auto",
           zIndex: 300,
+          display: "flex",
+          flexDirection: "column",
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -50,15 +55,17 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           <div style={{ fontWeight: 700, fontSize: 18 }}>菜单</div>
           <button
             onClick={onClose}
+            type="button"
+            aria-label="关闭"
             style={{
               background: "none",
               border: "none",
-              fontSize: 20,
               cursor: "pointer",
               color: "var(--text-primary)",
+              padding: 4,
             }}
           >
-            ✕
+            <Icon name="X" size={20} />
           </button>
         </div>
 
@@ -69,7 +76,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
             className={cn("nav-item", pathname === item.href && "active")}
             onClick={onClose}
           >
-            <span className="icon">{item.icon}</span>
+            <span className="icon"><Icon name={item.icon} size={20} /></span>
             {item.label}
           </Link>
         ))}
@@ -82,15 +89,17 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           }}
         >
           <div className="user-info">
-            <div className="user-avatar">张</div>
+            <div className="user-avatar">{userInfo.initial}</div>
             <div>
-              <div className="user-name">张先生</div>
-              <div className="user-email">zhang@email.com</div>
+              <div className="user-name">{userInfo.name}</div>
+              <div className="user-email">{userInfo.email}</div>
             </div>
           </div>
-          <div className="logout-btn">
-            <span>🚪</span> 退出登录
-          </div>
+          <form action={signOut}>
+            <button className="logout-btn" type="submit">
+              <span><Icon name="LogOut" size={18} /></span> 退出登录
+            </button>
+          </form>
         </div>
       </div>
     </div>

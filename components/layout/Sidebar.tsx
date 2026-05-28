@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils/cn";
+import { Icon } from "@/lib/utils/icons";
 import { UserInfo } from "./UserInfo";
 import { ThemeToggle } from "./ThemeToggle";
 import { signOut } from "@/lib/auth/actions";
@@ -14,13 +15,13 @@ interface NavItem {
 }
 
 const mainNav: NavItem[] = [
-  { icon: "📊", label: "仪表盘", href: "/dashboard" },
-  { icon: "🏘️", label: "我的房产", href: "/dashboard/properties" },
-  { icon: "🛡️", label: "我的保险", href: "/dashboard/insurances" },
+  { icon: "Dashboard", label: "仪表盘", href: "/dashboard" },
+  { icon: "Properties", label: "我的房产", href: "/dashboard/properties" },
+  { icon: "Shield", label: "我的保险", href: "/dashboard/insurances" },
 ];
 
 const otherNav: NavItem[] = [
-  { icon: "⚙️", label: "账户设置", href: "/dashboard/settings" },
+  { icon: "Settings", label: "账户设置", href: "/dashboard/settings" },
 ];
 
 interface Props {
@@ -33,7 +34,9 @@ export function Sidebar({ userInfo }: Props) {
   return (
     <aside className="sidebar">
       <div className="logo">
-        <div className="logo-icon">🏰</div>
+        <div className="logo-icon">
+          <Icon name="Castle" size={28} />
+        </div>
         <div className="logo-text">
           Family Asset<span>Vault</span>
         </div>
@@ -47,7 +50,7 @@ export function Sidebar({ userInfo }: Props) {
             href={item.href}
             className={cn("nav-item", pathname.startsWith(item.href) && "active")}
           >
-            <span className="icon">{item.icon}</span>
+            <span className="icon"><Icon name={item.icon} size={20} /></span>
             {item.label}
           </Link>
         ))}
@@ -61,7 +64,7 @@ export function Sidebar({ userInfo }: Props) {
             href={item.href}
             className={cn("nav-item", pathname === item.href && "active")}
           >
-            <span className="icon">{item.icon}</span>
+            <span className="icon"><Icon name={item.icon} size={20} /></span>
             {item.label}
           </Link>
         ))}
@@ -72,7 +75,7 @@ export function Sidebar({ userInfo }: Props) {
         <ThemeToggle />
         <form action={signOut}>
           <button className="logout-btn" type="submit">
-            <span>🚪</span> 退出登录
+            <span><Icon name="LogOut" size={18} /></span> 退出登录
           </button>
         </form>
       </div>

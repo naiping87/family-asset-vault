@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
+import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { addTenancyAction, editTenancyAction, deleteTenancyAction } from "@/app/dashboard/properties/[id]/tenancy-actions";
@@ -19,6 +20,13 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
+  const [contractUrl, setContractUrl] = useState("");
+  const [passportUrl, setPassportUrl] = useState("");
+
+  function resetFiles() {
+    setContractUrl("");
+    setPassportUrl("");
+  }
 
   function handleAdd(formData: FormData) {
     startTransition(async () => {
@@ -64,7 +72,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
         </Button>
       </div>
       {showForm && !editingId && (
-        <form action={handleAdd}
+        <form action={(fd) => { handleAdd(fd); resetFiles(); }}
           style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <FormInput label="租户姓名" name="tenant_name" placeholder="例如：陈小明" required />
           <div className="form-row">
@@ -80,9 +88,27 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
             <FormInput label="月租 (RM)" name="monthly_rent" type="number" placeholder="0.00" />
             <FormInput label="押金 (RM)" name="deposit" type="number" placeholder="0.00" />
           </div>
-          <div className="form-row">
-            <FormInput label="租赁合同文件链接" name="contract_file_url" placeholder="上传合同后粘贴链接" />
-            <FormInput label="租客护照/身份证链接" name="tenant_passport_url" placeholder="上传护照样本后粘贴链接" />
+          <div style={{ marginBottom: 12 }}>
+            <label className="form-label">租赁合同文件</label>
+            <FileUpload
+              propertyId={propertyId}
+              accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={contractUrl ? [{ id: "", name: "合同文件", size: 0, type: "application/pdf", url: contractUrl }] : []}
+              onUploaded={setContractUrl}
+              onDelete={() => setContractUrl("")}
+            />
+            <input type="hidden" name="contract_file_url" value={contractUrl} />
+          </div>
+          <div style={{ marginBottom: 12 }}>
+            <label className="form-label">租客护照/身份证</label>
+            <FileUpload
+              propertyId={propertyId}
+              accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={passportUrl ? [{ id: "", name: "护照/身份证", size: 0, type: "application/pdf", url: passportUrl }] : []}
+              onUploaded={setPassportUrl}
+              onDelete={() => setPassportUrl("")}
+            />
+            <input type="hidden" name="tenant_passport_url" value={passportUrl} />
           </div>
           <div style={{ marginTop: 12 }}>
             <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
@@ -109,6 +135,28 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
                 <div className="form-row">
                   <FormInput label="月租 (RM)" name="monthly_rent" type="number" defaultValue={t.monthly_rent ? String(t.monthly_rent) : ""} />
                   <FormInput label="押金 (RM)" name="deposit" type="number" defaultValue={t.deposit ? String(t.deposit) : ""} />
+                </div>
+                <div style={{ marginBottom: 12 }}>
+                  <label className="form-label">租赁合同文件</label>
+                  <FileUpload
+                    propertyId={propertyId}
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    existingFiles={t.contract_file_url ? [{ id: "", name: "合同文件", size: 0, type: "application/pdf", url: t.contract_file_url }] : []}
+                    onUploaded={(url) => setContractUrl(url)}
+                    onDelete={() => setContractUrl("")}
+                  />
+                  <input type="hidden" name="contract_file_url" value={contractUrl || t.contract_file_url || ""} />
+                </div>
+                <div style={{ marginBottom: 12 }}>
+                  <label className="form-label">租客护照/身份证</label>
+                  <FileUpload
+                    propertyId={propertyId}
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    existingFiles={t.tenant_passport_url ? [{ id: "", name: "护照/身份证", size: 0, type: "application/pdf", url: t.tenant_passport_url }] : []}
+                    onUploaded={(url) => setPassportUrl(url)}
+                    onDelete={() => setPassportUrl("")}
+                  />
+                  <input type="hidden" name="tenant_passport_url" value={passportUrl || t.tenant_passport_url || ""} />
                 </div>
                 <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
                   <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>

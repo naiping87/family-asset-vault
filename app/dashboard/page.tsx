@@ -6,6 +6,7 @@ import { PropertyCard } from "@/components/ui/PropertyCard";
 import { getGreeting, formatFullDate, formatCurrency } from "@/lib/utils/formatters";
 import { getDashboardStats, getReminders, getRecentProperties } from "@/lib/api/dashboard";
 import { createClient } from "@/lib/supabase/server";
+import { LayoutDashboard, Building2, Wallet, Shield, Plus, List, FileText, Clock } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -20,7 +21,7 @@ export default async function DashboardPage() {
   const displayName = user?.user_metadata?.full_name ?? user?.email?.split("@")[0] ?? "用户";
 
   return (
-    <>
+    <div className="page-enter">
       <div className="greeting">
         <div className="greeting-text">
           {greeting}，{displayName} 👋
@@ -30,28 +31,28 @@ export default async function DashboardPage() {
 
       <div className="stats-grid">
         <StatsCard
-          icon="📊"
+          icon={<LayoutDashboard size={24} />}
           iconColor="blue"
           label="总资产估值"
           value={stats ? formatCurrency(stats.total_value) : "RM 0"}
           sub={stats ? `${stats.total_properties} 处房产` : "暂无数据"}
         />
         <StatsCard
-          icon="🏠"
+          icon={<Building2 size={24} />}
           iconColor="green"
           label="房产数量"
           value={stats ? String(stats.total_properties) : "0"}
           sub={stats ? `${stats.rented_count} 出租 · ${stats.non_rental_count} 自住 · ${stats.vacant_count} 空置` : "暂无数据"}
         />
         <StatsCard
-          icon="💰"
+          icon={<Wallet size={24} />}
           iconColor="amber"
           label="月租金收入"
           value={stats ? formatCurrency(stats.monthly_rental_income) : "RM 0"}
           sub={stats ? `年化 ${formatCurrency(stats.monthly_rental_income * 12)}` : "暂无数据"}
         />
         <StatsCard
-          icon="🛡️"
+          icon={<Shield size={24} />}
           iconColor="purple"
           label="保单数量"
           value={stats ? String(stats.active_insurances) : "0"}
@@ -62,7 +63,7 @@ export default async function DashboardPage() {
       <div className="content-grid-2">
         <Card variant="intense" className="section-panel">
           <div className="section-header">
-            <div className="section-title">⏰ 待办提醒</div>
+            <div className="section-title"><Clock size={18} style={{ display: "inline", marginRight: 6, verticalAlign: -3 }} />待办提醒</div>
           </div>
           {reminders.length === 0 ? (
             <div style={{ padding: 32, textAlign: "center", color: "var(--text-secondary)" }}>
@@ -92,19 +93,19 @@ export default async function DashboardPage() {
           </div>
           <div className="quick-actions">
             <Link href="/dashboard/properties/new" className="quick-action-btn">
-              <span className="icon blue">🏠</span>
+              <span className="icon blue"><Building2 size={22} /></span>
               <span className="quick-action-label">添加房产</span>
             </Link>
-            <Link href="/dashboard/insurances" className="quick-action-btn">
-              <span className="icon green">🛡️</span>
+            <Link href="/dashboard/insurances/new" className="quick-action-btn">
+              <span className="icon green"><Shield size={22} /></span>
               <span className="quick-action-label">添加保险</span>
             </Link>
             <Link href="/dashboard/properties" className="quick-action-btn">
-              <span className="icon amber">📋</span>
+              <span className="icon amber"><List size={22} /></span>
               <span className="quick-action-label">查看房产</span>
             </Link>
             <Link href="/dashboard/properties" className="quick-action-btn">
-              <span className="icon purple">📄</span>
+              <span className="icon purple"><FileText size={22} /></span>
               <span className="quick-action-label">管理文件</span>
             </Link>
           </div>
@@ -113,7 +114,7 @@ export default async function DashboardPage() {
 
       <Card variant="intense" className="section-panel">
         <div className="section-header">
-          <div className="section-title">🏘️ 最近房产</div>
+          <div className="section-title"><Building2 size={18} style={{ display: "inline", marginRight: 6, verticalAlign: -3 }} />最近房产</div>
           <Link href="/dashboard/properties">
             <Badge color="blue">查看全部 →</Badge>
           </Link>
@@ -153,6 +154,6 @@ export default async function DashboardPage() {
           </div>
         )}
       </Card>
-    </>
+    </div>
   );
 }

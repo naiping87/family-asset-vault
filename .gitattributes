@@ -1,0 +1,2 @@
+*.tsx text eol=lf
+components/**/*.tsx text eol=lf
