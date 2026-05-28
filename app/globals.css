@@ -131,7 +131,7 @@ body::before {
 }
 
 .sidebar {
-  width: 220px;
+  width: 60px;
   height: 100vh;
   position: fixed;
   left: 8px;
@@ -139,8 +139,9 @@ body::before {
   bottom: 68px;
   display: flex;
   flex-direction: column;
-  padding: 24px 16px;
+  padding: 16px 10px;
   overflow-y: auto;
+  overflow-x: hidden;
   background: var(--glass-bg-intense);
   backdrop-filter: blur(40px);
   -webkit-backdrop-filter: blur(40px);
@@ -148,14 +149,80 @@ body::before {
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xl);
   z-index: 100;
+  transition: width 0.2s ease, padding 0.2s ease;
+}
+
+.sidebar:hover,
+.sidebar.expanded {
+  width: 220px;
+  padding: 24px 16px;
 }
 
 .main-content {
-  margin-left: 236px;
+  margin-left: 76px;
   flex: 1;
   padding: 8px 8px 8px 0;
   min-height: 100vh;
+  transition: margin-left 0.2s ease;
 }
+
+/* Hover expand: shift main content */
+body:has(.sidebar:hover:not(.expanded)) .main-content {
+  margin-left: 236px;
+}
+
+/* Locked expanded: permanent shift */
+body:not(.sidebar-collapsed) .main-content {
+  margin-left: 236px;
+}
+
+/* ===== Sidebar text visibility ===== */
+.sidebar .nav-item span:not(.icon),
+.sidebar .logo-text,
+.sidebar .user-name,
+.sidebar .user-email,
+.sidebar .theme-row span,
+.sidebar .logout-btn span:not(.icon) {
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar:hover .nav-item span:not(.icon),
+.sidebar:hover .logo-text,
+.sidebar:hover .user-name,
+.sidebar:hover .user-email,
+.sidebar:hover .theme-row span,
+.sidebar:hover .logout-btn span:not(.icon),
+.sidebar.expanded .nav-item span:not(.icon),
+.sidebar.expanded .logo-text,
+.sidebar.expanded .user-name,
+.sidebar.expanded .user-email,
+.sidebar.expanded .theme-row span,
+.sidebar.expanded .logout-btn span:not(.icon) {
+  opacity: 1;
+}
+
+/* Toggle pin button */
+.sidebar-toggle {
+  display: none;
+  position: absolute;
+  top: 12px;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 2px;
+  z-index: 2;
+  border-radius: 4px;
+}
+.sidebar:hover .sidebar-toggle,
+.sidebar.expanded .sidebar-toggle {
+  display: block;
+}
+.sidebar-toggle:hover { color: var(--text-primary); }
 
 .main-inner {
   padding: 28px 32px 90px 32px;
@@ -778,7 +845,7 @@ body::before {
   display: flex;
   position: fixed;
   bottom: 0;
-  left: 236px;
+  left: 76px;
   right: 0;
   padding: 8px 0;
   justify-content: space-around;
