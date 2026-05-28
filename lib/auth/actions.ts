@@ -33,8 +33,9 @@ export async function signUp(_prevState: unknown, formData: FormData) {
   });
   if (error) return { error: error.message };
 
-  if (data.user?.identities?.length === 0) {
-    redirect("/register/confirm");
+  // If no session, email confirmation is required
+  if (!data.session) {
+    redirect("/register/confirm?email=" + encodeURIComponent(email));
   }
 
   revalidatePath("/", "layout");

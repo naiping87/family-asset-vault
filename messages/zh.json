@@ -61,6 +61,7 @@
     "updating": "更新中...",
     "confirmTitle": "请查收验证邮件",
     "confirmDesc": "我们已向您的邮箱发送了一封验证邮件，请点击邮件中的链接完成注册。",
+    "confirmHint": "如未收到邮件，请检查垃圾邮件箱。",
     "registerAccount": "注册账号",
     "registerDesc": "创建您的家庭资产管理账户"
   },

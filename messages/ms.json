@@ -61,6 +61,7 @@
     "updating": "Mengemas kini...",
     "confirmTitle": "Semak Emel Anda",
     "confirmDesc": "Kami telah menghantar emel pengesahan. Sila klik pautan untuk melengkapkan pendaftaran.",
+    "confirmHint": "Jika tidak diterima, semak folder spam.",
     "registerAccount": "Cipta Akaun",
     "registerDesc": "Cipta akaun pengurusan aset keluarga anda"
   },

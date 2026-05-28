@@ -61,6 +61,7 @@
     "updating": "Updating...",
     "confirmTitle": "Check Your Email",
     "confirmDesc": "We've sent a verification email. Please click the link to complete registration.",
+    "confirmHint": "If you don't see it, check your spam folder.",
     "registerAccount": "Create Account",
     "registerDesc": "Create your family asset management account"
   },
