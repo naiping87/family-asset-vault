@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
@@ -15,101 +16,93 @@ interface Props {
 }
 
 export function InsuranceForm({ properties }: Props) {
+  const t = useTranslations();
   const [state, formAction, isPending] = useActionState(createInsuranceAction, null);
   const [policyFileUrl, setPolicyFileUrl] = useState("");
 
   useEffect(() => {
-    if (state?.error) {
-      showToast(state.error, "error");
-    }
+    if (state?.error) showToast(state.error, "error");
   }, [state]);
 
   return (
     <>
       <div className="breadcrumb">
-        <Link href="/dashboard/insurances">保险列表</Link>
+        <Link href="/dashboard/insurances">{t("insurance.listTitle")}</Link>
         <span>›</span>
-        <span className="current">新增保险</span>
+        <span className="current">{t("insurance.newTitle")}</span>
       </div>
 
       <div className="page-header">
         <div>
-          <div className="page-title">🛡️ 新增保险</div>
-          <div className="page-subtitle">记录保单信息，到期自动提醒</div>
+          <div className="page-title">🛡️ {t("insurance.newTitle")}</div>
+          <div className="page-subtitle">{t("property.saveProperty")}</div>
         </div>
       </div>
 
       <form action={formAction}>
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📋 保单信息</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>📋 {t("insurance.policyInfo")}</div>
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label">保险类型</label>
+              <label className="form-label">{t("insurance.type")}</label>
               <select className="form-input" name="insurance_type" defaultValue="fire" required>
-                <option value="fire">火险</option>
-                <option value="flood">水灾险</option>
-                <option value="home">房屋保险</option>
-                <option value="mortgage">贷款保险</option>
-                <option value="other">其他</option>
+                <option value="fire">{t("insurance.fire")}</option>
+                <option value="flood">{t("insurance.flood")}</option>
+                <option value="home">{t("insurance.home")}</option>
+                <option value="mortgage">{t("insurance.mortgage")}</option>
+                <option value="other">{t("insurance.other")}</option>
               </select>
             </div>
             <div className="form-group">
-              <label className="form-label">关联房产</label>
+              <label className="form-label">{t("insurance.linkedProperty")}</label>
               <select className="form-input" name="property_id" defaultValue="">
-                <option value="">不关联</option>
-                {properties.map((p) => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
+                <option value="">{t("insurance.noProperty")}</option>
+                {properties.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
             </div>
           </div>
           <div className="form-row">
-            <FormInput label="保险公司" name="provider" placeholder="例如：Allianz" required />
-            <FormInput label="保单编号" name="policy_no" placeholder="例如：FL-2026-001" required />
+            <FormInput label={t("insurance.provider")} name="provider" placeholder={t("insurance.providerPlaceholder")} required />
+            <FormInput label={t("insurance.policyNo")} name="policy_no" placeholder={t("insurance.policyNoPlaceholder")} required />
           </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>💰 保额与保费</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>💰 {t("insurance.coverage")}</div>
           <div className="form-row">
-            <FormInput label="保额 (RM)" name="coverage_amount" type="number" placeholder="0.00" required />
-            <FormInput label="年费 (RM)" name="annual_premium" type="number" placeholder="0.00" required />
+            <FormInput label={t("insurance.coverageAmount")} name="coverage_amount" type="number" placeholder="0.00" required />
+            <FormInput label={t("insurance.annualPremium")} name="annual_premium" type="number" placeholder="0.00" required />
           </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>👤 保险代理人</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>👤 {t("insurance.agent")}</div>
           <div className="form-row">
-            <FormInput label="代理人姓名" name="agent_name" placeholder="例如：陈先生" />
-            <FormInput label="代理人电话" name="agent_phone" placeholder="例如：012-3456789" />
+            <FormInput label={t("insurance.agentName")} name="agent_name" placeholder={t("insurance.agentNamePlaceholder")} />
+            <FormInput label={t("insurance.agentPhone")} name="agent_phone" placeholder={t("insurance.agentPhonePlaceholder")} />
           </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📅 有效期限</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>📅 {t("insurance.validity")}</div>
           <div className="form-row">
-            <FormInput label="开始日期" name="start_date" type="date" required />
-            <FormInput label="结束日期" name="end_date" type="date" required />
+            <FormInput label={t("tenancy.startDate")} name="start_date" type="date" required />
+            <FormInput label={t("tenancy.endDate")} name="end_date" type="date" required />
           </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📎 保单文件</div>
-          <FileUpload
-            accept=".pdf,.jpg,.jpeg,.png"
-            existingFiles={policyFileUrl ? [{ id: "", name: "保单文件", size: 0, type: "application/pdf", url: policyFileUrl }] : []}
-            onUploaded={setPolicyFileUrl}
-            onDelete={() => setPolicyFileUrl("")}
-          />
+          <div className="section-title" style={{ marginBottom: 20 }}>📎 {t("insurance.policyFile")}</div>
+          <FileUpload accept=".pdf,.jpg,.jpeg,.png"
+            existingFiles={policyFileUrl ? [{ id: "", name: "Policy", size: 0, type: "application/pdf", url: policyFileUrl }] : []}
+            onUploaded={setPolicyFileUrl} onDelete={() => setPolicyFileUrl("")} />
           <input type="hidden" name="policy_file_url" value={policyFileUrl} />
         </Card>
 
         <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
-          <Link href="/dashboard/insurances">
-            <Button variant="secondary">取消</Button>
-          </Link>
+          <Link href="/dashboard/insurances"><Button variant="secondary">{t("common.cancel")}</Button></Link>
           <Button variant="primary" type="submit" disabled={isPending}>
-            {isPending ? "保存中..." : "保存保单"}
+            {isPending ? t("common.saving") : t("insurance.savePolicy")}
           </Button>
         </div>
       </form>

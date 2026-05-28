@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 import { Icon } from "@/lib/utils/icons";
 import { signOut } from "@/lib/auth/actions";
@@ -12,17 +13,18 @@ interface MobileMenuProps {
   userInfo: { name: string; email: string; initial: string };
 }
 
-const navItems = [
-  { icon: "Dashboard", label: "仪表盘", href: "/dashboard" },
-  { icon: "Properties", label: "我的房产", href: "/dashboard/properties" },
-  { icon: "Shield", label: "我的保险", href: "/dashboard/insurances" },
-  { icon: "Settings", label: "账户设置", href: "/dashboard/settings" },
-];
-
 export function MobileMenu({ open, onClose, userInfo }: MobileMenuProps) {
   const pathname = usePathname();
+  const t = useTranslations();
 
   if (!open) return null;
+
+  const navItems = [
+    { icon: "Dashboard", label: t("nav.dashboard"), href: "/dashboard" },
+    { icon: "Properties", label: t("nav.properties"), href: "/dashboard/properties" },
+    { icon: "Shield", label: t("nav.insurances"), href: "/dashboard/insurances" },
+    { icon: "Settings", label: t("nav.settings"), href: "/dashboard/settings" },
+  ];
 
   return (
     <div className="dialog-overlay" onClick={onClose}>
@@ -52,11 +54,11 @@ export function MobileMenu({ open, onClose, userInfo }: MobileMenuProps) {
             marginBottom: 32,
           }}
         >
-          <div style={{ fontWeight: 700, fontSize: 18 }}>菜单</div>
+          <div style={{ fontWeight: 700, fontSize: 18 }}>{t("nav.menu")}</div>
           <button
             onClick={onClose}
             type="button"
-            aria-label="关闭"
+            aria-label={t("common.close")}
             style={{
               background: "none",
               border: "none",
@@ -97,7 +99,7 @@ export function MobileMenu({ open, onClose, userInfo }: MobileMenuProps) {
           </div>
           <form action={signOut}>
             <button className="logout-btn" type="submit">
-              <span><Icon name="LogOut" size={18} /></span> 退出登录
+              <span><Icon name="LogOut" size={18} /></span> {t("nav.logout")}
             </button>
           </form>
         </div>

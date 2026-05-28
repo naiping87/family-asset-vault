@@ -2,18 +2,20 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils/cn";
 import { Icon } from "@/lib/utils/icons";
 
-const items = [
-  { icon: "Dashboard", label: "仪表盘", href: "/dashboard" },
-  { icon: "Properties", label: "房产", href: "/dashboard/properties" },
-  { icon: "Shield", label: "保险", href: "/dashboard/insurances" },
-  { icon: "Settings", label: "设置", href: "/dashboard/settings" },
-];
-
 export function BottomNav() {
   const pathname = usePathname();
+  const t = useTranslations();
+
+  const items = [
+    { icon: "Dashboard", label: t("nav.dashboard"), href: "/dashboard" },
+    { icon: "Properties", label: t("nav.properties"), href: "/dashboard/properties" },
+    { icon: "Shield", label: t("nav.insurances"), href: "/dashboard/insurances" },
+    { icon: "Settings", label: t("nav.settings"), href: "/dashboard/settings" },
+  ];
 
   return (
     <nav className="bottom-nav glass-intense">
@@ -21,10 +23,7 @@ export function BottomNav() {
         <Link
           key={item.href}
           href={item.href}
-          className={cn(
-            "bottom-nav-item",
-            pathname === item.href && "active"
-          )}
+          className={cn("bottom-nav-item", pathname === item.href && "active")}
         >
           <span className="icon"><Icon name={item.icon} size={20} /></span>
           {item.label}

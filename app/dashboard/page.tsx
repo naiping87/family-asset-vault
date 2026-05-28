@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/Card";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Badge } from "@/components/ui/Badge";
@@ -11,6 +12,7 @@ import { LayoutDashboard, Building2, Wallet, Shield, Plus, List, FileText, Clock
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+  const t = await getTranslations();
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -39,41 +41,41 @@ export default async function DashboardPage() {
         <StatsCard
           icon={<LayoutDashboard size={24} />}
           iconColor="blue"
-          label="总资产估值"
+          label={t("dashboard.totalValue")}
           value={stats ? formatCurrency(stats.total_value) : "RM 0"}
-          sub={stats ? `${stats.total_properties} 处房产` : "暂无数据"}
+          sub={stats ? `${stats.total_properties} ${t("dashboard.propertiesUnit")}` : t("common.noData")}
         />
         <StatsCard
           icon={<Building2 size={24} />}
           iconColor="green"
-          label="房产数量"
+          label={t("dashboard.propertyCount")}
           value={stats ? String(stats.total_properties) : "0"}
-          sub={stats ? `${stats.rented_count} 出租 · ${stats.non_rental_count} 自住 · ${stats.vacant_count} 空置` : "暂无数据"}
+          sub={stats ? `${stats.rented_count} ${t("dashboard.rentedCount")} · ${stats.non_rental_count} ${t("dashboard.occupiedCount")} · ${stats.vacant_count} ${t("dashboard.vacantCount")}` : t("common.noData")}
         />
         <StatsCard
           icon={<Wallet size={24} />}
           iconColor="amber"
-          label="月租金收入"
+          label={t("dashboard.monthlyRental")}
           value={stats ? formatCurrency(stats.monthly_rental_income) : "RM 0"}
-          sub={stats ? `年化 ${formatCurrency(stats.monthly_rental_income * 12)}` : "暂无数据"}
+          sub={stats ? `${t("dashboard.annualRental")} ${formatCurrency(stats.monthly_rental_income * 12)}` : t("common.noData")}
         />
         <StatsCard
           icon={<Shield size={24} />}
           iconColor="purple"
-          label="保单数量"
+          label={t("dashboard.insuranceCount")}
           value={stats ? String(stats.active_insurances) : "0"}
-          sub={stats && stats.active_insurances > 0 ? "管理您的保险" : "暂无保单"}
+          sub={stats && stats.active_insurances > 0 ? t("dashboard.manageInsurance") : t("common.noData")}
         />
       </div>
 
       <div className="content-grid-2">
         <Card variant="intense" className="section-panel">
           <div className="section-header">
-            <div className="section-title"><Clock size={18} style={{ display: "inline", marginRight: 6, verticalAlign: -3 }} />待办提醒</div>
+            <div className="section-title"><Clock size={18} style={{ display: "inline", marginRight: 6, verticalAlign: -3 }} />{t("dashboard.reminders")}</div>
           </div>
           {reminders.length === 0 ? (
             <div style={{ padding: 32, textAlign: "center", color: "var(--text-secondary)" }}>
-              暂无待办事项 🎉
+              {t("dashboard.noReminders")} 🎉
             </div>
           ) : (
             <div className="reminder-list">
@@ -95,24 +97,24 @@ export default async function DashboardPage() {
 
         <Card variant="intense" className="section-panel">
           <div className="section-header">
-            <div className="section-title">⚡ 快速操作</div>
+            <div className="section-title">⚡ {t("dashboard.quickActions")}</div>
           </div>
           <div className="quick-actions">
             <Link href="/dashboard/properties/new" className="quick-action-btn">
               <span className="icon blue"><Building2 size={22} /></span>
-              <span className="quick-action-label">添加房产</span>
+              <span className="quick-action-label">{t("dashboard.addProperty")}</span>
             </Link>
             <Link href="/dashboard/insurances/new" className="quick-action-btn">
               <span className="icon green"><Shield size={22} /></span>
-              <span className="quick-action-label">添加保险</span>
+              <span className="quick-action-label">{t("dashboard.addInsurance")}</span>
             </Link>
             <Link href="/dashboard/properties" className="quick-action-btn">
               <span className="icon amber"><List size={22} /></span>
-              <span className="quick-action-label">查看房产</span>
+              <span className="quick-action-label">{t("dashboard.viewProperties")}</span>
             </Link>
             <Link href="/dashboard/properties" className="quick-action-btn">
               <span className="icon purple"><FileText size={22} /></span>
-              <span className="quick-action-label">管理文件</span>
+              <span className="quick-action-label">{t("dashboard.manageFiles")}</span>
             </Link>
           </div>
         </Card>
@@ -120,39 +122,35 @@ export default async function DashboardPage() {
 
       <Card variant="intense" className="section-panel">
         <div className="section-header">
-          <div className="section-title"><Building2 size={18} style={{ display: "inline", marginRight: 6, verticalAlign: -3 }} />最近房产</div>
+          <div className="section-title"><Building2 size={18} style={{ display: "inline", marginRight: 6, verticalAlign: -3 }} />{t("dashboard.recentProperties")}</div>
           <Link href="/dashboard/properties">
-            <Badge color="blue">查看全部 →</Badge>
+            <Badge color="blue">{t("dashboard.viewAll")} →</Badge>
           </Link>
         </div>
         {recentProperties.length === 0 ? (
           <div style={{ padding: 32, textAlign: "center", color: "var(--text-secondary)" }}>
-            <p style={{ marginBottom: 16 }}>还没有添加房产</p>
+            <p style={{ marginBottom: 16 }}>{t("dashboard.noProperties")}</p>
             <Link href="/dashboard/properties/new">
-              <Badge color="blue">+ 添加第一处房产</Badge>
+              <Badge color="blue">+ {t("dashboard.addFirstProperty")}</Badge>
             </Link>
           </div>
         ) : (
           <div className="content-grid-2">
             {recentProperties.map((p: Record<string, unknown>) => (
-              <Link
-                key={String(p.id)}
-                href={`/dashboard/properties/${p.id}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
+              <Link key={String(p.id)} href={`/dashboard/properties/${p.id}`} style={{ textDecoration: "none", color: "inherit" }}>
                 <PropertyCard
                   name={String(p.name ?? "")}
                   address={[p.city, p.state].filter(Boolean).join(", ") || String(p.address ?? "")}
                   badge={
                     <Badge color={p.status === "rented" ? "green" : p.status === "vacant" ? "amber" : "blue"}>
-                      {p.status === "rented" ? "出租中" : p.status === "vacant" ? "空置" : "自住"}
+                      {p.status === "rented" ? t("status.rented") : p.status === "vacant" ? t("status.vacant") : t("status.occupied")}
                     </Badge>
                   }
                   finance={[
-                    { label: "估值", value: formatCurrency(Number(p.current_value) || 0) },
+                    { label: t("property.valuation"), value: formatCurrency(Number(p.current_value) || 0) },
                     ...(p.status === "rented"
-                      ? [{ label: "月租", value: formatCurrency(0) }]
-                      : [{ label: "贷款余额", value: formatCurrency(Number(p.loan_balance) || 0) }]),
+                      ? [{ label: t("property.monthlyRent"), value: formatCurrency(0) }]
+                      : [{ label: t("property.loanBalance"), value: formatCurrency(Number(p.loan_balance) || 0) }]),
                   ]}
                 />
               </Link>

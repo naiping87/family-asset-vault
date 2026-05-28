@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Icon } from "@/lib/utils/icons";
 
 export function ThemeToggle() {
+  const t = useTranslations();
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export function ThemeToggle() {
   return (
     <div className="theme-row" onClick={toggle}>
       <Icon name={isDark ? "Moon" : "Sun"} size={18} />
-      <span>{isDark ? "暗色模式" : "亮色模式"}</span>
+      <span>{isDark ? t("theme.dark") : t("theme.light")}</span>
       <div className={`theme-toggle ${isDark ? "on" : ""}`}>
         <div className="theme-toggle-knob" />
       </div>

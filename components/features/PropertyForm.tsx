@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
@@ -19,21 +20,20 @@ interface Props {
 }
 
 export function PropertyForm({ property, mode }: Props) {
+  const t = useTranslations();
   const serverAction = mode === "new" ? createPropertyAction : updatePropertyAction.bind(null, property?.id ?? "");
   const [state, formAction, isPending] = useActionState(serverAction, null);
   const [spaFileUrl, setSpaFileUrl] = useState(property?.spa_file_url ?? "");
   const [geranFileUrl, setGeranFileUrl] = useState(property?.geran_file_url ?? "");
 
   useEffect(() => {
-    if (state?.error) {
-      showToast(state.error, "error");
-    }
+    if (state?.error) { showToast(state.error, "error"); }
   }, [state]);
 
   return (
     <>
       <div className="breadcrumb">
-        <Link href="/dashboard/properties">房产列表</Link>
+        <Link href="/dashboard/properties">{t("property.listTitle")}</Link>
         <span>›</span>
         {mode === "edit" && property ? (
           <>
@@ -41,130 +41,96 @@ export function PropertyForm({ property, mode }: Props) {
             <span>›</span>
           </>
         ) : null}
-        <span className="current">{mode === "new" ? "新增房产" : "编辑"}</span>
+        <span className="current">{mode === "new" ? t("property.newTitle") : t("property.editTitle")}</span>
       </div>
 
       <div className="page-header">
         <div>
-          <div className="page-title">{mode === "new" ? "🏠 新增房产" : "✏️ 编辑房产"}</div>
-          <div className="page-subtitle">
-            {mode === "new" ? "填写房产信息，支持地图定位选点" : property?.name}
-          </div>
+          <div className="page-title">{mode === "new" ? `🏠 ${t("property.newTitle")}` : `✏️ ${t("property.editTitle")}`}</div>
+          <div className="page-subtitle">{mode === "new" ? t("property.saveProperty") : property?.name}</div>
         </div>
       </div>
 
       <form action={formAction}>
         <div className="content-grid-2" style={{ marginBottom: 28 }}>
           <Card variant="intense" className="section-panel">
-            <div className="section-title" style={{ marginBottom: 20 }}>📋 基本信息</div>
-            <FormInput
-              label="房产名称" name="name" placeholder="例如：SkyVue 高级公寓"
-              defaultValue={property?.name ?? ""} required
-            />
+            <div className="section-title" style={{ marginBottom: 20 }}>📋 {t("property.basicInfo")}</div>
+            <FormInput label={t("property.name")} name="name" placeholder={t("property.namePlaceholder")} defaultValue={property?.name ?? ""} required />
             <div className="form-row">
               <div className="form-group">
-                <label className="form-label">房产类型</label>
+                <label className="form-label">{t("property.type")}</label>
                 <select className="form-input" name="property_type" defaultValue={property?.property_type ?? "apartment"}>
-                  <option value="apartment">公寓</option>
-                  <option value="landed">有地房产</option>
-                  <option value="land">土地</option>
-                  <option value="shop">商铺</option>
-                  <option value="factory">工厂</option>
+                  <option value="apartment">{t("property.apartment")}</option>
+                  <option value="landed">{t("property.landed")}</option>
+                  <option value="land">{t("property.land")}</option>
+                  <option value="shop">{t("property.shop")}</option>
+                  <option value="factory">{t("property.factory")}</option>
                 </select>
               </div>
-              <FormInput
-                label="地契编号" name="title_deed_no" placeholder="HS(D) 12345/2020"
-                defaultValue={property?.title_deed_no ?? ""}
-              />
+              <FormInput label={t("property.titleDeed")} name="title_deed_no" placeholder={t("property.titleDeedPlaceholder")} defaultValue={property?.title_deed_no ?? ""} />
             </div>
             <div className="form-row">
-              <FormInput label="城市" name="city" placeholder="Kuala Lumpur" defaultValue={property?.city ?? ""} />
-              <FormInput label="州属" name="state" placeholder="Selangor" defaultValue={property?.state ?? ""} />
+              <FormInput label={t("property.city")} name="city" placeholder={t("property.cityPlaceholder")} defaultValue={property?.city ?? ""} />
+              <FormInput label={t("property.state")} name="state" placeholder={t("property.statePlaceholder")} defaultValue={property?.state ?? ""} />
             </div>
-            <FormInput
-              label="详细地址" name="address" placeholder="Jalan, Taman, Poskod"
-              defaultValue={property?.address ?? ""}
-            />
-            <FormInput
-              label="邮编号码" name="postcode" placeholder="47300"
-              defaultValue={property?.postcode ?? ""}
-            />
+            <FormInput label={t("property.address")} name="address" placeholder={t("property.addressPlaceholder")} defaultValue={property?.address ?? ""} />
+            <FormInput label={t("property.postcode")} name="postcode" placeholder={t("property.postcodePlaceholder")} defaultValue={property?.postcode ?? ""} />
           </Card>
 
           <Card variant="intense" className="section-panel">
-            <div className="section-title" style={{ marginBottom: 20 }}>📍 地图定位</div>
+            <div className="section-title" style={{ marginBottom: 20 }}>📍 {t("property.map")}</div>
             <MapPlaceholder />
           </Card>
         </div>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>💰 财务信息</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>💰 {t("property.finance")}</div>
           <div className="form-row-3">
-            <FormInput
-              label="购买价格" name="purchase_price" type="number" placeholder="0.00"
-              defaultValue={property?.purchase_price ? String(property.purchase_price) : ""}
-            />
-            <FormInput
-              label="当前估值" name="current_value" type="number" placeholder="0.00"
-              defaultValue={property?.current_value ? String(property.current_value) : ""}
-            />
-            <FormInput
-              label="贷款余额" name="loan_balance" type="number" placeholder="0.00"
-              defaultValue={property?.loan_balance ? String(property.loan_balance) : ""}
-            />
+            <FormInput label={t("property.purchasePrice")} name="purchase_price" type="number" placeholder="0.00" defaultValue={property?.purchase_price ? String(property.purchase_price) : ""} />
+            <FormInput label={t("property.currentValue")} name="current_value" type="number" placeholder="0.00" defaultValue={property?.current_value ? String(property.current_value) : ""} />
+            <FormInput label={t("property.loanBalance")} name="loan_balance" type="number" placeholder="0.00" defaultValue={property?.loan_balance ? String(property.loan_balance) : ""} />
           </div>
           <div style={{ marginTop: 16 }}>
-            <FormInput
-              label="贷款银行" name="loan_bank" placeholder="例如：Maybank"
-              defaultValue={property?.loan_bank ?? ""}
-            />
+            <FormInput label={t("property.loanBank")} name="loan_bank" placeholder={t("property.loanBankPlaceholder")} defaultValue={property?.loan_bank ?? ""} />
           </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📄 法律文件</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>📄 {t("property.legalDocs")}</div>
           <div style={{ marginBottom: 16 }}>
-            <label className="form-label">SPA 买卖合同</label>
-            <FileUpload
-              propertyId={property?.id}
-              accept=".pdf,.jpg,.jpeg,.png"
-              existingFiles={spaFileUrl ? [{ id: "", name: "SPA文件", size: 0, type: "application/pdf", url: spaFileUrl }] : []}
-              onUploaded={setSpaFileUrl}
-              onDelete={() => setSpaFileUrl("")}
-            />
+            <label className="form-label">{t("property.spaFile")}</label>
+            <FileUpload propertyId={property?.id} accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={spaFileUrl ? [{ id: "", name: "SPA", size: 0, type: "application/pdf", url: spaFileUrl }] : []}
+              onUploaded={setSpaFileUrl} onDelete={() => setSpaFileUrl("")} />
             <input type="hidden" name="spa_file_url" value={spaFileUrl} />
           </div>
           <div>
-            <label className="form-label">地契 / Geran</label>
-            <FileUpload
-              propertyId={property?.id}
-              accept=".pdf,.jpg,.jpeg,.png"
-              existingFiles={geranFileUrl ? [{ id: "", name: "地契文件", size: 0, type: "application/pdf", url: geranFileUrl }] : []}
-              onUploaded={setGeranFileUrl}
-              onDelete={() => setGeranFileUrl("")}
-            />
+            <label className="form-label">{t("property.geranFile")}</label>
+            <FileUpload propertyId={property?.id} accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={geranFileUrl ? [{ id: "", name: "Geran", size: 0, type: "application/pdf", url: geranFileUrl }] : []}
+              onUploaded={setGeranFileUrl} onDelete={() => setGeranFileUrl("")} />
             <input type="hidden" name="geran_file_url" value={geranFileUrl} />
           </div>
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📊 状态</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>📊 {t("property.status")}</div>
           <div className="form-group">
             <select className="form-input" name="status" defaultValue={property?.status ?? "vacant"}>
-              <option value="rented">出租中</option>
-              <option value="non_rental">自住</option>
-              <option value="vacant">空置</option>
-              <option value="sold">已售</option>
+              <option value="rented">{t("property.rented")}</option>
+              <option value="non_rental">{t("property.occupied")}</option>
+              <option value="vacant">{t("property.vacant")}</option>
+              <option value="sold">{t("property.sold")}</option>
             </select>
           </div>
         </Card>
 
         <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
           <Link href={property ? "/dashboard/properties/" + property.id : "/dashboard/properties"}>
-            <Button variant="secondary">取消</Button>
+            <Button variant="secondary">{t("common.cancel")}</Button>
           </Link>
           <Button variant="primary" type="submit" disabled={isPending}>
-            {isPending ? "保存中..." : mode === "new" ? "保存房产" : "保存更改"}
+            {isPending ? t("common.saving") : mode === "new" ? t("property.saveProperty") : t("property.saveChanges")}
           </Button>
         </div>
       </form>

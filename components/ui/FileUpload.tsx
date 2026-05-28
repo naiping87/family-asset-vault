@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { uploadFileAction, deleteFileAction } from "@/app/actions/files";
 import { showToast } from "@/components/ui/Toast";
 
@@ -39,6 +40,7 @@ export function FileUpload({
   onUploaded,
   onDelete,
 }: FileUploadProps) {
+  const t = useTranslations();
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [files, setFiles] = useState<UploadedFile[]>(existingFiles);
@@ -54,7 +56,7 @@ export function FileUpload({
       const result = await uploadFileAction(formData);
 
       if (result.error) {
-        showToast("上传失败: " + result.error, "error");
+        showToast(t("upload.failed") + result.error, "error");
         return;
       }
 
@@ -72,7 +74,7 @@ export function FileUpload({
     } finally {
       setUploading(false);
     }
-  }, [propertyId, onUploaded]);
+  }, [propertyId, onUploaded, t]);
 
   const handleDelete = useCallback(async (fileId: string) => {
     if (!fileId) {
@@ -82,14 +84,14 @@ export function FileUpload({
 
     const result = await deleteFileAction(fileId);
     if (result.error) {
-      showToast("删除失败: " + result.error, "error");
+      showToast(t("upload.deleteFailed") + result.error, "error");
       return;
     }
 
     setFiles((prev) => prev.filter((f) => f.id !== fileId));
     onDelete?.(fileId);
-    showToast("文件已删除", "success");
-  }, [onDelete]);
+    showToast(t("upload.deleted"), "success");
+  }, [onDelete, t]);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
@@ -116,73 +118,25 @@ export function FileUpload({
           ...(uploading ? { opacity: 0.6, pointerEvents: "none" } : {}),
         }}
       >
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept={accept}
-          style={{ display: "none" }}
-          onChange={handleChange}
-        />
+        <input ref={fileInputRef} type="file" accept={accept} style={{ display: "none" }} onChange={handleChange} />
         <div className="upload-icon">{uploading ? "⏳" : "📁"}</div>
         <div className="upload-text">
-          {uploading ? "上传中..." : dragOver ? "松开以上传" : "拖拽文件到此处或点击上传"}
+          {uploading ? t("upload.uploading") : dragOver ? t("upload.dropText") : t("upload.dragText")}
         </div>
-        <div className="upload-hint">
-          {accept ? `支持 ${accept} · 单文件最大 10MB` : "支持 PDF、图片 · 单文件最大 10MB"}
-        </div>
+        <div className="upload-hint">{t("upload.hint")}</div>
       </div>
 
       {files.length > 0 && (
         <div style={{ marginTop: 12 }}>
           {files.map((file) => (
-            <div
-              key={file.id || file.name}
-              className="file-item"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 12px",
-                borderRadius: "var(--radius)",
-                background: "var(--glass-bg-subtle)",
-                border: "1px solid var(--glass-border)",
-                marginBottom: 6,
-                fontSize: 14,
-              }}
-            >
+            <div key={file.id || file.name} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 12px", borderRadius: "var(--radius)", background: "var(--glass-bg-subtle)", border: "1px solid var(--glass-border)", marginBottom: 6, fontSize: 14 }}>
               <span style={{ fontSize: 20 }}>{fileIcon(file.type)}</span>
-              <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {file.name}
-              </span>
-              <span style={{ color: "var(--text-muted)", fontSize: 12, flexShrink: 0 }}>
-                {formatSize(file.size)}
-              </span>
-              <a
-                href={file.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  color: "var(--brand)",
-                  fontSize: 13,
-                  flexShrink: 0,
-                  cursor: "pointer",
-                }}
-              >
-                查看
+              <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{file.name}</span>
+              <span style={{ color: "var(--text-muted)", fontSize: 12, flexShrink: 0 }}>{formatSize(file.size)}</span>
+              <a href={file.url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand)", fontSize: 13, flexShrink: 0 }}>
+                {t("common.view")}
               </a>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); handleDelete(file.id); }}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: "var(--text-muted)",
-                  cursor: "pointer",
-                  fontSize: 16,
-                  padding: "2px 4px",
-                  flexShrink: 0,
-                }}
-              >
+              <button type="button" onClick={(e) => { e.stopPropagation(); handleDelete(file.id); }} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: 16, padding: "2px 4px", flexShrink: 0 }}>
                 ✕
               </button>
             </div>
