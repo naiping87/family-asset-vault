@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { getLocale } from "@/lib/i18n/server";
+import { ToastContainer } from "@/components/ui/Toast";
 import "./globals.css";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <I18nProvider locale={locale}>
           {children}
         </I18nProvider>
+        <ToastContainer />
       </body>
     </html>
   );

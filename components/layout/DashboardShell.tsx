@@ -5,7 +5,6 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { MobileMenu } from "@/components/layout/MobileMenu";
-import { ToastContainer } from "@/components/ui/Toast";
 
 interface Props {
   userInfo: { name: string; email: string; initial: string };
@@ -25,7 +24,6 @@ export function DashboardShell({ userInfo, children }: Props) {
       <div className="main-content">
         <div className="main-inner">{children}</div>
       </div>
-      <ToastContainer />
     </div>
   );
 }
