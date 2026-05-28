@@ -916,6 +916,7 @@ body::before {
 /* ===== Hide/Show by screen ===== */
 .desktop-only { display: block; }
 .mobile-only { display: none; }
+.desktop-hidden { display: none; }
 
 /* ===== Page Switching ===== */
 .page { display: none; }
@@ -1051,12 +1052,15 @@ body::before {
 @media (max-width: 1023px) {
   .sidebar { display: none; }
   .top-bar { display: flex; }
-  .bottom-nav { left: 0; }
+  .bottom-nav { left: 0; padding: 6px 0; }
+  .bottom-nav-item { padding: 4px 12px; gap: 2px; font-size: 11px; }
+  .bottom-nav-item .icon svg { width: 18px; height: 18px; }
   .desktop-only { display: none; }
   .mobile-only { display: block; }
+  .desktop-hidden { display: flex; }
 
   .main-content { margin-left: 0; padding: 0; }
-  .main-inner { padding: 16px 16px 100px 16px; }
+  .main-inner { padding: 16px 16px 70px 16px; }
 
   .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .content-grid-2 { grid-template-columns: 1fr; gap: 12px; }

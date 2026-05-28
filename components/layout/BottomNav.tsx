@@ -18,7 +18,7 @@ export function BottomNav() {
   ];
 
   return (
-    <nav className="bottom-nav glass-intense">
+    <nav className="bottom-nav glass-intense desktop-hidden">
       {items.map((item) => (
         <Link
           key={item.href}

@@ -18,7 +18,7 @@ export function DashboardShell({ userInfo, children }: Props) {
     <div className="app-container">
       <Sidebar userInfo={userInfo} />
       <TopBar onMenuToggle={() => setMenuOpen(true)} />
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} userInfo={userInfo} />
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
       <BottomNav />
 
       <div className="main-content">
