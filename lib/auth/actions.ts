@@ -73,3 +73,28 @@ export async function updatePassword(_prevState: unknown, formData: FormData) {
   revalidatePath("/", "layout");
   redirect("/login");
 }
+
+export async function changePassword(_prevState: unknown, formData: FormData) {
+  const supabase = await createClient();
+  const currentPassword = formData.get("current_password") as string;
+  const newPassword = formData.get("new_password") as string;
+
+  if (!currentPassword) return { error: "请输入当前密码" };
+  const pwError = validatePassword(newPassword);
+  if (pwError) return { error: pwError };
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) return { error: "未登录" };
+
+  // Re-authenticate first, then update password
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword,
+  });
+  if (signInError) return { error: "当前密码错误" };
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) return { error: error.message };
+
+  return { success: "密码修改成功" };
+}

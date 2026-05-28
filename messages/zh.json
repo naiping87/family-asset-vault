@@ -237,7 +237,11 @@
     "logout": "退出登录",
     "logoutNote": "安全退出当前账户",
     "logoutButton": "退出",
-    "save": "保存更改"
+    "save": "保存更改",
+    "changePassword": "修改密码",
+    "currentPassword": "当前密码",
+    "newPassword": "新密码",
+    "updatePassword": "更新密码"
   },
   "theme": {
     "dark": "暗色模式",

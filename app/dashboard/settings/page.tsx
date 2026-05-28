@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getT } from "@/lib/i18n/server";
+import { ChangePasswordForm } from "@/components/features/ChangePasswordForm";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -77,7 +78,8 @@ export default async function SettingsPage() {
 
       <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
         <div className="section-title" style={{ marginBottom: 20 }}>🔐 {t("settings.account")}</div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <ChangePasswordForm />
+        <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid var(--glass-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
             <div style={{ fontWeight: 600 }}>{t("settings.logout")}</div>
             <div style={{ fontSize: 13, color: "var(--text-secondary)" }}>{t("settings.logoutNote")}</div>

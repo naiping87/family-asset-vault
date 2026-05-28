@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { translate, type Locale, defaultLocale } from "./messages";
 
 interface I18nContextValue {
@@ -16,9 +16,13 @@ const I18nContext = createContext<I18nContextValue>({
 });
 
 export function I18nProvider({ locale: initialLocale, children }: { locale: string; children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(
-    (["zh", "en", "ms"].includes(initialLocale) ? initialLocale : "zh") as Locale
-  );
+  const validLocale: Locale = (["zh", "en", "ms"].includes(initialLocale) ? initialLocale : "zh") as Locale;
+  const [locale, setLocaleState] = useState<Locale>(validLocale);
+
+  // Sync state when server-side locale changes (e.g. after settings save + redirect)
+  useEffect(() => {
+    setLocaleState(validLocale);
+  }, [initialLocale]);
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);

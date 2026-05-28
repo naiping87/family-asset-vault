@@ -237,7 +237,11 @@
     "logout": "Log Keluar",
     "logoutNote": "Log keluar dengan selamat",
     "logoutButton": "Log Keluar",
-    "save": "Simpan Perubahan"
+    "save": "Simpan Perubahan",
+    "changePassword": "Tukar Kata Laluan",
+    "currentPassword": "Kata Laluan Semasa",
+    "newPassword": "Kata Laluan Baharu",
+    "updatePassword": "Kemas Kini Kata Laluan"
   },
   "theme": {
     "dark": "Mod Gelap",

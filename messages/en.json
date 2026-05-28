@@ -237,7 +237,11 @@
     "logout": "Logout",
     "logoutNote": "Securely sign out of your account",
     "logoutButton": "Logout",
-    "save": "Save Changes"
+    "save": "Save Changes",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "updatePassword": "Update Password"
   },
   "theme": {
     "dark": "Dark Mode",
