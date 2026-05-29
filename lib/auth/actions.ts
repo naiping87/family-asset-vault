@@ -6,7 +6,8 @@ import { revalidatePath } from "next/cache";
 import { validatePassword } from "@/lib/auth/validation";
 
 function isNextRedirect(e: unknown): boolean {
-  return e instanceof Error && "digest" in e && (e as Record<string, unknown>).digest === "NEXT_REDIRECT";
+  if (!(e instanceof Error)) return false;
+  return e.message === "NEXT_REDIRECT" || (e as unknown as Record<string, unknown>).digest === "NEXT_REDIRECT";
 }
 
 export async function signIn(_prevState: unknown, formData: FormData) {
