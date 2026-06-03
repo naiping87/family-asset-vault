@@ -5,50 +5,56 @@ import { createClient } from "@/lib/supabase/server";
 const SIGNED_URL_EXPIRY = 60 * 60 * 24 * 7; // 7 days
 
 export async function uploadFileAction(formData: FormData) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { error: "未登录" };
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { error: "未登录" };
 
-  const file = formData.get("file") as File;
-  const propertyId = (formData.get("property_id") as string) || null;
+    const file = formData.get("file") as File;
+    const propertyId = (formData.get("property_id") as string) || null;
 
-  if (!file) return { error: "未选择文件" };
+    if (!file) return { error: "未选择文件" };
 
-  const bucket = "files";
-  const filePath = `${user.id}/${Date.now()}-${file.name}`;
+    const bucket = "files";
+    const filePath = `${user.id}/${Date.now()}-${file.name}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from(bucket)
-    .upload(filePath, file);
+    const { error: uploadError } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file);
 
-  if (uploadError) return { error: uploadError.message };
+    if (uploadError) return { error: uploadError.message };
 
-  const { data: signedData, error: signedError } = await supabase.storage
-    .from(bucket)
-    .createSignedUrl(filePath, SIGNED_URL_EXPIRY);
+    const { data: signedData, error: signedError } = await supabase.storage
+      .from(bucket)
+      .createSignedUrl(filePath, SIGNED_URL_EXPIRY);
 
-  if (signedError || !signedData?.signedUrl) return { error: "获取文件链接失败" };
+    if (signedError || !signedData?.signedUrl) {
+      return { error: "获取文件链接失败: " + (signedError?.message || "未知错误") };
+    }
 
-  const { data, error } = await supabase
-    .from("files")
-    .insert({
-      user_id: user.id,
-      property_id: propertyId,
-      bucket_name: bucket,
-      file_path: filePath,
-      file_name: file.name,
-      file_size: file.size,
-      mime_type: file.type,
-    })
-    .select()
-    .single();
+    const { data, error } = await supabase
+      .from("files")
+      .insert({
+        user_id: user.id,
+        property_id: propertyId,
+        bucket_name: bucket,
+        file_path: filePath,
+        file_name: file.name,
+        file_size: file.size,
+        mime_type: file.type,
+      })
+      .select()
+      .single();
 
-  if (error) return { error: error.message };
+    if (error) return { error: error.message };
 
-  return {
-    url: signedData.signedUrl,
-    file: { id: data.id, name: file.name, size: file.size, type: file.type } as UploadedFileInfo,
-  };
+    return {
+      url: signedData.signedUrl,
+      file: { id: data.id, name: file.name, size: file.size, type: file.type } as UploadedFileInfo,
+    };
+  } catch (e) {
+    return { error: "上传失败: " + (e instanceof Error ? e.message : "未知错误") };
+  }
 }
 
 export async function deleteFileAction(id: string) {

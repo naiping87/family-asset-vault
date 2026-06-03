@@ -73,7 +73,11 @@ export function FileUpload({
         };
         setFiles((prev) => [...prev, newFile]);
         onUploaded?.(result.url);
+      } else {
+        showToast(t("upload.failed") + "未获取到文件链接", "error");
       }
+    } catch (e) {
+      showToast(t("upload.failed") + (e instanceof Error ? e.message : "上传出错"), "error");
     } finally {
       setUploading(false);
       onUploadingChange?.(false);
