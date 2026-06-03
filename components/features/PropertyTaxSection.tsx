@@ -23,6 +23,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
   const [showForm, setShowForm] = useState(false);
   const [pending, startTransition] = useTransition();
   const [receiptUrl, setReceiptUrl] = useState("");
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const taxTypeLabels: Record<string, string> = {
     cukai_tanah: t("tax.cukaiTanah"), cukai_pintu: t("tax.cukaiPintu"), cukai_petak: t("tax.cukaiPetak"), other: t("insurance.other"),
@@ -114,11 +115,11 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
             <label className="form-label">{t("tax.receiptFile")}</label>
             <FileUpload propertyId={propertyId} accept=".pdf,.jpg,.jpeg,.png"
               existingFiles={receiptUrl ? [{ id: "", name: "receipt", size: 0, type: "application/pdf", url: receiptUrl }] : []}
-              onUploaded={setReceiptUrl} onDelete={() => setReceiptUrl("")} />
+              onUploaded={setReceiptUrl} onDelete={() => setReceiptUrl("")} onUploadingChange={setUploadingFile} />
             <input type="hidden" name="receipt_url" value={receiptUrl} />
           </div>
           <div style={{ marginTop: 12 }}>
-            <Button variant="primary" size="sm" type="submit" disabled={pending}>{t("common.save")}</Button>
+            <Button variant="primary" size="sm" type="submit" disabled={pending || uploadingFile}>{uploadingFile ? t("upload.uploading") : t("common.save")}</Button>
           </div>
         </form>
       )}

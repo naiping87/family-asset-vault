@@ -19,6 +19,7 @@ interface FileUploadProps {
   existingFiles?: UploadedFile[];
   onUploaded?: (url: string) => void;
   onDelete?: (id: string) => void;
+  onUploadingChange?: (uploading: boolean) => void;
 }
 
 function formatSize(bytes: number): string {
@@ -39,6 +40,7 @@ export function FileUpload({
   existingFiles = [],
   onUploaded,
   onDelete,
+  onUploadingChange,
 }: FileUploadProps) {
   const { t } = useT();
   const [uploading, setUploading] = useState(false);
@@ -48,6 +50,7 @@ export function FileUpload({
 
   const handleUpload = useCallback(async (file: File) => {
     setUploading(true);
+    onUploadingChange?.(true);
     try {
       const formData = new FormData();
       formData.set("file", file);
@@ -73,8 +76,9 @@ export function FileUpload({
       }
     } finally {
       setUploading(false);
+      onUploadingChange?.(false);
     }
-  }, [propertyId, onUploaded, t]);
+  }, [propertyId, onUploaded, onUploadingChange, t]);
 
   const handleDelete = useCallback(async (fileId: string) => {
     if (!fileId) {
