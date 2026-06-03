@@ -1135,7 +1135,7 @@ body:not(.sidebar-collapsed) .main-content {
   .mobile-only { display: block; }
   .desktop-hidden { display: flex; }
 
-  .main-content { margin-left: 0; padding: 0; }
+  .main-content { margin-left: 0 !important; padding: 0; }
   .main-inner { padding: 12px 12px 60px 12px; }
 
   .section-panel { padding: 16px !important; }
