@@ -15,13 +15,17 @@ export function DashboardShell({ userInfo, children }: Props) {
 
   return (
     <div className="app-container">
-      <TopBar onMenuToggle={() => setMenuOpen(true)} userInitial={userInfo.initial} />
+      <TopBar
+        onMenuToggle={() => setMenuOpen(true)}
+        userInitial={userInfo.initial}
+        userName={userInfo.name}
+      />
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} userInfo={userInfo} />
       <BottomNav />
 
-      <div className="main-content">
+      <main className="main-content">
         <div className="main-inner">{children}</div>
-      </div>
+      </main>
     </div>
   );
 }

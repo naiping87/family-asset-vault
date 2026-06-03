@@ -1,41 +1,78 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/lib/utils/icons";
+import { cn } from "@/lib/utils/cn";
 
 interface TopBarProps {
   onMenuToggle: () => void;
-  userInitial?: string;
+  userInitial: string;
+  userName: string;
 }
 
-const titles: Record<string, string> = {
-  "/dashboard": "仪表盘",
-  "/dashboard/properties": "房产",
-  "/dashboard/insurances": "保险",
-  "/dashboard/settings": "设置",
-};
+const links = [
+  { href: "/dashboard", label: "仪表盘", icon: "Dashboard" },
+  { href: "/dashboard/properties", label: "房产", icon: "Properties" },
+  { href: "/dashboard/insurances", label: "保险", icon: "Insurance" },
+];
 
-export function TopBar({ onMenuToggle, userInitial }: TopBarProps) {
+export function TopBar({ onMenuToggle, userInitial, userName }: TopBarProps) {
   const pathname = usePathname();
 
-  let title = "Family Asset Vault";
-  for (const [path, label] of Object.entries(titles)) {
-    if (pathname.startsWith(path)) { title = label; break; }
-  }
-
   return (
-    <div className="top-bar glass-intense">
-      <button className="btn btn-secondary btn-icon" onClick={onMenuToggle} type="button" aria-label="菜单">
-        <Icon name="Menu" size={22} />
-      </button>
-      <span style={{ fontWeight: 700, fontSize: 17 }}>{title}</span>
-      {userInitial ? (
-        <div className="user-avatar" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 13 }}>
+    <header className="top-bar glass-intense">
+      {/* Left: Logo + Desktop Nav */}
+      <div className="top-bar-left">
+        <button
+          className="btn btn-secondary btn-icon hamburger-btn"
+          onClick={onMenuToggle}
+          type="button"
+          aria-label="菜单"
+        >
+          <Icon name="Menu" size={22} />
+        </button>
+
+        <Link href="/dashboard" className="top-bar-logo">
+          <div className="logo-icon" style={{ width: 34, height: 34, borderRadius: 8, fontSize: 18 }}>
+            🏰
+          </div>
+          <span style={{ fontWeight: 700, fontSize: 16, display: "none" }} className="logo-text-desktop">
+            Family Asset Vault
+          </span>
+        </Link>
+
+        <nav className="top-bar-nav">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={cn("top-bar-link", pathname.startsWith(link.href) && "active")}
+            >
+              <Icon name={link.icon} size={18} />
+              <span>{link.label}</span>
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      {/* Right: Settings + User */}
+      <div className="top-bar-right">
+        <Link
+          href="/dashboard/settings"
+          className={cn("top-bar-link", pathname === "/dashboard/settings" && "active")}
+        >
+          <Icon name="Settings" size={18} />
+          <span className="desktop-only-inline">设置</span>
+        </Link>
+
+        <div className="user-avatar" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 13, flexShrink: 0 }}>
           {userInitial}
         </div>
-      ) : (
-        <div style={{ width: 40 }} />
-      )}
-    </div>
+        <span className="desktop-only-inline" style={{ fontSize: 13, fontWeight: 600, color: "var(--text-primary)" }}>
+          {userName}
+        </span>
+      </div>
+    </header>
   );
 }
