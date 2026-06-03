@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from "react";
 import { useT } from "@/lib/i18n/provider";
-import { uploadFileAction, deleteFileAction } from "@/app/actions/files";
+import { createClient } from "@/lib/supabase/client";
 import { showToast } from "@/components/ui/Toast";
 
 export interface UploadedFile {
@@ -48,69 +48,90 @@ export function FileUpload({
   const [files, setFiles] = useState<UploadedFile[]>(existingFiles);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleUpload = useCallback(async (file: File) => {
+  const doUpload = useCallback(async (file: File) => {
     setUploading(true);
     onUploadingChange?.(true);
     try {
-      const formData = new FormData();
-      formData.set("file", file);
-      if (propertyId) formData.set("property_id", propertyId);
+      const supabase = createClient();
 
-      const result = await uploadFileAction(formData);
-
-      if (result.error) {
-        showToast(t("upload.failed") + result.error, "error");
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        showToast(t("upload.failed") + "未登录", "error");
         return;
       }
 
-      if (result.url) {
-        const newFile: UploadedFile = {
-          id: result.file?.id ?? "",
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          url: result.url,
-        };
-        setFiles((prev) => [...prev, newFile]);
-        onUploaded?.(result.url);
-      } else {
-        showToast(t("upload.failed") + "未获取到文件链接", "error");
+      // Upload directly to Supabase Storage (bypasses Vercel body limit)
+      const bucket = "files";
+      const filePath = `${user.id}/${Date.now()}-${file.name}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from(bucket)
+        .upload(filePath, file);
+
+      if (uploadError) {
+        showToast(t("upload.failed") + uploadError.message, "error");
+        return;
       }
+
+      // Get signed URL
+      const { data: signedData } = await supabase.storage
+        .from(bucket)
+        .createSignedUrl(filePath, 60 * 60 * 24 * 7);
+
+      if (!signedData?.signedUrl) {
+        showToast(t("upload.failed") + "无法获取文件链接", "error");
+        return;
+      }
+
+      // Tell parent form about the URL
+      onUploaded?.(signedData.signedUrl);
+
+      // Add to local file list
+      setFiles((prev) => [...prev, {
+        id: filePath,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url: signedData.signedUrl,
+      }]);
     } catch (e) {
       showToast(t("upload.failed") + (e instanceof Error ? e.message : "上传出错"), "error");
     } finally {
       setUploading(false);
       onUploadingChange?.(false);
     }
-  }, [propertyId, onUploaded, onUploadingChange, t]);
+  }, [onUploaded, onUploadingChange, t]);
 
   const handleDelete = useCallback(async (fileId: string) => {
     if (!fileId) {
       setFiles((prev) => prev.filter((f) => f.id !== fileId));
       return;
     }
-
-    const result = await deleteFileAction(fileId);
-    if (result.error) {
-      showToast(t("upload.deleteFailed") + result.error, "error");
-      return;
+    try {
+      const supabase = createClient();
+      // Remove from storage
+      await supabase.storage.from("files").remove([fileId]);
+      setFiles((prev) => prev.filter((f) => f.id !== fileId));
+      onDelete?.(fileId);
+      showToast(t("upload.deleted"), "success");
+    } catch (e) {
+      showToast(t("upload.deleteFailed") + (e instanceof Error ? e.message : ""), "error");
     }
-
-    setFiles((prev) => prev.filter((f) => f.id !== fileId));
-    onDelete?.(fileId);
-    showToast(t("upload.deleted"), "success");
   }, [onDelete, t]);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
     setDragOver(false);
     const file = e.dataTransfer.files?.[0];
-    if (file) handleUpload(file);
+    if (file) doUpload(file);
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    if (file) handleUpload(file);
+    if (file) doUpload(file);
+    // Reset so same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   return (
