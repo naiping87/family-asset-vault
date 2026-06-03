@@ -10,9 +10,10 @@ import { signOut } from "@/lib/auth/actions";
 interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
+  userInfo?: { name: string; email: string; initial: string };
 }
 
-export function MobileMenu({ open, onClose }: MobileMenuProps) {
+export function MobileMenu({ open, onClose, userInfo }: MobileMenuProps) {
   const pathname = usePathname();
   const { t } = useT();
 
@@ -83,6 +84,15 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         ))}
 
         <div style={{ marginTop: "auto", paddingTop: 24, borderTop: "1px solid var(--glass-border)" }}>
+          {userInfo && (
+            <div className="user-info">
+              <div className="user-avatar">{userInfo.initial}</div>
+              <div>
+                <div className="user-name">{userInfo.name}</div>
+                <div className="user-email">{userInfo.email}</div>
+              </div>
+            </div>
+          )}
           <form action={signOut}>
             <button className="logout-btn" type="submit">
               <span><Icon name="LogOut" size={18} /></span> {t("nav.logout")}

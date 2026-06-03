@@ -1,12 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { useState } from "react";
 import { TopBar } from "@/components/layout/TopBar";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { MobileMenu } from "@/components/layout/MobileMenu";
-
-const BREAKPOINT = 1280;
 
 interface Props {
   userInfo: { name: string; email: string; initial: string };
@@ -15,26 +12,14 @@ interface Props {
 
 export function DashboardShell({ userInfo, children }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
-  // Default false = SSR 不渲染侧边栏，客户端检测宽度后再决定
-  const [showSidebar, setShowSidebar] = useState(false);
-
-  useEffect(() => {
-    function check() {
-      setShowSidebar(window.innerWidth >= BREAKPOINT);
-    }
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
 
   return (
     <div className="app-container">
-      {showSidebar && <Sidebar userInfo={userInfo} />}
-      <TopBar onMenuToggle={() => setMenuOpen(true)} />
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <TopBar onMenuToggle={() => setMenuOpen(true)} userInitial={userInfo.initial} />
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} userInfo={userInfo} />
       <BottomNav />
 
-      <div className="main-content" style={!showSidebar ? { marginLeft: 0 } : undefined}>
+      <div className="main-content">
         <div className="main-inner">{children}</div>
       </div>
     </div>

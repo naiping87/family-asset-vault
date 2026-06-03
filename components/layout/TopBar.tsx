@@ -5,6 +5,7 @@ import { Icon } from "@/lib/utils/icons";
 
 interface TopBarProps {
   onMenuToggle: () => void;
+  userInitial?: string;
 }
 
 const titles: Record<string, string> = {
@@ -14,7 +15,7 @@ const titles: Record<string, string> = {
   "/dashboard/settings": "设置",
 };
 
-export function TopBar({ onMenuToggle }: TopBarProps) {
+export function TopBar({ onMenuToggle, userInitial }: TopBarProps) {
   const pathname = usePathname();
 
   let title = "Family Asset Vault";
@@ -23,12 +24,18 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
   }
 
   return (
-    <div className="top-bar glass-intense mobile-only">
+    <div className="top-bar glass-intense">
       <button className="btn btn-secondary btn-icon" onClick={onMenuToggle} type="button" aria-label="菜单">
         <Icon name="Menu" size={22} />
       </button>
       <span style={{ fontWeight: 700, fontSize: 17 }}>{title}</span>
-      <div style={{ width: 40 }} />
+      {userInitial ? (
+        <div className="user-avatar" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 13 }}>
+          {userInitial}
+        </div>
+      ) : (
+        <div style={{ width: 40 }} />
+      )}
     </div>
   );
 }
