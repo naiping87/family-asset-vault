@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Icon } from "@/lib/utils/icons";
 import { cn } from "@/lib/utils/cn";
 import { ThemeToggle } from "./ThemeToggle";
+import { signOut } from "@/lib/auth/actions";
 
 interface TopBarProps {
   onMenuToggle: () => void;
@@ -66,6 +67,17 @@ export function TopBar({ onMenuToggle, userInitial, userName }: TopBarProps) {
           <Icon name="Settings" size={18} />
           <span className="desktop-only-inline">设置</span>
         </Link>
+
+        <form action={signOut}>
+          <button
+            className="btn btn-secondary btn-icon"
+            type="submit"
+            aria-label="退出登录"
+            style={{ width: 36, height: 36 }}
+          >
+            <Icon name="LogOut" size={18} />
+          </button>
+        </form>
 
         <div className="user-avatar" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 13, flexShrink: 0 }}>
           {userInitial}
