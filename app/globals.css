@@ -2,46 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== CSS Variables ===== */
+/* ===== CSS Variables — Luxury Family Office ===== */
 :root {
-  --glass-bg: rgba(255, 255, 255, 0.65);
-  --glass-bg-intense: rgba(255, 255, 255, 0.85);
-  --glass-bg-subtle: rgba(255, 255, 255, 0.40);
-  --glass-border: rgba(255, 255, 255, 0.30);
-  --glass-border-intense: rgba(255, 255, 255, 0.50);
-  --text-primary: #1a1a2e;
-  --text-secondary: #6b7280;
-  --text-muted: #9ca3af;
-  --bg-page: linear-gradient(135deg, #f0f4ff 0%, #fafafa 30%, #f0f4ff 100%);
-  --bg-radial: radial-gradient(ellipse at 70% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
-  --brand: #2563eb;
-  --brand-hover: #1d4ed8;
-  --success: #059669;
-  --success-bg: rgba(5, 150, 105, 0.10);
+  --glass-bg: rgba(255, 255, 255, 0.62);
+  --glass-bg-intense: rgba(255, 255, 255, 0.82);
+  --glass-bg-subtle: rgba(255, 255, 255, 0.35);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-border-intense: rgba(255, 255, 255, 0.55);
+  --text-primary: #13141b;
+  --text-secondary: #5b6075;
+  --text-muted: #9499ad;
+  --bg-page: linear-gradient(160deg, #f5f5fa 0%, #fafafc 40%, #f2f0f7 100%);
+  --bg-radial: radial-gradient(ellipse at 60% 10%, rgba(79, 95, 255, 0.06) 0%, transparent 55%);
+  --brand: #4b5fff;
+  --brand-hover: #3d4ee0;
+  --success: #0d9e6c;
+  --success-bg: rgba(13, 158, 108, 0.08);
   --warning: #d97706;
-  --warning-bg: rgba(217, 119, 6, 0.10);
-  --danger: #dc2626;
-  --danger-bg: rgba(220, 38, 38, 0.10);
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow: 0 4px 16px rgba(0,0,0,0.06);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
-  --shadow-xl: 0 16px 48px rgba(0,0,0,0.10);
-  --radius: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --warning-bg: rgba(217, 119, 6, 0.08);
+  --danger: #e04444;
+  --danger-bg: rgba(224, 68, 68, 0.08);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.03), 0 1px 3px rgba(0,0,0,0.02);
+  --shadow: 0 2px 8px rgba(0,0,0,0.04), 0 4px 20px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.05), 0 8px 40px rgba(0,0,0,0.06);
+  --shadow-xl: 0 8px 32px rgba(0,0,0,0.06), 0 16px 64px rgba(0,0,0,0.08);
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
 
-  /* Typography Scale */
+  /* Typography */
   --text-xs: 0.75rem;
   --text-sm: 0.8125rem;
   --text-base: 0.9375rem;
   --text-md: 1.0625rem;
   --text-lg: 1.1875rem;
   --text-xl: 1.375rem;
-  --text-2xl: 1.625rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.25rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: 2.75rem;
 
-  /* Spacing System */
+  /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -51,41 +51,45 @@
   --space-8: 2rem;
   --space-10: 2.5rem;
   --space-12: 3rem;
+  --space-16: 4rem;
 
   /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition: 0.25s ease;
-  --transition-slow: 0.35s ease;
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark {
-  --glass-bg: rgba(15, 23, 42, 0.70);
-  --glass-bg-intense: rgba(15, 23, 42, 0.88);
-  --glass-bg-subtle: rgba(15, 23, 42, 0.45);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-border-intense: rgba(255, 255, 255, 0.14);
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --bg-page: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-  --bg-radial: radial-gradient(ellipse at 70% 0%, rgba(59, 130, 246, 0.12) 0%, transparent 50%);
-  --brand: #3b82f6;
-  --brand-hover: #2563eb;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.20);
-  --shadow: 0 4px 16px rgba(0,0,0,0.30);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.40);
-  --shadow-xl: 0 16px 48px rgba(0,0,0,0.50);
+  --glass-bg: rgba(10, 12, 20, 0.68);
+  --glass-bg-intense: rgba(10, 12, 20, 0.90);
+  --glass-bg-subtle: rgba(10, 12, 20, 0.42);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-border-intense: rgba(255, 255, 255, 0.10);
+  --text-primary: #eeeff4;
+  --text-secondary: #8b8fa5;
+  --text-muted: #565b70;
+  --bg-page: linear-gradient(160deg, #08090f 0%, #0c0d16 30%, #060610 100%);
+  --bg-radial: radial-gradient(ellipse at 60% 10%, rgba(79, 95, 255, 0.1) 0%, transparent 55%);
+  --brand: #6979ff;
+  --brand-hover: #5566ee;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
+  --shadow: 0 2px 8px rgba(0,0,0,0.35), 0 4px 20px rgba(0,0,0,0.25);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.40), 0 8px 40px rgba(0,0,0,0.30);
+  --shadow-xl: 0 8px 32px rgba(0,0,0,0.45), 0 16px 64px rgba(0,0,0,0.35);
 }
 
 /* ===== Reset & Base ===== */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
   background: var(--bg-page);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv01", "cv02", "cv03", "cv04";
 }
 
 body::before {
@@ -100,8 +104,8 @@ body::before {
 /* ===== Glass Components ===== */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow);
@@ -423,8 +427,8 @@ body:not(.sidebar-collapsed) .main-content {
   margin-bottom: 28px;
 }
 
-.page-title { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-.page-subtitle { font-size: 15px; color: var(--text-secondary); margin-top: 4px; }
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+.page-subtitle { font-size: 15px; color: var(--text-secondary); margin-top: 4px; font-weight: 400; }
 
 /* ===== Buttons ===== */
 .btn {
@@ -476,10 +480,15 @@ body:not(.sidebar-collapsed) .main-content {
 }
 
 .stat-card {
-  padding: 24px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
 }
 
 .stat-icon {
@@ -497,9 +506,9 @@ body:not(.sidebar-collapsed) .main-content {
 .stat-icon.amber { background: rgba(217, 119, 6, 0.12); }
 .stat-icon.purple { background: rgba(99, 102, 241, 0.12); }
 
-.stat-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; }
-.stat-value { font-size: 30px; font-weight: 800; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
-.stat-sub { font-size: 13px; color: var(--text-muted); }
+.stat-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+.stat-value { font-size: 36px; font-weight: 600; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; line-height: 1; }
+.stat-sub { font-size: 13px; color: var(--text-muted); font-weight: 400; }
 .stat-sub.up { color: var(--success); }
 
 /* ===== Content Grid ===== */
@@ -517,7 +526,7 @@ body:not(.sidebar-collapsed) .main-content {
 }
 
 /* ===== Section Panel ===== */
-.section-panel { padding: 24px; margin-bottom: 20px; }
+.section-panel { padding: 28px; margin-bottom: 24px; }
 
 .section-header {
   display: flex;
