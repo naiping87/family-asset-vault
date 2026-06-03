@@ -42,7 +42,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
   return (
     <>
       <div className="section-header" style={{ marginTop: 0 }}>
-        <div className="section-title">👥 持有人</div>
+        <div className="section-title">持有人</div>
         <Button variant="secondary" size="sm" onClick={() => setShowForm(!showForm)}>
           {showForm ? "取消" : "+ 添加持有人"}
         </Button>
@@ -73,7 +73,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
               <div className="owner-role">{owner.is_primary ? "主要持有人" : "共同持有人"}</div>
             </div>
             <div className="owner-pct">{owner.ownership_pct}%</div>
-            <button className="owner-remove" type="button" onClick={() => handleRemove(owner.id)} disabled={pending}>✕</button>
+            <button className="owner-remove" type="button" onClick={() => handleRemove(owner.id)} disabled={pending}>×</button>
           </div>
         ))
       )}

@@ -29,7 +29,7 @@ function formatSize(bytes: number): string {
 }
 
 function fileIcon(mimeType: string): string {
-  if (mimeType.startsWith("image/")) return "🖼️";
+  if (mimeType.startsWith("image/")) return "";
   if (mimeType === "application/pdf") return "📄";
   return "📎";
 }
@@ -158,7 +158,7 @@ export function FileUpload({
         }}
       >
         <input ref={fileInputRef} type="file" accept={accept} style={{ display: "none" }} onChange={handleChange} />
-        <div className="upload-icon">{uploading ? "⏳" : "📁"}</div>
+        <div className="upload-icon">{uploading ? "" : ""}</div>
         <div className="upload-text">
           {uploading && progress > 0
             ? `${t("upload.uploading")} ${Math.round(progress)}%`
@@ -201,7 +201,7 @@ export function FileUpload({
               </a>
               <button type="button" onClick={(e) => { e.stopPropagation(); handleDelete(file.id); }}
                 style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: 16, padding: "2px 4px", flexShrink: 0 }}>
-                ✕
+                ×
               </button>
             </div>
           ))}

@@ -67,7 +67,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
     { key: "due_date", label: t("tax.dueDate") },
     { key: "receipt_url", label: t("tax.receiptFile"), render: (v: unknown) => {
       const url = String(v ?? "");
-      return url ? <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand)", fontSize: 13 }}>📄 {t("common.view")}</a> : <span style={{ color: "var(--text-muted)", fontSize: 13 }}>-</span>;
+      return url ? <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand)", fontSize: 13 }}>{t("common.view")}</a> : <span style={{ color: "var(--text-muted)", fontSize: 13 }}>-</span>;
     }},
     { key: "status", label: t("property.status"), render: (value: unknown) => {
       const s = String(value ?? "");
@@ -87,7 +87,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
   return (
     <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
       <div className="section-header">
-        <div className="section-title">📋 {t("property.taxRecords")}</div>
+        <div className="section-title">{t("property.taxRecords")}</div>
         <Button variant="secondary" size="sm" onClick={() => setShowForm(!showForm)}>
           {showForm ? t("common.cancel") : `+ ${t("property.taxAdd")}`}
         </Button>

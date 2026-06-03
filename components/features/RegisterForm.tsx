@@ -36,7 +36,7 @@ export function RegisterForm() {
     >
       <Card variant="intense" style={{ width: "100%", maxWidth: 420, padding: 36 }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div className="logo-icon" style={{ margin: "0 auto 16px", width: 56, height: 56, fontSize: 28 }}>🏰</div>
+          <div className="logo-icon" style={{ margin: "0 auto 16px", width: 56, height: 56, fontSize: 28 }}></div>
           <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>{t("auth.registerAccount")}</h1>
           <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>{t("auth.registerDesc")}</p>
         </div>

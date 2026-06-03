@@ -1,10 +1,14 @@
 import {
   LayoutDashboard, Building2, Shield, Settings,
-  Castle, Home, Plus, Edit, Trash2, Upload,
+  Home, Plus, Edit, Trash2, Upload,
   Sun, Moon, Menu, X, ChevronRight, MapPin,
   DollarSign, FileText, User, LogOut,
   CheckCircle, Clock, Calendar, Receipt, File,
   Search, Bell, UploadCloud, Download, Eye,
+  AlertTriangle, Mail, Lock, Key, Palette,
+  Loader, Paperclip, Image, FolderOpen,
+  ClipboardList, Pencil, Flame, Droplets, Map,
+  XCircle, Building, Briefcase, Landmark,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -13,7 +17,6 @@ export const Icons: Record<string, LucideIcon> = {
   Properties: Building2,
   Insurance: Shield,
   Settings,
-  Castle,
   Home,
   Plus,
   Edit,
@@ -39,6 +42,24 @@ export const Icons: Record<string, LucideIcon> = {
   UploadCloud,
   Download,
   Eye,
+  AlertTriangle,
+  Mail,
+  Lock,
+  Key,
+  Palette,
+  Loader,
+  Paperclip,
+  Image,
+  FolderOpen,
+  ClipboardList,
+  Pencil,
+  Flame,
+  Droplets,
+  Map,
+  XCircle,
+  Building,
+  Briefcase,
+  Landmark,
 };
 
 export function Icon({ name, size = 20, className, ...props }: {

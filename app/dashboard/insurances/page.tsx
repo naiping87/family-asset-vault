@@ -8,10 +8,10 @@ import { daysUntil } from "@/lib/utils/formatters";
 import { revalidatePath } from "next/cache";
 
 const insuranceTypeIcons: Record<string, string> = {
-  fire: "🔥",
-  flood: "🌊",
+  fire: "",
+  flood: "",
   home: "🏠",
-  mortgage: "🏦",
+  mortgage: "",
   other: "🛡️",
 };
 
@@ -27,7 +27,7 @@ export default async function InsurancesPage() {
     <>
       <div className="page-header">
         <div>
-          <div className="page-title">🛡️ 我的保险</div>
+          <div className="page-title">我的保险</div>
           <div className="page-subtitle">
             共 {insurances.length} 份保单
             {insurances.length > 0 && ` · 总保额 ${formatCurrency(totalCoverage)}`}
@@ -76,7 +76,7 @@ export default async function InsurancesPage() {
                 </div>
                 {ins.properties != null && (
                   <div style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 12 }}>
-                    🏢 {String((ins.properties as Record<string, unknown>).name ?? "")}
+                    {String((ins.properties as Record<string, unknown>).name ?? "")}
                   </div>
                 )}
                 <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 4 }}>
@@ -99,7 +99,7 @@ export default async function InsurancesPage() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <Badge color={statusColor}>{statusText}</Badge>
                   <form action={async () => { "use server"; await deleteInsurance(String(ins.id)); revalidatePath("/dashboard/insurances"); }}>
-                    <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "var(--text-muted)", padding: "2px 6px" }} title="删除">🗑️</button>
+                    <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "var(--text-muted)", padding: "2px 6px" }} title="删除"></button>
                   </form>
                 </div>
               </Card>

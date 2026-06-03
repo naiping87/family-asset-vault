@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { uploadFile } from "@/lib/api/files";
+import { Icon } from "@/lib/utils/icons";
 
 interface UploadZoneProps {
   propertyId?: string;
@@ -54,7 +55,7 @@ export function UploadZone({ propertyId, onUploaded }: UploadZoneProps) {
           if (file) handleFile(file);
         }}
       />
-      <div className="upload-icon">{uploading ? "⏳" : "📁"}</div>
+      <div className="upload-icon"><Icon name={uploading ? "Loader" : "UploadCloud"} size={36} /></div>
       <div className="upload-text">
         {uploading ? "上传中..." : dragOver ? "松开以上传" : "拖拽文件到此处上传"}
       </div>

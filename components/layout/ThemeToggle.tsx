@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { useT } from "@/lib/i18n/provider";
 import { Icon } from "@/lib/utils/icons";
 
-export function ThemeToggle() {
+interface Props {
+  compact?: boolean;
+}
+
+export function ThemeToggle({ compact }: Props) {
   const { t } = useT();
   const [isDark, setIsDark] = useState(true);
 
@@ -22,6 +26,20 @@ export function ThemeToggle() {
       document.documentElement.classList.remove("dark");
     }
     localStorage.setItem("theme", next ? "dark" : "light");
+  }
+
+  if (compact) {
+    return (
+      <button
+        className="btn btn-secondary btn-icon"
+        onClick={toggle}
+        type="button"
+        aria-label={isDark ? t("theme.light") : t("theme.dark")}
+        style={{ width: 36, height: 36 }}
+      >
+        <Icon name={isDark ? "Sun" : "Moon"} size={18} />
+      </button>
+    );
   }
 
   return (

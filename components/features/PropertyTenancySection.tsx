@@ -60,7 +60,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
   return (
     <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
       <div className="section-header">
-        <div className="section-title">🏠 {t("tenancy.title")}</div>
+        <div className="section-title">{t("tenancy.title")}</div>
         <Button variant="secondary" size="sm" onClick={() => { setShowForm(!showForm); setEditingId(null); }}>
           {showForm && !editingId ? t("common.cancel") : `+ ${t("tenancy.addTenancy")}`}
         </Button>
@@ -163,7 +163,7 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
                   {tItem.tenant_email && <div className="tenancy-field"><div className="tenancy-field-label">{t("tenancy.tenantEmail")}</div><div className="tenancy-field-value">{tItem.tenant_email}</div></div>}
                   {tItem.contract_file_url && (
                     <div className="tenancy-field"><div className="tenancy-field-label">{t("tenancy.contractFile")}</div>
-                      <div className="tenancy-field-value"><a href={tItem.contract_file_url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand)", textDecoration: "underline" }}>📄 {t("tenancy.contractView")}</a></div>
+                      <div className="tenancy-field-value"><a href={tItem.contract_file_url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand)", textDecoration: "underline" }}>{t("tenancy.contractView")}</a></div>
                     </div>
                   )}
                   {tItem.tenant_passport_url && (

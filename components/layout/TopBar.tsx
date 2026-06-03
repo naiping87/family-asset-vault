@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/lib/utils/icons";
 import { cn } from "@/lib/utils/cn";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface TopBarProps {
   onMenuToggle: () => void;
@@ -22,7 +23,6 @@ export function TopBar({ onMenuToggle, userInitial, userName }: TopBarProps) {
 
   return (
     <header className="top-bar glass-intense">
-      {/* Left: Logo + Desktop Nav */}
       <div className="top-bar-left">
         <button
           className="btn btn-secondary btn-icon hamburger-btn"
@@ -34,10 +34,10 @@ export function TopBar({ onMenuToggle, userInitial, userName }: TopBarProps) {
         </button>
 
         <Link href="/dashboard" className="top-bar-logo">
-          <div className="logo-icon" style={{ width: 34, height: 34, borderRadius: 8, fontSize: 18 }}>
-            🏰
+          <div className="logo-icon" style={{ width: 34, height: 34, borderRadius: 8 }}>
+            <Icon name="Landmark" size={18} style={{ color: "white" }} />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 16, display: "none" }} className="logo-text-desktop">
+          <span className="logo-text-desktop" style={{ fontWeight: 700, fontSize: 16, display: "none" }}>
             Family Asset Vault
           </span>
         </Link>
@@ -56,8 +56,9 @@ export function TopBar({ onMenuToggle, userInitial, userName }: TopBarProps) {
         </nav>
       </div>
 
-      {/* Right: Settings + User */}
       <div className="top-bar-right">
+        <ThemeToggle compact />
+
         <Link
           href="/dashboard/settings"
           className={cn("top-bar-link", pathname === "/dashboard/settings" && "active")}

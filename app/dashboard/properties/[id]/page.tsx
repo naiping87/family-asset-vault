@@ -54,7 +54,7 @@ export default async function PropertyDetailPage({
             <Badge color="blue">{propertyTypeLabels[property.property_type] ?? property.property_type}</Badge>
           </div>
           <div className="detail-address">
-            📍 {[property.address, property.city, property.state, property.postcode].filter(Boolean).join(", ")}
+            {[property.address, property.city, property.state, property.postcode].filter(Boolean).join(", ")}
           </div>
         </div>
         <div className="detail-actions">
@@ -85,7 +85,7 @@ export default async function PropertyDetailPage({
 
       <div className="content-grid-2" style={{ marginTop: 24 }}>
         <Card variant="intense" className="section-panel">
-          <div className="section-title" style={{ marginBottom: 16 }}>🏠 房产信息</div>
+          <div className="section-title" style={{ marginBottom: 16 }}>房产信息</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>类型: </span>{propertyTypeLabels[property.property_type] ?? property.property_type}</div>
             <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>地契: </span>{property.title_deed_no || "-"}</div>

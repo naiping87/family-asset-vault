@@ -46,7 +46,7 @@ export function PropertyForm({ property, mode }: Props) {
 
       <div className="page-header">
         <div>
-          <div className="page-title">{mode === "new" ? `🏠 ${t("property.newTitle")}` : `✏️ ${t("property.editTitle")}`}</div>
+          <div className="page-title">{mode === "new" ? `${t("property.newTitle")}` : `${t("property.editTitle")}`}</div>
           <div className="page-subtitle">{mode === "new" ? t("property.saveProperty") : property?.name}</div>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function PropertyForm({ property, mode }: Props) {
       <form action={formAction}>
         <div className="content-grid-2" style={{ marginBottom: 28 }}>
           <Card variant="intense" className="section-panel">
-            <div className="section-title" style={{ marginBottom: 20 }}>📋 {t("property.basicInfo")}</div>
+            <div className="section-title" style={{ marginBottom: 20 }}>{t("property.basicInfo")}</div>
             <FormInput label={t("property.name")} name="name" placeholder={t("property.namePlaceholder")} defaultValue={property?.name ?? ""} required />
             <div className="form-row">
               <div className="form-group">
@@ -78,13 +78,13 @@ export function PropertyForm({ property, mode }: Props) {
           </Card>
 
           <Card variant="intense" className="section-panel">
-            <div className="section-title" style={{ marginBottom: 20 }}>📍 {t("property.map")}</div>
+            <div className="section-title" style={{ marginBottom: 20 }}>{t("property.map")}</div>
             <MapPlaceholder />
           </Card>
         </div>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>💰 {t("property.finance")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("property.finance")}</div>
           <div className="form-row-3">
             <FormInput label={t("property.purchasePrice")} name="purchase_price" type="number" placeholder="0.00" defaultValue={property?.purchase_price ? String(property.purchase_price) : ""} />
             <FormInput label={t("property.currentValue")} name="current_value" type="number" placeholder="0.00" defaultValue={property?.current_value ? String(property.current_value) : ""} />
@@ -96,7 +96,7 @@ export function PropertyForm({ property, mode }: Props) {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📄 {t("property.legalDocs")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("property.legalDocs")}</div>
           <div style={{ marginBottom: 16 }}>
             <label className="form-label">{t("property.spaFile")}</label>
             <FileUpload propertyId={property?.id} accept=".pdf,.jpg,.jpeg,.png"
@@ -114,7 +114,7 @@ export function PropertyForm({ property, mode }: Props) {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📊 {t("property.status")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("property.status")}</div>
           <div className="form-group">
             <select className="form-input" name="status" defaultValue={property?.status ?? "vacant"}>
               <option value="rented">{t("property.rented")}</option>

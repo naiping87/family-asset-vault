@@ -15,7 +15,7 @@ export default async function PropertiesPage() {
     <>
       <div className="page-header">
         <div>
-          <div className="page-title">🏘️ 我的房产</div>
+          <div className="page-title">我的房产</div>
           <div className="page-subtitle">
             共 {properties.length} 处房产
             {properties.length > 0 && ` · 总估值 ${formatCurrency(

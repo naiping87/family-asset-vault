@@ -18,7 +18,7 @@ export function ChangePasswordForm() {
 
   return (
     <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid var(--glass-border)" }}>
-      <div style={{ fontWeight: 600, marginBottom: 16 }}>🔒 {t("settings.changePassword")}</div>
+      <div style={{ fontWeight: 600, marginBottom: 16 }}>{t("settings.changePassword")}</div>
       <form action={formAction}>
         <FormInput label={t("settings.currentPassword")} name="current_password" type="password" placeholder="••••••••" required />
         <FormInput label={t("settings.newPassword")} name="new_password" type="password" placeholder={t("auth.passwordHint")} required />

@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useT } from "@/lib/i18n/provider";
+import { Icon } from "@/lib/utils/icons";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
@@ -45,9 +46,9 @@ export function LoginForm() {
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div
             className="logo-icon"
-            style={{ margin: "0 auto 16px", width: 56, height: 56, fontSize: 28 }}
+            style={{ margin: "0 auto 16px", width: 56, height: 56 }}
           >
-            🏰
+            <Icon name="Landmark" size={28} style={{ color: "white" }} />
           </div>
           <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>
             {t("auth.title")}

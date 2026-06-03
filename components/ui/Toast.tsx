@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Icon } from "@/lib/utils/icons";
 
 let toastId = 0;
 const listeners: Set<(t: ToastMsg | null) => void> = new Set();
@@ -50,7 +51,7 @@ export function ToastContainer() {
             maxWidth: 280,
           }}
         >
-          {t.type === "success" ? "✅ " : "❌ "}{t.message}
+          <span style={{ marginRight: 6 }}><Icon name={t.type === "success" ? "CheckCircle" : "XCircle"} size={16} /></span>{t.message}
         </div>
       ))}
       <style>{`@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }`}</style>

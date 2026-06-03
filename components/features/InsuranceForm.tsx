@@ -34,14 +34,14 @@ export function InsuranceForm({ properties }: Props) {
 
       <div className="page-header">
         <div>
-          <div className="page-title">🛡️ {t("insurance.newTitle")}</div>
+          <div className="page-title">{t("insurance.newTitle")}</div>
           <div className="page-subtitle">{t("property.saveProperty")}</div>
         </div>
       </div>
 
       <form action={formAction}>
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📋 {t("insurance.policyInfo")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.policyInfo")}</div>
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">{t("insurance.type")}</label>
@@ -68,7 +68,7 @@ export function InsuranceForm({ properties }: Props) {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>💰 {t("insurance.coverage")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.coverage")}</div>
           <div className="form-row">
             <FormInput label={t("insurance.coverageAmount")} name="coverage_amount" type="number" placeholder="0.00" required />
             <FormInput label={t("insurance.annualPremium")} name="annual_premium" type="number" placeholder="0.00" required />
@@ -76,7 +76,7 @@ export function InsuranceForm({ properties }: Props) {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>👤 {t("insurance.agent")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.agent")}</div>
           <div className="form-row">
             <FormInput label={t("insurance.agentName")} name="agent_name" placeholder={t("insurance.agentNamePlaceholder")} />
             <FormInput label={t("insurance.agentPhone")} name="agent_phone" placeholder={t("insurance.agentPhonePlaceholder")} />
@@ -84,7 +84,7 @@ export function InsuranceForm({ properties }: Props) {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📅 {t("insurance.validity")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.validity")}</div>
           <div className="form-row">
             <FormInput label={t("tenancy.startDate")} name="start_date" type="date" required />
             <FormInput label={t("tenancy.endDate")} name="end_date" type="date" required />
@@ -92,7 +92,7 @@ export function InsuranceForm({ properties }: Props) {
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
-          <div className="section-title" style={{ marginBottom: 20 }}>📎 {t("insurance.policyFile")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.policyFile")}</div>
           <FileUpload accept=".pdf,.jpg,.jpeg,.png"
             existingFiles={policyFileUrl ? [{ id: "", name: "Policy", size: 0, type: "application/pdf", url: policyFileUrl }] : []}
             onUploaded={setPolicyFileUrl} onDelete={() => setPolicyFileUrl("")} />

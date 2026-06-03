@@ -35,14 +35,14 @@ export default async function SettingsPage() {
     <>
       <div className="page-header">
         <div>
-          <div className="page-title">⚙️ {t("settings.title")}</div>
+          <div className="page-title">{t("settings.title")}</div>
           <div className="page-subtitle">{t("settings.subtitle")}</div>
         </div>
       </div>
 
       <div className="content-grid-2">
         <Card variant="intense" className="section-panel">
-          <div className="section-title" style={{ marginBottom: 20 }}>👤 {t("settings.profile")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("settings.profile")}</div>
           <form action={handleSave}>
             <FormInput label={t("settings.email")} name="email" type="email" defaultValue={user?.email ?? ""} disabled />
             <FormInput label={t("settings.displayName")} name="display_name" placeholder={t("settings.displayNamePlaceholder")} defaultValue={displayName} />
@@ -62,7 +62,7 @@ export default async function SettingsPage() {
         </Card>
 
         <Card variant="intense" className="section-panel">
-          <div className="section-title" style={{ marginBottom: 20 }}>🎨 {t("settings.appearance")}</div>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("settings.appearance")}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span>{t("settings.darkMode")}</span>
@@ -77,7 +77,7 @@ export default async function SettingsPage() {
       </div>
 
       <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
-        <div className="section-title" style={{ marginBottom: 20 }}>🔐 {t("settings.account")}</div>
+        <div className="section-title" style={{ marginBottom: 20 }}>{t("settings.account")}</div>
         <ChangePasswordForm />
         <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid var(--glass-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div>
