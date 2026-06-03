@@ -13,6 +13,7 @@ export async function createTax(formData: FormData) {
     account_no: (formData.get("account_no") as string) || null,
     amount: formData.get("amount") ? Number(formData.get("amount")) : null,
     due_date: (formData.get("due_date") as string) || null,
+    receipt_url: (formData.get("receipt_url") as string) || null,
     status: "unpaid",
   };
 

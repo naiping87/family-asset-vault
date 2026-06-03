@@ -64,6 +64,10 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
     { key: "account_no", label: t("tax.accountNo") },
     { key: "amount", label: t("tax.amount"), render: (v: unknown) => formatCurrency(Number(v) || 0) },
     { key: "due_date", label: t("tax.dueDate") },
+    { key: "receipt_url", label: t("tax.receiptFile"), render: (v: unknown) => {
+      const url = String(v ?? "");
+      return url ? <a href={url} target="_blank" rel="noopener noreferrer" style={{ color: "var(--brand)", fontSize: 13 }}>📄 {t("common.view")}</a> : <span style={{ color: "var(--text-muted)", fontSize: 13 }}>-</span>;
+    }},
     { key: "status", label: t("property.status"), render: (value: unknown) => {
       const s = String(value ?? "");
       const c: Record<string, string> = { paid: "green", unpaid: "amber", overdue: "red" };
