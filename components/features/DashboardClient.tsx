@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+import { useT } from "@/lib/i18n/provider";
 import { Card } from "@/components/ui/Card";
 import { StatsCard } from "@/components/ui/StatsCard";
 import { Badge } from "@/components/ui/Badge";
@@ -30,10 +31,10 @@ interface Props {
   stats: Record<string, unknown> | null;
   reminders: Record<string, unknown>[];
   recentProperties: Record<string, unknown>[];
-  t: (key: string) => string;
 }
 
-export function DashboardClient({ greeting, displayName, today, stats, reminders, recentProperties, t }: Props) {
+export function DashboardClient({ greeting, displayName, today, stats, reminders, recentProperties }: Props) {
+  const { t } = useT();
   return (
     <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.08 } } }}>
       <Animate>
