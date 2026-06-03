@@ -15,7 +15,8 @@ interface Props {
 
 export function DashboardShell({ userInfo, children }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(true);
+  // Default false = SSR 不渲染侧边栏，客户端检测宽度后再决定
+  const [showSidebar, setShowSidebar] = useState(false);
 
   useEffect(() => {
     function check() {
