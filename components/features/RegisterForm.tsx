@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
 import { showToast } from "@/components/ui/Toast";
+import { Icon } from "@/lib/utils/icons";
 import { signUp } from "@/lib/auth/actions";
 import { passwordStrength } from "@/lib/auth/validation";
 
@@ -36,7 +37,7 @@ export function RegisterForm() {
     >
       <Card variant="intense" style={{ width: "100%", maxWidth: 420, padding: 36 }}>
         <div style={{ textAlign: "center", marginBottom: 32 }}>
-          <div className="logo-icon" style={{ margin: "0 auto 16px", width: 56, height: 56, fontSize: 28 }}></div>
+          <div className="logo-icon" style={{ margin: "0 auto 16px", width: 56, height: 56 }}><Icon name="Landmark" size={28} style={{ color: "white" }} /></div>
           <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 4 }}>{t("auth.registerAccount")}</h1>
           <p style={{ color: "var(--text-secondary)", fontSize: 15 }}>{t("auth.registerDesc")}</p>
         </div>
