@@ -26,7 +26,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
   const [uploadingFile, setUploadingFile] = useState(false);
 
   const taxTypeLabels: Record<string, string> = {
-    cukai_tanah: t("tax.cukaiTanah"), cukai_pintu: t("tax.cukaiPintu"), cukai_petak: t("tax.cukaiPetak"), other: t("insurance.other"),
+    cukai_tanah: t("tax.cukaiTanah"), cukai_taksiran: t("tax.cukaiTaksiran"), cukai_pintu: t("tax.cukaiTaksiran"), cukai_petak: t("tax.cukaiPetak"), other: t("insurance.other"),
   };
 
   function statusLabel(s: string) {
@@ -97,8 +97,8 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
           <div className="form-row">
             <div className="form-group">
               <label className="form-label">{t("tax.type")}</label>
-              <select className="form-input" name="tax_type" defaultValue="cukai_pintu">
-                <option value="cukai_pintu">{t("tax.cukaiPintu")}</option>
+              <select className="form-input" name="tax_type" defaultValue="cukai_taksiran">
+                <option value="cukai_taksiran">{t("tax.cukaiTaksiran")}</option>
                 <option value="cukai_tanah">{t("tax.cukaiTanah")}</option>
                 <option value="cukai_petak">{t("tax.cukaiPetak")}</option>
                 <option value="other">{t("insurance.other")}</option>

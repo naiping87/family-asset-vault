@@ -8,6 +8,7 @@ export interface DashboardStats {
   non_rental_count: number;
   total_value: number;
   total_loan: number;
+  total_loan_installment: number;
   monthly_rental_income: number;
   active_insurances: number;
 }
@@ -76,8 +77,13 @@ export async function getReminders(): Promise<Reminder[]> {
       if (!tax.due_date) continue;
       const days = daysUntil(tax.due_date);
       if (days <= 90 && days >= -30) {
+        const taxLabel = tax.tax_type === "cukai_taksiran" || tax.tax_type === "cukai_pintu"
+          ? "门牌税"
+          : tax.tax_type === "cukai_tanah"
+          ? "土地税"
+          : "税务";
         reminders.push({
-          title: `${tax.tax_type === "cukai_pintu" ? "门牌税" : tax.tax_type === "cukai_tanah" ? "土地税" : "税务"}缴付截止`,
+          title: `${taxLabel}缴付截止`,
           sub: `${tax.authority ?? ""} · 账号 ${tax.account_no ?? ""} · ${tax.properties?.name ?? ""}`,
           days,
           type: days < 0 ? "danger" : days <= 14 ? "warning" : "info",
@@ -96,7 +102,7 @@ export async function getRecentProperties(limit = 4) {
 
   const { data } = await supabase
     .from("properties")
-    .select("*")
+    .select("*, tenancies(monthly_rent, status)")
     .eq("user_id", user.id)
     .order("updated_at", { ascending: false })
     .limit(limit);

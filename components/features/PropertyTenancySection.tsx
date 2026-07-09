@@ -70,7 +70,20 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
           style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <FormInput label={t("tenancy.tenantName")} name="tenant_name" placeholder={t("tenancy.tenantNamePlaceholder")} required />
           <div className="form-row">
-            <FormInput label={t("tenancy.tenantIC")} name="tenant_ic" placeholder={t("tenancy.tenantICPlaceholder")} />
+            <div className="form-group">
+              <label className="form-label">{t("tenancy.tenantIdNumber")}</label>
+              <input className="form-input" name="tenant_ic" placeholder={t("tenancy.tenantIdPlaceholder")} />
+            </div>
+            <div className="form-group">
+              <label className="form-label">{t("tenancy.idType")}</label>
+              <select className="form-input" name="tenant_id_type" defaultValue="ic">
+                <option value="ic">{t("tenancy.ic")}</option>
+                <option value="passport">{t("tenancy.passport")}</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-row">
+            <FormInput label={t("tenancy.tenantIC")} name="tenant_ic_legacy" placeholder={t("tenancy.tenantICPlaceholder")} style={{ display: "none" }} />
             <FormInput label={t("tenancy.tenantPhone")} name="tenant_phone" placeholder={t("tenancy.tenantPhonePlaceholder")} />
           </div>
           <FormInput label={t("tenancy.tenantEmail")} name="tenant_email" type="email" placeholder={t("tenancy.tenantEmailPlaceholder")} />
@@ -110,7 +123,20 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
               <form action={(formData: FormData) => handleEdit(tItem.id, formData)} style={{ padding: 4 }}>
                 <FormInput label={t("tenancy.tenantName")} name="tenant_name" defaultValue={tItem.tenant_name} required />
                 <div className="form-row">
-                  <FormInput label={t("tenancy.tenantIC")} name="tenant_ic" defaultValue={tItem.tenant_ic ?? ""} />
+                  <div className="form-group">
+                    <label className="form-label">{t("tenancy.tenantIdNumber")}</label>
+                    <input className="form-input" name="tenant_ic" defaultValue={tItem.tenant_ic ?? ""} placeholder={t("tenancy.tenantIdPlaceholder")} />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">{t("tenancy.idType")}</label>
+                    <select className="form-input" name="tenant_id_type" defaultValue={tItem.tenant_id_type ?? "ic"}>
+                      <option value="ic">{t("tenancy.ic")}</option>
+                      <option value="passport">{t("tenancy.passport")}</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="form-row" style={{ display: "none" }}>
+                  <FormInput label="" name="tenant_ic_legacy" defaultValue={tItem.tenant_ic ?? ""} />
                   <FormInput label={t("tenancy.tenantPhone")} name="tenant_phone" defaultValue={tItem.tenant_phone ?? ""} />
                 </div>
                 <FormInput label={t("tenancy.tenantEmail")} name="tenant_email" type="email" defaultValue={tItem.tenant_email ?? ""} />

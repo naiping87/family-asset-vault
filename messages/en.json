@@ -140,7 +140,12 @@
     "coOwners": "Co-owners",
     "files": "Files",
     "noTenancies": "No tenancy records",
-    "noTaxes": "No tax records"
+    "noTaxes": "No tax records",
+    "loanInstallment": "Monthly Installment",
+    "loanInterestRate": "Interest Rate (%)",
+    "photos": "Property Photos",
+    "photosHint": "Upload property photos, supports JPG/PNG/WebP",
+    "photoLabel": "Photo"
   },
   "tenancy": {
     "title": "Tenancy",
@@ -166,7 +171,12 @@
     "terminated": "Terminated",
     "added": "Tenancy added",
     "updated": "Tenancy updated",
-    "deleted": "Tenancy deleted"
+    "deleted": "Tenancy deleted",
+    "tenantIdNumber": "IC/Passport No.",
+    "tenantIdPlaceholder": "900101-10-1234 or A1234567",
+    "idType": "ID Type",
+    "ic": "IC",
+    "passport": "Passport"
   },
   "insurance": {
     "title": "Insurance",
@@ -219,7 +229,8 @@
     "markPaid": "Mark Paid",
     "added": "Tax record added",
     "markedPaid": "Marked as paid",
-    "deleted": "Tax record deleted"
+    "deleted": "Tax record deleted",
+    "cukaiTaksiran": "Assessment Tax (Cukai Taksiran)"
   },
   "settings": {
     "title": "Settings",
@@ -273,5 +284,33 @@
     "paid": "Paid",
     "unpaid": "Unpaid",
     "overdue": "Overdue"
+  },
+  "expense": {
+    "title": "Expenses",
+    "addExpense": "Add Expense",
+    "type": "Expense Type",
+    "utility": "Water",
+    "electricity": "Electricity",
+    "fireInsurance": "Fire Insurance",
+    "gatedGuarded": "Gated & Guarded",
+    "maintenance": "Maintenance",
+    "description": "Description",
+    "descriptionPlaceholder": "e.g. TNB electricity bill",
+    "amount": "Amount",
+    "dueDate": "Due Date",
+    "receiptFile": "Receipt",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "markPaid": "Mark Paid",
+    "added": "Expense added",
+    "updated": "Expense updated",
+    "markedPaid": "Marked as paid",
+    "deleted": "Expense deleted",
+    "noExpenses": "No expenses recorded"
+  },
+  "dateInput": {
+    "placeholder": "dd/mm/yyyy",
+    "invalidFormat": "Invalid date format, use dd/mm/yyyy"
   }
 }

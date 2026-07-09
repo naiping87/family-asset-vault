@@ -7,6 +7,7 @@ import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
+import { DateInput } from "@/components/ui/DateInput";
 import { MapPlaceholder } from "@/components/ui/MapPlaceholder";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
@@ -25,6 +26,16 @@ export function PropertyForm({ property, mode }: Props) {
   const [state, formAction, isPending] = useActionState(serverAction, null);
   const [spaFileUrl, setSpaFileUrl] = useState(property?.spa_file_url ?? "");
   const [geranFileUrl, setGeranFileUrl] = useState(property?.geran_file_url ?? "");
+  const [photoUrls, setPhotoUrls] = useState<string[]>(property?.photos ?? []);
+  const [photosUploading, setPhotosUploading] = useState(false);
+
+  function handlePhotoUploaded(url: string) {
+    setPhotoUrls((prev) => [...prev, url]);
+  }
+
+  function handlePhotoDelete(url: string) {
+    setPhotoUrls((prev) => prev.filter((u) => u !== url));
+  }
 
   useEffect(() => {
     if (state?.error) { showToast(state.error, "error"); }
@@ -93,6 +104,28 @@ export function PropertyForm({ property, mode }: Props) {
           <div style={{ marginTop: 16 }}>
             <FormInput label={t("property.loanBank")} name="loan_bank" placeholder={t("property.loanBankPlaceholder")} defaultValue={property?.loan_bank ?? ""} />
           </div>
+          <div className="form-row" style={{ marginTop: 16 }}>
+            <FormInput label={t("property.loanInstallment")} name="loan_installment" type="number" placeholder="0.00" defaultValue={property?.loan_installment ? String(property.loan_installment) : ""} />
+            <FormInput label={t("property.loanInterestRate")} name="loan_interest_rate" type="number" placeholder="0.00" step="0.01" defaultValue={property?.loan_interest_rate ? String(property.loan_interest_rate) : ""} />
+          </div>
+        </Card>
+
+<Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
+          <div className="section-title" style={{ marginBottom: 20 }}>{t("property.photos")}</div>
+          <p style={{ color: "var(--text-secondary)", fontSize: 13, marginBottom: 12 }}>{t("property.photosHint")}</p>
+          <FileUpload propertyId={property?.id} accept=".jpg,.jpeg,.png,.webp"
+            existingFiles={photoUrls.map((url, i) => ({ id: url, name: t("property.photoLabel") + " " + (i + 1), size: 0, type: "image/jpeg", url }))}
+            onUploaded={handlePhotoUploaded} onDelete={handlePhotoDelete}
+            onUploadingChange={setPhotosUploading} />
+          <input type="hidden" name="photos" value={JSON.stringify(photoUrls)} />
+          {photoUrls.length > 0 && (
+            <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
+              {photoUrls.map((url, i) => (
+                <img key={i} src={url} alt={t("property.photoLabel") + " " + (i + 1)}
+                  style={{ width: 80, height: 80, objectFit: "cover", borderRadius: 8, border: "1px solid var(--glass-border)" }} />
+              ))}
+            </div>
+          )}
         </Card>
 
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
@@ -129,7 +162,7 @@ export function PropertyForm({ property, mode }: Props) {
           <Link href={property ? "/dashboard/properties/" + property.id : "/dashboard/properties"}>
             <Button variant="secondary">{t("common.cancel")}</Button>
           </Link>
-          <Button variant="primary" type="submit" disabled={isPending}>
+          <Button variant="primary" type="submit" disabled={isPending || photosUploading}>
             {isPending ? t("common.saving") : mode === "new" ? t("property.saveProperty") : t("property.saveChanges")}
           </Button>
         </div>

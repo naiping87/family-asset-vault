@@ -138,7 +138,9 @@ export function DashboardClient({ greeting, displayName, today, stats, reminders
                     badge={<Badge color={p.status === "rented" ? "green" : p.status === "vacant" ? "amber" : "blue"}>{p.status === "rented" ? t("status.rented") : p.status === "vacant" ? t("status.vacant") : t("status.occupied")}</Badge>}
                     finance={[
                       { label: t("property.valuation"), value: formatCurrency(Number(p.current_value) || 0) },
-                      ...(p.status === "rented" ? [{ label: t("property.monthlyRent"), value: formatCurrency(0) }] : [{ label: t("property.loanBalance"), value: formatCurrency(Number(p.loan_balance) || 0) }]),
+                      ...(p.status === "rented"
+                      ? [{ label: t("property.monthlyRent"), value: formatCurrency((() => { const tenancies = (p as any).tenancies; const active = tenancies?.find((t: any) => t.status === "active"); return Number(active?.monthly_rent) || 0; })()) }]
+                      : [{ label: t("property.loanBalance"), value: formatCurrency(Number(p.loan_balance) || 0) }]),
                     ]}
                   />
                 </Link>

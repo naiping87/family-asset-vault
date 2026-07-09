@@ -8,10 +8,10 @@ export async function getProperties() {
 
   const { data } = await supabase
     .from("properties")
-    .select("*")
+    .select("*, tenancies(monthly_rent, status)")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
-  return (data as Property[]) ?? [];
+  return (data as (Property & { tenancies?: { monthly_rent: number | null; status: string }[] })[]) ?? [];
 }
 
 export async function getProperty(id: string) {
@@ -45,11 +45,18 @@ export async function getProperty(id: string) {
     .eq("property_id", id)
     .order("due_date", { ascending: true });
 
+  const { data: expenses } = await supabase
+    .from("expenses")
+    .select("*")
+    .eq("property_id", id)
+    .order("due_date", { ascending: true });
+
   return {
     ...(property as Property),
     co_owners: (coOwners as CoOwner[]) ?? [],
     tenancies: tenancies ?? [],
     taxes: taxes ?? [],
+    expenses: expenses ?? [],
   };
 }
 
@@ -57,6 +64,13 @@ export async function createProperty(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "未登录" };
+
+  // Parse photos JSON array from hidden input
+  let photos: string[] = [];
+  const photosRaw = formData.get("photos") as string;
+  if (photosRaw) {
+    try { photos = JSON.parse(photosRaw); } catch { photos = []; }
+  }
 
   const entry = {
     user_id: user.id,
@@ -69,10 +83,13 @@ export async function createProperty(formData: FormData) {
     purchase_price: formData.get("purchase_price") ? Number(formData.get("purchase_price")) : null,
     current_value: formData.get("current_value") ? Number(formData.get("current_value")) : null,
     loan_balance: formData.get("loan_balance") ? Number(formData.get("loan_balance")) : null,
+    loan_installment: formData.get("loan_installment") ? Number(formData.get("loan_installment")) : null,
+    loan_interest_rate: formData.get("loan_interest_rate") ? Number(formData.get("loan_interest_rate")) : null,
     loan_bank: (formData.get("loan_bank") as string) || null,
     title_deed_no: (formData.get("title_deed_no") as string) || null,
     spa_file_url: (formData.get("spa_file_url") as string) || null,
     geran_file_url: (formData.get("geran_file_url") as string) || null,
+    photos,
     status: formData.get("status") as string,
   };
 
@@ -91,6 +108,12 @@ export async function updateProperty(id: string, formData: FormData) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { error: "未登录" };
 
+  let photos: string[] = [];
+  const photosRaw = formData.get("photos") as string;
+  if (photosRaw) {
+    try { photos = JSON.parse(photosRaw); } catch { photos = []; }
+  }
+
   const entry = {
     name: formData.get("name") as string,
     property_type: formData.get("property_type") as string,
@@ -101,10 +124,13 @@ export async function updateProperty(id: string, formData: FormData) {
     purchase_price: formData.get("purchase_price") ? Number(formData.get("purchase_price")) : null,
     current_value: formData.get("current_value") ? Number(formData.get("current_value")) : null,
     loan_balance: formData.get("loan_balance") ? Number(formData.get("loan_balance")) : null,
+    loan_installment: formData.get("loan_installment") ? Number(formData.get("loan_installment")) : null,
+    loan_interest_rate: formData.get("loan_interest_rate") ? Number(formData.get("loan_interest_rate")) : null,
     loan_bank: (formData.get("loan_bank") as string) || null,
     title_deed_no: (formData.get("title_deed_no") as string) || null,
     spa_file_url: (formData.get("spa_file_url") as string) || null,
     geran_file_url: (formData.get("geran_file_url") as string) || null,
+    photos,
     status: formData.get("status") as string,
   };
 

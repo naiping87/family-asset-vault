@@ -59,10 +59,20 @@ export default async function PropertiesPage() {
                     {p.status === "rented" ? "出租中" : p.status === "vacant" ? "空置" : "自住"}
                   </Badge>
                 }
-                finance={[
-                  { label: "估值", value: formatCurrency(p.current_value || 0) },
-                  { label: "贷款余额", value: formatCurrency(p.loan_balance || 0) },
-                ]}
+                finance={(() => {
+                    const activeTenancy = (p as any).tenancies?.find((t: any) => t.status === "active");
+                    const monthlyRent = activeTenancy?.monthly_rent || 0;
+                    if (p.status === "rented") {
+                      return [
+                        { label: "估值", value: formatCurrency(p.current_value || 0) },
+                        { label: "月租金", value: formatCurrency(monthlyRent) },
+                      ];
+                    }
+                    return [
+                      { label: "估值", value: formatCurrency(p.current_value || 0) },
+                      { label: "贷款余额", value: formatCurrency(p.loan_balance || 0) },
+                    ];
+                  })()}
               />
             </Link>
           ))}

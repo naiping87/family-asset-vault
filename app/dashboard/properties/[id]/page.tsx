@@ -9,6 +9,7 @@ import { DeletePropertyButton } from "@/components/features/DeletePropertyButton
 import { PropertyCoOwnerSection } from "@/components/features/PropertyCoOwnerSection";
 import { PropertyTenancySection } from "@/components/features/PropertyTenancySection";
 import { PropertyTaxSection } from "@/components/features/PropertyTaxSection";
+import { PropertyExpenseSection } from "@/components/features/PropertyExpenseSection";
 
 const statusLabels: Record<string, string> = {
   rented: "出租中",
@@ -76,12 +77,35 @@ export default async function PropertyDetailPage({
             <div className="detail-stat-label">贷款余额</div>
             <div className="detail-stat-value">{formatCurrency(property.loan_balance || 0)}</div>
           </div>
+          {property.loan_installment ? (
+            <div className="detail-stat">
+              <div className="detail-stat-label">月供</div>
+              <div className="detail-stat-value">{formatCurrency(property.loan_installment)}</div>
+            </div>
+          ) : null}
+          {property.loan_interest_rate ? (
+            <div className="detail-stat">
+              <div className="detail-stat-label">利率</div>
+              <div className="detail-stat-value" style={{ fontSize: 14 }}>{property.loan_interest_rate}%</div>
+            </div>
+          ) : null}
           <div className="detail-stat">
             <div className="detail-stat-label">地契编号</div>
             <div className="detail-stat-value" style={{ fontSize: 14 }}>{property.title_deed_no || "-"}</div>
           </div>
         </div>
       </div>
+
+      {property.photos && property.photos.length > 0 && (
+        <div style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
+          {property.photos.map((url: string, i: number) => (
+            <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+              <img src={url} alt={`photo ${i + 1}`}
+                style={{ width: 160, height: 120, objectFit: "cover", borderRadius: 12, border: "1px solid var(--glass-border)", cursor: "pointer" }} />
+            </a>
+          ))}
+        </div>
+      )}
 
       <div className="content-grid-2" style={{ marginTop: 24 }}>
         <Card variant="intense" className="section-panel">
@@ -111,6 +135,11 @@ export default async function PropertyDetailPage({
       <PropertyTaxSection
         propertyId={property.id}
         taxes={property.taxes ?? []}
+      />
+
+      <PropertyExpenseSection
+        propertyId={property.id}
+        expenses={property.expenses ?? []}
       />
     </>
   );

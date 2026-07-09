@@ -4,6 +4,7 @@ export interface Profile {
   display_name?: string;
   avatar_url?: string;
   preferred_currency: string;
+  language?: string;
   created_at: string;
   updated_at: string;
 }
@@ -22,10 +23,13 @@ export interface Property {
   purchase_price?: number;
   current_value?: number;
   loan_balance?: number;
+  loan_installment?: number;
+  loan_interest_rate?: number;
   loan_bank?: string;
   title_deed_no?: string;
   spa_file_url?: string;
   geran_file_url?: string;
+  photos?: string[];
   status: "rented" | "vacant" | "non_rental" | "sold";
   created_at: string;
   updated_at: string;
@@ -46,6 +50,7 @@ export interface Tenancy {
   property_id: string;
   tenant_name: string;
   tenant_ic?: string;
+  tenant_id_type?: "ic" | "passport";
   tenant_phone?: string;
   tenant_email?: string;
   start_date: string;
@@ -63,7 +68,7 @@ export interface Tenancy {
 export interface Tax {
   id: string;
   property_id: string;
-  tax_type: "cukai_tanah" | "cukai_pintu" | "cukai_petak" | "other";
+  tax_type: "cukai_tanah" | "cukai_taksiran" | "cukai_pintu" | "cukai_petak" | "other";
   authority?: string;
   account_no?: string;
   amount?: number;
@@ -96,6 +101,21 @@ export interface Insurance {
   updated_at: string;
 }
 
+export interface Expense {
+  id: string;
+  property_id: string;
+  expense_type: "utility" | "electricity" | "fire_insurance" | "gated_guarded" | "maintenance" | "other";
+  description?: string;
+  amount?: number;
+  due_date?: string;
+  paid_date?: string;
+  status: "unpaid" | "paid" | "overdue";
+  receipt_url?: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface DashboardStats {
   user_id: string;
   total_properties: number;
@@ -104,6 +124,7 @@ export interface DashboardStats {
   non_rental_count: number;
   total_value: number;
   total_loan: number;
+  total_loan_installment: number;
   monthly_rental_income: number;
   active_insurances: number;
 }

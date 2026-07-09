@@ -10,6 +10,7 @@ export async function createTenancy(formData: FormData) {
     property_id: formData.get("property_id") as string,
     tenant_name: formData.get("tenant_name") as string,
     tenant_ic: (formData.get("tenant_ic") as string) || null,
+    tenant_id_type: (formData.get("tenant_id_type") as string) || "ic",
     tenant_phone: (formData.get("tenant_phone") as string) || null,
     tenant_email: (formData.get("tenant_email") as string) || null,
     start_date: formData.get("start_date") as string,
@@ -37,7 +38,7 @@ export async function updateTenancy(id: string, formData: FormData) {
   if (!user) return { error: "未登录" };
 
   const entry: Record<string, unknown> = {};
-  const fields = ["tenant_name", "tenant_ic", "tenant_phone", "tenant_email", "start_date", "end_date", "contract_file_url", "tenant_passport_url"];
+  const fields = ["tenant_name", "tenant_ic", "tenant_id_type", "tenant_phone", "tenant_email", "start_date", "end_date", "contract_file_url", "tenant_passport_url"];
   for (const f of fields) {
     const v = formData.get(f);
     if (v !== null && v !== "") entry[f] = v;

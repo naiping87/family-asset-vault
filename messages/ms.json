@@ -140,7 +140,12 @@
     "coOwners": "Pemilik Bersama",
     "files": "Fail",
     "noTenancies": "Tiada rekod penyewaan",
-    "noTaxes": "Tiada rekod cukai"
+    "noTaxes": "Tiada rekod cukai",
+    "loanInstallment": "Ansuran Bulanan",
+    "loanInterestRate": "Kadar Faedah (%)",
+    "photos": "Gambar Hartanah",
+    "photosHint": "Muat naik gambar hartanah, menyokong JPG/PNG/WebP",
+    "photoLabel": "Gambar"
   },
   "tenancy": {
     "title": "Penyewaan",
@@ -166,7 +171,12 @@
     "terminated": "Ditamatkan",
     "added": "Penyewaan ditambah",
     "updated": "Penyewaan dikemas kini",
-    "deleted": "Penyewaan dipadam"
+    "deleted": "Penyewaan dipadam",
+    "tenantIdNumber": "No. IC/Pasport",
+    "tenantIdPlaceholder": "900101-10-1234 atau A1234567",
+    "idType": "Jenis ID",
+    "ic": "IC",
+    "passport": "Pasport"
   },
   "insurance": {
     "title": "Insurans",
@@ -219,7 +229,8 @@
     "markPaid": "Tanda Dibayar",
     "added": "Rekod cukai ditambah",
     "markedPaid": "Ditanda sebagai dibayar",
-    "deleted": "Rekod cukai dipadam"
+    "deleted": "Rekod cukai dipadam",
+    "cukaiTaksiran": "Cukai Taksiran"
   },
   "settings": {
     "title": "Tetapan",
@@ -273,5 +284,33 @@
     "paid": "Dibayar",
     "unpaid": "Belum Dibayar",
     "overdue": "Tertunggak"
+  },
+  "expense": {
+    "title": "Perbelanjaan",
+    "addExpense": "Tambah Belanja",
+    "type": "Jenis Belanja",
+    "utility": "Air",
+    "electricity": "Elektrik",
+    "fireInsurance": "Insurans Kebakaran",
+    "gatedGuarded": "Gated & Guarded",
+    "maintenance": "Penyelenggaraan",
+    "description": "Penerangan",
+    "descriptionPlaceholder": "cth: Bil elektrik TNB",
+    "amount": "Jumlah",
+    "dueDate": "Tarikh Akhir",
+    "receiptFile": "Resit",
+    "paid": "Dibayar",
+    "unpaid": "Belum Dibayar",
+    "overdue": "Tertunggak",
+    "markPaid": "Tanda Dibayar",
+    "added": "Belanja ditambah",
+    "updated": "Belanja dikemaskini",
+    "markedPaid": "Ditanda sebagai dibayar",
+    "deleted": "Belanja dipadam",
+    "noExpenses": "Tiada rekod perbelanjaan"
+  },
+  "dateInput": {
+    "placeholder": "dd/mm/yyyy",
+    "invalidFormat": "Format tarikh tidak sah, gunakan dd/mm/yyyy"
   }
 }

@@ -140,7 +140,12 @@
     "coOwners": "共有人",
     "files": "文件",
     "noTenancies": "暂无租约记录",
-    "noTaxes": "暂无税务记录"
+    "noTaxes": "暂无税务记录",
+    "loanInstallment": "月供金额",
+    "loanInterestRate": "利率 (%)",
+    "photos": "房产照片",
+    "photosHint": "上传房产照片，支持 JPG/PNG/WebP 格式",
+    "photoLabel": "照片"
   },
   "tenancy": {
     "title": "租约管理",
@@ -166,7 +171,12 @@
     "terminated": "已终止",
     "added": "租约已添加",
     "updated": "租约已更新",
-    "deleted": "租约已删除"
+    "deleted": "租约已删除",
+    "tenantIdNumber": "IC/护照号码",
+    "tenantIdPlaceholder": "900101-10-1234 或 A1234567",
+    "idType": "证件类型",
+    "ic": "身份证 (IC)",
+    "passport": "护照 (Passport)"
   },
   "insurance": {
     "title": "保险",
@@ -219,7 +229,8 @@
     "markPaid": "标记已缴",
     "added": "税务记录已添加",
     "markedPaid": "已标记为已缴",
-    "deleted": "税务记录已删除"
+    "deleted": "税务记录已删除",
+    "cukaiTaksiran": "门牌税 (Cukai Taksiran)"
   },
   "settings": {
     "title": "设置",
@@ -273,5 +284,33 @@
     "paid": "已缴",
     "unpaid": "未缴",
     "overdue": "逾期"
+  },
+  "expense": {
+    "title": "杂费记录",
+    "addExpense": "添加费用",
+    "type": "费用类型",
+    "utility": "水电费",
+    "electricity": "电费",
+    "fireInsurance": "火险",
+    "gatedGuarded": "Gated & Guarded",
+    "maintenance": "维修/维护",
+    "description": "描述",
+    "descriptionPlaceholder": "例如：TNB 电费单",
+    "amount": "金额",
+    "dueDate": "截止日期",
+    "receiptFile": "收据文件",
+    "paid": "已缴",
+    "unpaid": "未缴",
+    "overdue": "逾期",
+    "markPaid": "标记已缴",
+    "added": "费用记录已添加",
+    "updated": "费用记录已更新",
+    "markedPaid": "已标记为已缴",
+    "deleted": "费用记录已删除",
+    "noExpenses": "暂无杂费记录"
+  },
+  "dateInput": {
+    "placeholder": "dd/mm/yyyy",
+    "invalidFormat": "日期格式无效，请使用 dd/mm/yyyy"
   }
 }
