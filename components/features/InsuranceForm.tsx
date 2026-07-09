@@ -7,6 +7,7 @@ import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
+import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
 import { createInsuranceAction } from "@/app/dashboard/insurances/new/actions";
@@ -86,8 +87,8 @@ export function InsuranceForm({ properties }: Props) {
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.validity")}</div>
           <div className="form-row">
-            <FormInput label={t("tenancy.startDate")} name="start_date" type="date" required />
-            <FormInput label={t("tenancy.endDate")} name="end_date" type="date" required />
+            <DateInput label={t("tenancy.startDate")} name="start_date" required />
+            <DateInput label={t("tenancy.endDate")} name="end_date" required />
           </div>
         </Card>
 

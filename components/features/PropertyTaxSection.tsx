@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
+import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { DataTable } from "@/components/ui/DataTable";
 import { showToast } from "@/components/ui/Toast";
@@ -110,7 +111,7 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
             <FormInput label={t("tax.accountNo")} name="account_no" placeholder={t("tax.accountNoPlaceholder")} />
             <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" placeholder="0.00" />
           </div>
-          <FormInput label={t("tax.dueDate")} name="due_date" type="date" />
+          <DateInput label={t("tax.dueDate")} name="due_date" />
           <div style={{ marginBottom: 12 }}>
             <label className="form-label">{t("tax.receiptFile")}</label>
             <FileUpload propertyId={propertyId} accept=".pdf,.jpg,.jpeg,.png"

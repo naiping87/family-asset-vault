@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { FormInput } from "@/components/ui/FormInput";
+import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
 import { formatCurrency } from "@/lib/utils/formatters";
@@ -88,8 +89,8 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
           </div>
           <FormInput label={t("tenancy.tenantEmail")} name="tenant_email" type="email" placeholder={t("tenancy.tenantEmailPlaceholder")} />
           <div className="form-row">
-            <FormInput label={t("tenancy.startDate")} name="start_date" type="date" required />
-            <FormInput label={t("tenancy.endDate")} name="end_date" type="date" required />
+            <DateInput label={t("tenancy.startDate")} name="start_date" required />
+            <DateInput label={t("tenancy.endDate")} name="end_date" required />
           </div>
           <div className="form-row">
             <FormInput label={`${t("tenancy.monthlyRent")} (RM)`} name="monthly_rent" type="number" placeholder="0.00" />
@@ -141,8 +142,8 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
                 </div>
                 <FormInput label={t("tenancy.tenantEmail")} name="tenant_email" type="email" defaultValue={tItem.tenant_email ?? ""} />
                 <div className="form-row">
-                  <FormInput label={t("tenancy.startDate")} name="start_date" type="date" defaultValue={tItem.start_date} required />
-                  <FormInput label={t("tenancy.endDate")} name="end_date" type="date" defaultValue={tItem.end_date} required />
+                  <DateInput label={t("tenancy.startDate")} name="start_date" defaultValue={tItem.start_date} required />
+                  <DateInput label={t("tenancy.endDate")} name="end_date" defaultValue={tItem.end_date} required />
                 </div>
                 <div className="form-row">
                   <FormInput label={`${t("tenancy.monthlyRent")} (RM)`} name="monthly_rent" type="number" defaultValue={tItem.monthly_rent ? String(tItem.monthly_rent) : ""} />
