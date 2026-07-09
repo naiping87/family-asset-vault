@@ -145,7 +145,11 @@
     "loanInterestRate": "Interest Rate (%)",
     "photos": "Property Photos",
     "photosHint": "Upload property photos, supports JPG/PNG/WebP",
-    "photoLabel": "Photo"
+    "photoLabel": "Photo",
+    "taxAccountNo": "Tax Account No.",
+    "taxAccountNoPlaceholder": "Cukai account number",
+    "taxAuthority": "Authority / Majlis",
+    "taxAuthorityPlaceholder": "e.g. DBKL / MBPJ"
   },
   "tenancy": {
     "title": "Tenancy",

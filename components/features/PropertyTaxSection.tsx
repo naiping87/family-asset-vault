@@ -17,9 +17,11 @@ import type { Tax } from "@/types/database";
 interface Props {
   propertyId: string;
   taxes: Tax[];
+  defaultAuthority?: string;
+  defaultAccountNo?: string;
 }
 
-export function PropertyTaxSection({ propertyId, taxes }: Props) {
+export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaultAccountNo }: Props) {
   const { t } = useT();
   const [showForm, setShowForm] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -105,10 +107,10 @@ export function PropertyTaxSection({ propertyId, taxes }: Props) {
                 <option value="other">{t("insurance.other")}</option>
               </select>
             </div>
-            <FormInput label={t("tax.authority")} name="authority" placeholder={t("tax.authorityPlaceholder")} />
+            <FormInput label={t("tax.authority")} name="authority" placeholder={t("tax.authorityPlaceholder")} defaultValue={defaultAuthority ?? ""} />
           </div>
           <div className="form-row">
-            <FormInput label={t("tax.accountNo")} name="account_no" placeholder={t("tax.accountNoPlaceholder")} />
+            <FormInput label={t("tax.accountNo")} name="account_no" placeholder={t("tax.accountNoPlaceholder")} defaultValue={defaultAccountNo ?? ""} />
             <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" placeholder="0.00" />
           </div>
           <DateInput label={t("tax.dueDate")} name="due_date" />

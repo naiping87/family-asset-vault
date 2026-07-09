@@ -27,6 +27,8 @@ export interface Property {
   loan_interest_rate?: number;
   loan_bank?: string;
   title_deed_no?: string;
+  tax_account_no?: string;
+  tax_authority?: string;
   spa_file_url?: string;
   geran_file_url?: string;
   photos?: string[];

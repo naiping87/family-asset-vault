@@ -145,7 +145,11 @@
     "loanInterestRate": "Kadar Faedah (%)",
     "photos": "Gambar Hartanah",
     "photosHint": "Muat naik gambar hartanah, menyokong JPG/PNG/WebP",
-    "photoLabel": "Gambar"
+    "photoLabel": "Gambar",
+    "taxAccountNo": "No. Akaun Cukai",
+    "taxAccountNoPlaceholder": "Nombor akaun cukai",
+    "taxAuthority": "Majlis / Pihak Berkuasa",
+    "taxAuthorityPlaceholder": "cth. DBKL / MBPJ"
   },
   "tenancy": {
     "title": "Penyewaan",

@@ -113,6 +113,12 @@ export default async function PropertyDetailPage({
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>类型: </span>{propertyTypeLabels[property.property_type] ?? property.property_type}</div>
             <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>地契: </span>{property.title_deed_no || "-"}</div>
+            {property.tax_authority && (
+              <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>Majlis: </span>{property.tax_authority}</div>
+            )}
+            {property.tax_account_no && (
+              <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>税务户口: </span>{property.tax_account_no}</div>
+            )}
             {property.loan_bank && (
               <div><span style={{ color: "var(--text-secondary)", fontSize: 14 }}>贷款银行: </span>{property.loan_bank}</div>
             )}
@@ -135,6 +141,8 @@ export default async function PropertyDetailPage({
       <PropertyTaxSection
         propertyId={property.id}
         taxes={property.taxes ?? []}
+        defaultAuthority={property.tax_authority}
+        defaultAccountNo={property.tax_account_no}
       />
 
       <PropertyExpenseSection

@@ -145,7 +145,11 @@
     "loanInterestRate": "利率 (%)",
     "photos": "房产照片",
     "photosHint": "上传房产照片，支持 JPG/PNG/WebP 格式",
-    "photoLabel": "照片"
+    "photoLabel": "照片",
+    "taxAccountNo": "税务户口号码",
+    "taxAccountNoPlaceholder": "Cukai 户口号码",
+    "taxAuthority": "所属 Majlis",
+    "taxAuthorityPlaceholder": "例如 DBKL / MBPJ"
   },
   "tenancy": {
     "title": "租约管理",

@@ -86,6 +86,10 @@ export function PropertyForm({ property, mode }: Props) {
             </div>
             <FormInput label={t("property.address")} name="address" placeholder={t("property.addressPlaceholder")} defaultValue={property?.address ?? ""} />
             <FormInput label={t("property.postcode")} name="postcode" placeholder={t("property.postcodePlaceholder")} defaultValue={property?.postcode ?? ""} />
+            <div className="form-row" style={{ marginTop: 16 }}>
+              <FormInput label={t("property.taxAccountNo")} name="tax_account_no" placeholder={t("property.taxAccountNoPlaceholder")} defaultValue={property?.tax_account_no ?? ""} />
+              <FormInput label={t("property.taxAuthority")} name="tax_authority" placeholder={t("property.taxAuthorityPlaceholder")} defaultValue={property?.tax_authority ?? ""} />
+            </div>
           </Card>
 
           <Card variant="intense" className="section-panel">
