@@ -58,7 +58,12 @@ export function DateInput({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const selectedDate = isoValue ? new Date(isoValue + "T00:00:00") : undefined;
+  const selectedDate = (() => {
+    if (!isoValue) return undefined;
+    const parts = isoValue.split("-");
+    if (parts.length !== 3) return undefined;
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  })();
 
   // Close popover on outside click
   useEffect(() => {
@@ -94,7 +99,10 @@ export function DateInput({
 
   const handleDaySelect = useCallback((date: Date | undefined) => {
     if (date) {
-      const iso = date.toISOString().split("T")[0];
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      const iso = `${y}-${m}-${d}`;
       setIsoValue(iso);
       setDisplayValue(isoToDisplay(iso));
     } else {
@@ -115,7 +123,10 @@ export function DateInput({
   const handleToday = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     const today = new Date();
-    const iso = today.toISOString().split("T")[0];
+    const y = today.getFullYear();
+    const m = String(today.getMonth() + 1).padStart(2, "0");
+    const d = String(today.getDate()).padStart(2, "0");
+    const iso = `${y}-${m}-${d}`;
     setIsoValue(iso);
     setDisplayValue(isoToDisplay(iso));
     setIsOpen(false);
