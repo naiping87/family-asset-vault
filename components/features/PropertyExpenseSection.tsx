@@ -125,7 +125,7 @@ export function PropertyExpenseSection({ propertyId, expenses }: Props) {
                 <option value="other">{t("insurance.other")}</option>
               </select>
             </div>
-            <FormInput label={t("expense.amount") + " (RM)"} name="amount" type="number" placeholder="0.00" />
+            <FormInput label={t("expense.amount") + " (RM)"} name="amount" type="number" step="0.01" placeholder="0.00" />
           </div>
           <FormInput label={t("expense.description")} name="description" placeholder={t("expense.descriptionPlaceholder")} />
           <DateInput label={t("expense.dueDate")} name="due_date" />

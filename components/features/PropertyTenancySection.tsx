@@ -94,8 +94,8 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
             <DateInput label={t("tenancy.endDate")} name="end_date" required />
           </div>
           <div className="form-row">
-            <FormInput label={`${t("tenancy.monthlyRent")} (RM)`} name="monthly_rent" type="number" placeholder="0.00" />
-            <FormInput label={`${t("tenancy.deposit")} (RM)`} name="deposit" type="number" placeholder="0.00" />
+            <FormInput label={`${t("tenancy.monthlyRent")} (RM)`} name="monthly_rent" type="number" step="0.01" placeholder="0.00" />
+            <FormInput label={`${t("tenancy.deposit")} (RM)`} name="deposit" type="number" step="0.01" placeholder="0.00" />
           </div>
           <div style={{ marginBottom: 12 }}>
             <label className="form-label">{t("tenancy.contractFile")}</label>
@@ -147,8 +147,8 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
                   <DateInput label={t("tenancy.endDate")} name="end_date" defaultValue={tItem.end_date} required />
                 </div>
                 <div className="form-row">
-                  <FormInput label={`${t("tenancy.monthlyRent")} (RM)`} name="monthly_rent" type="number" defaultValue={tItem.monthly_rent ? String(tItem.monthly_rent) : ""} />
-                  <FormInput label={`${t("tenancy.deposit")} (RM)`} name="deposit" type="number" defaultValue={tItem.deposit ? String(tItem.deposit) : ""} />
+                  <FormInput label={`${t("tenancy.monthlyRent")} (RM)`} name="monthly_rent" type="number" step="0.01" defaultValue={tItem.monthly_rent ? String(tItem.monthly_rent) : ""} />
+                  <FormInput label={`${t("tenancy.deposit")} (RM)`} name="deposit" type="number" step="0.01" defaultValue={tItem.deposit ? String(tItem.deposit) : ""} />
                 </div>
                 <div style={{ marginBottom: 12 }}>
                   <label className="form-label">{t("tenancy.contractFile")}</label>
