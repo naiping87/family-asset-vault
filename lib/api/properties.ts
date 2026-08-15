@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { refreshFileUrl } from "@/lib/utils/storage-url";
 import type { Property, CoOwner } from "@/types/database";
 
 export async function getProperties() {
@@ -51,12 +52,43 @@ export async function getProperty(id: string) {
     .eq("property_id", id)
     .order("due_date", { ascending: true });
 
+  // 数据库里存的是上传时生成的 signed URL(7 天有效),已过期会导致
+  // "查看文件"报 InvalidJWT。渲染前统一重新签名,保证链接始终可用。
+  const [photos, spaFileUrl, geranFileUrl, refreshedTenancies, refreshedTaxes, refreshedExpenses] =
+    await Promise.all([
+      Promise.all((property.photos ?? []).map((u: string) => refreshFileUrl(u))),
+      refreshFileUrl(property.spa_file_url),
+      refreshFileUrl(property.geran_file_url),
+      Promise.all(
+        (tenancies ?? []).map(async (t) => ({
+          ...t,
+          contract_file_url: await refreshFileUrl(t.contract_file_url),
+          tenant_passport_url: await refreshFileUrl(t.tenant_passport_url),
+        }))
+      ),
+      Promise.all(
+        (taxes ?? []).map(async (t) => ({
+          ...t,
+          receipt_url: await refreshFileUrl(t.receipt_url),
+        }))
+      ),
+      Promise.all(
+        (expenses ?? []).map(async (e) => ({
+          ...e,
+          receipt_url: await refreshFileUrl(e.receipt_url),
+        }))
+      ),
+    ]);
+
   return {
     ...(property as Property),
+    photos,
+    spa_file_url: spaFileUrl,
+    geran_file_url: geranFileUrl,
     co_owners: (coOwners as CoOwner[]) ?? [],
-    tenancies: tenancies ?? [],
-    taxes: taxes ?? [],
-    expenses: expenses ?? [],
+    tenancies: refreshedTenancies,
+    taxes: refreshedTaxes,
+    expenses: refreshedExpenses,
   };
 }
 
