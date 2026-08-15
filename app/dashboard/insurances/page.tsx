@@ -96,11 +96,14 @@ export default async function InsurancesPage() {
                     </div>
                   </div>
                 </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8 }}>
                   <Badge color={statusColor}>{statusText}</Badge>
-                  <form action={async () => { "use server"; await deleteInsurance(String(ins.id)); revalidatePath("/dashboard/insurances"); }}>
-                    <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 14, color: "var(--text-muted)", padding: "2px 6px" }} title="删除"></button>
-                  </form>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <Link href={`/dashboard/insurances/${String(ins.id)}/edit`} style={{ fontSize: 13, color: "var(--brand)", fontWeight: 600 }}>编辑</Link>
+                    <form action={async () => { "use server"; await deleteInsurance(String(ins.id)); revalidatePath("/dashboard/insurances"); }}>
+                      <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontSize: 13, color: "var(--danger)", padding: "2px 6px" }} title="删除">删除</button>
+                    </form>
+                  </div>
                 </div>
               </Card>
             );

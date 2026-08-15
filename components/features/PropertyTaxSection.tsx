@@ -12,7 +12,7 @@ import { DataTable } from "@/components/ui/DataTable";
 import { showToast } from "@/components/ui/Toast";
 import { handleActionError } from "@/lib/utils/action-error";
 import { formatCurrency } from "@/lib/utils/formatters";
-import { addTaxAction, markTaxPaidAction, deleteTaxAction } from "@/app/dashboard/properties/[id]/tax-actions";
+import { addTaxAction, editTaxAction, markTaxPaidAction, deleteTaxAction } from "@/app/dashboard/properties/[id]/tax-actions";
 import type { Tax } from "@/types/database";
 
 interface Props {
@@ -25,8 +25,10 @@ interface Props {
 export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaultAccountNo }: Props) {
   const { t } = useT();
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const [receiptUrl, setReceiptUrl] = useState("");
+  const [editReceiptUrl, setEditReceiptUrl] = useState("");
   const [uploadingFile, setUploadingFile] = useState(false);
 
   const taxTypeLabels: Record<string, string> = {
@@ -43,7 +45,15 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
     startTransition(async () => {
       const result = await addTaxAction(propertyId, formData);
       if (handleActionError(result)) return;
-      showToast(t("tax.added"), "success"); setShowForm(false);
+      showToast(t("tax.added"), "success"); setShowForm(false); setReceiptUrl("");
+    });
+  }
+
+  function handleEdit(taxId: string, formData: FormData) {
+    startTransition(async () => {
+      const result = await editTaxAction(propertyId, taxId, formData);
+      if (handleActionError(result)) return;
+      showToast(t("tax.updated"), "success"); setEditingId(null); setEditReceiptUrl("");
     });
   }
 
@@ -63,6 +73,14 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
     });
   }
 
+  function startEdit(row: Record<string, unknown>) {
+    setShowForm(false);
+    setEditingId(String(row.id));
+    setEditReceiptUrl(String(row.receipt_url ?? ""));
+  }
+
+  const editingTax = taxes.find((x) => x.id === editingId) ?? null;
+
   const taxColumns = [
     { key: "tax_type", label: t("tax.type") },
     { key: "authority", label: t("tax.authority") },
@@ -80,6 +98,7 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
     }},
     { key: "actions", label: t("common.edit"), render: (_: unknown, row: Record<string, unknown>) => (
       <div style={{ display: "flex", gap: 6 }}>
+        <Button variant="secondary" size="xs" onClick={() => startEdit(row)} disabled={pending}>{t("common.edit")}</Button>
         {row.status !== "paid" && <Button variant="secondary" size="xs" onClick={() => handleMarkPaid(String(row.id))} disabled={pending}>{t("tax.markPaid")}</Button>}
         <Button variant="danger" size="xs" onClick={() => handleDelete(String(row.id))} disabled={pending}>{t("common.delete")}</Button>
       </div>
@@ -92,11 +111,11 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
     <Card variant="intense" className="section-panel" style={{ marginTop: 24 }}>
       <div className="section-header">
         <div className="section-title">{t("property.taxRecords")}</div>
-        <Button variant="secondary" size="sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? t("common.cancel") : `+ ${t("property.taxAdd")}`}
+        <Button variant="secondary" size="sm" onClick={() => { setShowForm(!showForm); setEditingId(null); }}>
+          {showForm && !editingId ? t("common.cancel") : `+ ${t("property.taxAdd")}`}
         </Button>
       </div>
-      {showForm && (
+      {showForm && !editingId && (
         <form action={handleAdd} style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <div className="form-row">
             <div className="form-group">
@@ -127,6 +146,50 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
           </div>
         </form>
       )}
+
+      {editingTax && (
+        <form action={(formData) => handleEdit(editingTax.id, formData)} style={{ marginBottom: 20, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
+          <div className="section-title" style={{ fontSize: 14, marginBottom: 12 }}>{t("common.edit")}: {taxTypeLabels[editingTax.tax_type] ?? editingTax.tax_type}</div>
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">{t("tax.type")}</label>
+              <select className="form-input" name="tax_type" defaultValue={editingTax.tax_type}>
+                <option value="cukai_taksiran">{t("tax.cukaiTaksiran")}</option>
+                <option value="cukai_tanah">{t("tax.cukaiTanah")}</option>
+                <option value="cukai_petak">{t("tax.cukaiPetak")}</option>
+                <option value="other">{t("insurance.other")}</option>
+              </select>
+            </div>
+            <FormInput label={t("tax.authority")} name="authority" placeholder={t("tax.authorityPlaceholder")} defaultValue={editingTax.authority ?? ""} />
+          </div>
+          <div className="form-row">
+            <FormInput label={t("tax.accountNo")} name="account_no" placeholder={t("tax.accountNoPlaceholder")} defaultValue={editingTax.account_no ?? ""} />
+            <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" placeholder="0.00" defaultValue={editingTax.amount != null ? String(editingTax.amount) : ""} />
+          </div>
+          <div className="form-row">
+            <DateInput label={t("tax.dueDate")} name="due_date" defaultValue={editingTax.due_date ?? ""} />
+            <div className="form-group">
+              <label className="form-label">{t("property.status")}</label>
+              <select className="form-input" name="status" defaultValue={editingTax.status === "paid" ? "paid" : "unpaid"}>
+                <option value="unpaid">{t("tax.unpaid")}</option>
+                <option value="paid">{t("tax.paid")}</option>
+              </select>
+            </div>
+          </div>
+          <div style={{ marginBottom: 12 }}>
+            <label className="form-label">{t("tax.receiptFile")}</label>
+            <FileUpload propertyId={propertyId} accept=".pdf,.jpg,.jpeg,.png"
+              existingFiles={editReceiptUrl ? [{ id: "", name: "receipt", size: 0, type: "application/pdf", url: editReceiptUrl }] : []}
+              onUploaded={setEditReceiptUrl} onDelete={() => setEditReceiptUrl("")} onUploadingChange={setUploadingFile} />
+            <input type="hidden" name="receipt_url" value={editReceiptUrl} />
+          </div>
+          <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+            <Button variant="primary" size="sm" type="submit" disabled={pending || uploadingFile}>{uploadingFile ? t("upload.uploading") : t("common.save")}</Button>
+            <Button variant="secondary" size="sm" onClick={() => setEditingId(null)}>{t("common.cancel")}</Button>
+          </div>
+        </form>
+      )}
+
       {tableData.length > 0 ? (
         <DataTable columns={taxColumns} data={tableData} />
       ) : (

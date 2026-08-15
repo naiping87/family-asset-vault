@@ -210,6 +210,8 @@
     "validity": "Tempoh Sah",
     "policyFile": "Fail Polisi",
     "savePolicy": "Simpan Polisi",
+    "editTitle": "Edit Insurans",
+    "saveChanges": "Simpan Perubahan",
     "noInsurances": "Tiada rekod insurans",
     "addFirst": "Tambah insurans pertama"
   },
@@ -234,6 +236,7 @@
     "added": "Rekod cukai ditambah",
     "markedPaid": "Ditanda sebagai dibayar",
     "deleted": "Rekod cukai dipadam",
+    "updated": "Rekod cukai dikemas kini",
     "cukaiTaksiran": "Cukai Taksiran"
   },
   "settings": {

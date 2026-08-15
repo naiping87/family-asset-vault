@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { FormInput } from "@/components/ui/FormInput";
 import { showToast } from "@/components/ui/Toast";
 import { handleActionError } from "@/lib/utils/action-error";
-import { addCoOwnerAction, removeCoOwnerAction } from "@/app/dashboard/properties/[id]/co-owner-actions";
+import { addCoOwnerAction, editCoOwnerAction, removeCoOwnerAction } from "@/app/dashboard/properties/[id]/co-owner-actions";
 import type { CoOwner } from "@/types/database";
 
 interface Props {
@@ -15,6 +15,7 @@ interface Props {
 
 export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   function handleAdd(formData: FormData) {
@@ -23,6 +24,15 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
       if (handleActionError(result)) return;
       showToast("持有人已添加", "success");
       setShowForm(false);
+    });
+  }
+
+  function handleEdit(ownerId: string, formData: FormData) {
+    startTransition(async () => {
+      const result = await editCoOwnerAction(propertyId, ownerId, formData);
+      if (handleActionError(result)) return;
+      showToast("持有人已更新", "success");
+      setEditingId(null);
     });
   }
 
@@ -38,11 +48,11 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
     <>
       <div className="section-header" style={{ marginTop: 0 }}>
         <div className="section-title">持有人</div>
-        <Button variant="secondary" size="sm" onClick={() => setShowForm(!showForm)}>
-          {showForm ? "取消" : "+ 添加持有人"}
+        <Button variant="secondary" size="sm" onClick={() => { setShowForm(!showForm); setEditingId(null); }}>
+          {showForm && !editingId ? "取消" : "+ 添加持有人"}
         </Button>
       </div>
-      {showForm && (
+      {showForm && !editingId && (
         <form action={handleAdd}
           style={{ marginBottom: 12, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
           <div className="form-row">
@@ -58,19 +68,37 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
       {coOwners.length === 0 ? (
         <p style={{ color: "var(--text-secondary)", fontSize: 14 }}>暂无持有人信息</p>
       ) : (
-        coOwners.map((owner, i) => (
-          <div className="owner-item" key={owner.id}>
-            <div className="owner-avatar" style={{ background: i === 0 ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "linear-gradient(135deg, #ec4899, #f472b6)" }}>
-              {owner.name.charAt(0)}
+        coOwners.map((owner, i) =>
+          editingId === owner.id ? (
+            <form key={owner.id} action={(formData) => handleEdit(owner.id, formData)}
+              style={{ marginBottom: 12, padding: 16, background: "var(--glass-bg)", borderRadius: "var(--radius)" }}>
+              <div className="form-row">
+                <FormInput label="姓名" name="name" defaultValue={owner.name} required />
+                <FormInput label="邮箱" name="email" type="email" placeholder="email@example.com" defaultValue={owner.email ?? ""} />
+              </div>
+              <FormInput label="持有比例 (%)" name="ownership_pct" type="number" placeholder="50" defaultValue={owner.ownership_pct != null ? String(owner.ownership_pct) : ""} />
+              <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
+                <Button variant="secondary" size="sm" onClick={() => setEditingId(null)}>取消</Button>
+              </div>
+            </form>
+          ) : (
+            <div className="owner-item" key={owner.id}>
+              <div className="owner-avatar" style={{ background: i === 0 ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "linear-gradient(135deg, #ec4899, #f472b6)" }}>
+                {owner.name.charAt(0)}
+              </div>
+              <div className="owner-info">
+                <div className="owner-name">{owner.name}</div>
+                <div className="owner-role">{owner.is_primary ? "主要持有人" : "共同持有人"}</div>
+              </div>
+              <div className="owner-pct">{owner.ownership_pct}%</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <Button variant="secondary" size="xs" onClick={() => { setShowForm(false); setEditingId(owner.id); }} disabled={pending}>编辑</Button>
+                <button className="owner-remove" type="button" onClick={() => handleRemove(owner.id)} disabled={pending}>×</button>
+              </div>
             </div>
-            <div className="owner-info">
-              <div className="owner-name">{owner.name}</div>
-              <div className="owner-role">{owner.is_primary ? "主要持有人" : "共同持有人"}</div>
-            </div>
-            <div className="owner-pct">{owner.ownership_pct}%</div>
-            <button className="owner-remove" type="button" onClick={() => handleRemove(owner.id)} disabled={pending}>×</button>
-          </div>
-        ))
+          )
+        )
       )}
     </>
   );

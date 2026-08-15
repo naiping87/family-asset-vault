@@ -210,6 +210,8 @@
     "validity": "Validity Period",
     "policyFile": "Policy File",
     "savePolicy": "Save Policy",
+    "editTitle": "Edit Insurance",
+    "saveChanges": "Save Changes",
     "noInsurances": "No insurance records",
     "addFirst": "Add first insurance"
   },
@@ -234,6 +236,7 @@
     "added": "Tax record added",
     "markedPaid": "Marked as paid",
     "deleted": "Tax record deleted",
+    "updated": "Tax record updated",
     "cukaiTaksiran": "Assessment Tax (Cukai Taksiran)"
   },
   "settings": {
