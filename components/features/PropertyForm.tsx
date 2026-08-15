@@ -101,15 +101,15 @@ export function PropertyForm({ property, mode }: Props) {
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>{t("property.finance")}</div>
           <div className="form-row-3">
-            <FormInput label={t("property.purchasePrice")} name="purchase_price" type="number" placeholder="0.00" defaultValue={property?.purchase_price ? String(property.purchase_price) : ""} />
-            <FormInput label={t("property.currentValue")} name="current_value" type="number" placeholder="0.00" defaultValue={property?.current_value ? String(property.current_value) : ""} />
-            <FormInput label={t("property.loanBalance")} name="loan_balance" type="number" placeholder="0.00" defaultValue={property?.loan_balance ? String(property.loan_balance) : ""} />
+            <FormInput label={t("property.purchasePrice")} name="purchase_price" type="number" step="0.01" placeholder="0.00" defaultValue={property?.purchase_price ? String(property.purchase_price) : ""} />
+            <FormInput label={t("property.currentValue")} name="current_value" type="number" step="0.01" placeholder="0.00" defaultValue={property?.current_value ? String(property.current_value) : ""} />
+            <FormInput label={t("property.loanBalance")} name="loan_balance" type="number" step="0.01" placeholder="0.00" defaultValue={property?.loan_balance ? String(property.loan_balance) : ""} />
           </div>
           <div style={{ marginTop: 16 }}>
             <FormInput label={t("property.loanBank")} name="loan_bank" placeholder={t("property.loanBankPlaceholder")} defaultValue={property?.loan_bank ?? ""} />
           </div>
           <div className="form-row" style={{ marginTop: 16 }}>
-            <FormInput label={t("property.loanInstallment")} name="loan_installment" type="number" placeholder="0.00" defaultValue={property?.loan_installment ? String(property.loan_installment) : ""} />
+            <FormInput label={t("property.loanInstallment")} name="loan_installment" type="number" step="0.01" placeholder="0.00" defaultValue={property?.loan_installment ? String(property.loan_installment) : ""} />
             <FormInput label={t("property.loanInterestRate")} name="loan_interest_rate" type="number" placeholder="0.00" step="0.01" defaultValue={property?.loan_interest_rate ? String(property.loan_interest_rate) : ""} />
           </div>
         </Card>

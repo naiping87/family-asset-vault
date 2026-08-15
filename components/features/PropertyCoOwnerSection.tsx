@@ -59,7 +59,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
             <FormInput label="姓名" name="name" placeholder="持有人姓名" required />
             <FormInput label="邮箱" name="email" type="email" placeholder="email@example.com" />
           </div>
-          <FormInput label="持有比例 (%)" name="ownership_pct" type="number" placeholder="50" />
+          <FormInput label="持有比例 (%)" name="ownership_pct" type="number" step="0.01" placeholder="50" />
           <div style={{ marginTop: 12 }}>
             <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
           </div>
@@ -76,7 +76,7 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
                 <FormInput label="姓名" name="name" defaultValue={owner.name} required />
                 <FormInput label="邮箱" name="email" type="email" placeholder="email@example.com" defaultValue={owner.email ?? ""} />
               </div>
-              <FormInput label="持有比例 (%)" name="ownership_pct" type="number" placeholder="50" defaultValue={owner.ownership_pct != null ? String(owner.ownership_pct) : ""} />
+              <FormInput label="持有比例 (%)" name="ownership_pct" type="number" step="0.01" placeholder="50" defaultValue={owner.ownership_pct != null ? String(owner.ownership_pct) : ""} />
               <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
                 <Button variant="primary" size="sm" type="submit" disabled={pending}>保存</Button>
                 <Button variant="secondary" size="sm" onClick={() => setEditingId(null)}>取消</Button>

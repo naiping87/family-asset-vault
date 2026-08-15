@@ -80,8 +80,8 @@ export function InsuranceForm({ properties, insurance }: Props) {
         <Card variant="intense" className="section-panel" style={{ marginBottom: 28 }}>
           <div className="section-title" style={{ marginBottom: 20 }}>{t("insurance.coverage")}</div>
           <div className="form-row">
-            <FormInput label={t("insurance.coverageAmount")} name="coverage_amount" type="number" placeholder="0.00" defaultValue={insurance?.coverage_amount != null ? String(insurance.coverage_amount) : ""} required />
-            <FormInput label={t("insurance.annualPremium")} name="annual_premium" type="number" placeholder="0.00" defaultValue={insurance?.annual_premium != null ? String(insurance.annual_premium) : ""} required />
+            <FormInput label={t("insurance.coverageAmount")} name="coverage_amount" type="number" step="0.01" placeholder="0.00" defaultValue={insurance?.coverage_amount != null ? String(insurance.coverage_amount) : ""} required />
+            <FormInput label={t("insurance.annualPremium")} name="annual_premium" type="number" step="0.01" placeholder="0.00" defaultValue={insurance?.annual_premium != null ? String(insurance.annual_premium) : ""} required />
           </div>
         </Card>
 

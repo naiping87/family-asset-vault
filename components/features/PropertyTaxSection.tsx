@@ -131,7 +131,7 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
           </div>
           <div className="form-row">
             <FormInput label={t("tax.accountNo")} name="account_no" placeholder={t("tax.accountNoPlaceholder")} defaultValue={defaultAccountNo ?? ""} />
-            <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" placeholder="0.00" />
+            <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" step="0.01" placeholder="0.00" />
           </div>
           <DateInput label={t("tax.dueDate")} name="due_date" />
           <div style={{ marginBottom: 12 }}>
@@ -164,7 +164,7 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
           </div>
           <div className="form-row">
             <FormInput label={t("tax.accountNo")} name="account_no" placeholder={t("tax.accountNoPlaceholder")} defaultValue={editingTax.account_no ?? ""} />
-            <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" placeholder="0.00" defaultValue={editingTax.amount != null ? String(editingTax.amount) : ""} />
+            <FormInput label={`${t("tax.amount")} (RM)`} name="amount" type="number" step="0.01" placeholder="0.00" defaultValue={editingTax.amount != null ? String(editingTax.amount) : ""} />
           </div>
           <div className="form-row">
             <DateInput label={t("tax.dueDate")} name="due_date" defaultValue={editingTax.due_date ?? ""} />
