@@ -11,6 +11,17 @@ const SESSION_ERROR_PATTERNS: RegExp[] = [
   /refresh token/i,
 ];
 
+/** 网络层错误(如 "fetch failed"):提示连接问题,避免用户误以为操作/密码出错 */
+const NETWORK_ERROR_PATTERNS: RegExp[] = [
+  /fetch failed/i,
+  /failed to fetch/i,
+  /network ?error/i,
+  /econnrefused|enotfound|etimedout/i,
+  /socket hang up/i,
+  /connection refused/i,
+  /project paused/i,
+];
+
 /**
  * 统一处理 server action 返回的错误:
  * - 会话过期/未登录 → 提示后跳转登录页;
@@ -35,6 +46,11 @@ export function handleActionError(
         window.location.href = "/login?reason=expired";
       }
     }, 1200);
+    return true;
+  }
+
+  if (NETWORK_ERROR_PATTERNS.some((re) => re.test(message))) {
+    showToast("无法连接服务器,请检查网络后重试", "error");
     return true;
   }
 
