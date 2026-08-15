@@ -40,7 +40,6 @@ export async function getReminders(): Promise<Reminder[]> {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return [];
 
-  const now = new Date();
   const reminders: Reminder[] = [];
 
   // Expiring insurances (within 60 days)
@@ -69,6 +68,7 @@ export async function getReminders(): Promise<Reminder[]> {
   const { data: taxes } = await supabase
     .from("taxes")
     .select("*, properties(name)")
+    .eq("user_id", user.id)
     .eq("status", "unpaid")
     .order("due_date", { ascending: true });
 
