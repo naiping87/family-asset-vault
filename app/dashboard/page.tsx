@@ -7,18 +7,20 @@ export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name, language")
-    .eq("id", user?.id ?? "")
-    .single();
+  // 并行执行 4 个独立查询,减少页面等待时间(冷启动后尤其明显)
+  const [{ data: profile }, stats, reminders, recentProperties] = await Promise.all([
+    supabase
+      .from("profiles")
+      .select("display_name, language")
+      .eq("id", user?.id ?? "")
+      .single(),
+    getDashboardStats(),
+    getReminders(),
+    getRecentProperties(4),
+  ]);
 
   const greeting = getGreeting(profile?.language || "zh");
   const today = formatFullDate(new Date());
-  const stats = await getDashboardStats();
-  const reminders = await getReminders();
-  const recentProperties = await getRecentProperties(4);
-
   const displayName = profile?.display_name || user?.user_metadata?.full_name || user?.email?.split("@")[0] || "用户";
 
   return (

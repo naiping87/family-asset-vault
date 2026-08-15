@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { refreshFileUrl } from "@/lib/utils/storage-url";
 import type { Insurance } from "@/types/database";
 
 export async function getInsurances() {
@@ -25,6 +26,14 @@ export async function getInsurance(id: string) {
     .eq("id", id)
     .eq("user_id", user.id)
     .single();
+
+  if (!data) return null;
+
+  // 保单文件 URL 可能是过期的 signed URL,重新签名后返回(编辑页显示用)
+  if (data.policy_file_url) {
+    const policyFileUrl = await refreshFileUrl(data.policy_file_url);
+    return { ...data, policy_file_url: policyFileUrl };
+  }
   return data;
 }
 
