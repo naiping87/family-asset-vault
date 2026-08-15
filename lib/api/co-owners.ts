@@ -24,6 +24,27 @@ export async function addCoOwner(formData: FormData) {
   return { coOwner: data as CoOwner };
 }
 
+export async function updateCoOwner(id: string, formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "未登录" };
+
+  const entry = {
+    name: formData.get("name") as string,
+    email: (formData.get("email") as string) || null,
+    ownership_pct: Number(formData.get("ownership_pct") || 0),
+    is_primary: formData.get("is_primary") === "true",
+  };
+
+  const { error } = await supabase
+    .from("co_owners")
+    .update(entry)
+    .eq("id", id);
+
+  if (error) return { error: error.message };
+  return { success: true };
+}
+
 export async function removeCoOwner(id: string) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

@@ -210,6 +210,8 @@
     "validity": "有效期限",
     "policyFile": "保单文件",
     "savePolicy": "保存保单",
+    "editTitle": "编辑保险",
+    "saveChanges": "保存修改",
     "noInsurances": "暂无保险记录",
     "addFirst": "添加第一份保险"
   },
@@ -234,6 +236,7 @@
     "added": "税务记录已添加",
     "markedPaid": "已标记为已缴",
     "deleted": "税务记录已删除",
+    "updated": "税务记录已更新",
     "cukaiTaksiran": "门牌税 (Cukai Taksiran)"
   },
   "settings": {

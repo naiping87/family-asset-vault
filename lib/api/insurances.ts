@@ -45,6 +45,7 @@ export async function createInsurance(formData: FormData) {
     end_date: formData.get("end_date") as string,
     agent_name: (formData.get("agent_name") as string) || null,
     agent_phone: (formData.get("agent_phone") as string) || null,
+    policy_file_url: (formData.get("policy_file_url") as string) || null,
     status: formData.get("status") as string || "active",
   };
 
@@ -56,6 +57,36 @@ export async function createInsurance(formData: FormData) {
 
   if (error) return { error: error.message };
   return { insurance: data as Insurance };
+}
+
+export async function updateInsurance(id: string, formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { error: "未登录" };
+
+  const entry = {
+    property_id: (formData.get("property_id") as string) || null,
+    insurance_type: formData.get("insurance_type") as string,
+    provider: formData.get("provider") as string,
+    policy_no: formData.get("policy_no") as string,
+    coverage_amount: formData.get("coverage_amount") ? Number(formData.get("coverage_amount")) : null,
+    annual_premium: formData.get("annual_premium") ? Number(formData.get("annual_premium")) : null,
+    start_date: formData.get("start_date") as string,
+    end_date: formData.get("end_date") as string,
+    agent_name: (formData.get("agent_name") as string) || null,
+    agent_phone: (formData.get("agent_phone") as string) || null,
+    status: (formData.get("status") as string) || "active",
+    policy_file_url: (formData.get("policy_file_url") as string) || null,
+  };
+
+  const { error } = await supabase
+    .from("insurances")
+    .update(entry)
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) return { error: error.message };
+  return { success: true };
 }
 
 export async function deleteInsurance(id: string) {
