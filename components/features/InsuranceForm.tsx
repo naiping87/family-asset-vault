@@ -9,7 +9,7 @@ import { Card } from "@/components/ui/Card";
 import { FormInput } from "@/components/ui/FormInput";
 import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
-import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { createInsuranceAction } from "@/app/dashboard/insurances/new/actions";
 
 interface Props {
@@ -22,7 +22,7 @@ export function InsuranceForm({ properties }: Props) {
   const [policyFileUrl, setPolicyFileUrl] = useState("");
 
   useEffect(() => {
-    if (state?.error) showToast(state.error, "error");
+    handleActionError(state);
   }, [state]);
 
   return (

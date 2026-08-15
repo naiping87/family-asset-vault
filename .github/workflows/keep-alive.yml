@@ -1,0 +1,27 @@
+name: Supabase Keep-Alive
+
+# 双保险:即使 Vercel Cron 失效,此工作流每天直接查询 Supabase 数据库,
+# 保证免费项目不会因 7 天无活动被自动暂停。
+on:
+  schedule:
+    # 每天 06:00 UTC(与 Vercel Cron 的 01:00 错开)
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase database
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::Missing SUPABASE_URL or SUPABASE_ANON_KEY secret. Add them in GitHub repo Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          curl -sf -o /dev/null -w "keep-alive ping HTTP %{http_code}\n" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            "${SUPABASE_URL}/rest/v1/keep_alive?select=id&limit=1"

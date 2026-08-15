@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
-import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { deletePropertyAction } from "@/app/dashboard/properties/[id]/actions";
 
 export function DeletePropertyButton({ propertyId }: { propertyId: string }) {
@@ -13,9 +13,8 @@ export function DeletePropertyButton({ propertyId }: { propertyId: string }) {
   function handleConfirm() {
     startTransition(async () => {
       const result = await deletePropertyAction(propertyId);
-      if (result?.error) {
-        showToast("删除失败: " + result.error, "error");
-      }
+      // 成功时 server action 会 redirect 到房产列表;失败时统一处理
+      handleActionError(result);
     });
   }
 

@@ -5,6 +5,7 @@ import { useT } from "@/lib/i18n/provider";
 import { Button } from "@/components/ui/Button";
 import { FormInput } from "@/components/ui/FormInput";
 import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { changePassword } from "@/lib/auth/actions";
 
 export function ChangePasswordForm() {
@@ -12,7 +13,7 @@ export function ChangePasswordForm() {
   const [state, formAction, isPending] = useActionState(changePassword, null);
 
   useEffect(() => {
-    if (state?.error) showToast(state.error, "error");
+    handleActionError(state);
     if (state?.success) showToast(state.success, "success");
   }, [state]);
 
