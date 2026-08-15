@@ -10,6 +10,7 @@ import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { DataTable } from "@/components/ui/DataTable";
 import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { addExpenseAction, editExpenseAction, markExpensePaidAction, deleteExpenseAction } from "@/app/dashboard/properties/[id]/expense-actions";
 import type { Expense } from "@/types/database";
@@ -45,32 +46,32 @@ export function PropertyExpenseSection({ propertyId, expenses }: Props) {
   function handleAdd(formData: FormData) {
     startTransition(async () => {
       const result = await addExpenseAction(propertyId, formData);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("expense.added"), "success"); setShowForm(false); setReceiptUrl(""); }
+      if (handleActionError(result)) return;
+      showToast(t("expense.added"), "success"); setShowForm(false); setReceiptUrl("");
     });
   }
 
   function handleEdit(expenseId: string, formData: FormData) {
     startTransition(async () => {
       const result = await editExpenseAction(propertyId, expenseId, formData);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("expense.updated"), "success"); setEditingId(null); }
+      if (handleActionError(result)) return;
+      showToast(t("expense.updated"), "success"); setEditingId(null);
     });
   }
 
   function handleMarkPaid(expenseId: string) {
     startTransition(async () => {
       const result = await markExpensePaidAction(propertyId, expenseId);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("expense.markedPaid"), "success"); }
+      if (handleActionError(result)) return;
+      showToast(t("expense.markedPaid"), "success");
     });
   }
 
   function handleDelete(expenseId: string) {
     startTransition(async () => {
       const result = await deleteExpenseAction(propertyId, expenseId);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("expense.deleted"), "success"); }
+      if (handleActionError(result)) return;
+      showToast(t("expense.deleted"), "success");
     });
   }
 

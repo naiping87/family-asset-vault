@@ -10,6 +10,7 @@ import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { DataTable } from "@/components/ui/DataTable";
 import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { addTaxAction, markTaxPaidAction, deleteTaxAction } from "@/app/dashboard/properties/[id]/tax-actions";
 import type { Tax } from "@/types/database";
@@ -41,24 +42,24 @@ export function PropertyTaxSection({ propertyId, taxes, defaultAuthority, defaul
   function handleAdd(formData: FormData) {
     startTransition(async () => {
       const result = await addTaxAction(propertyId, formData);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("tax.added"), "success"); setShowForm(false); }
+      if (handleActionError(result)) return;
+      showToast(t("tax.added"), "success"); setShowForm(false);
     });
   }
 
   function handleMarkPaid(taxId: string) {
     startTransition(async () => {
       const result = await markTaxPaidAction(propertyId, taxId);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("tax.markedPaid"), "success"); }
+      if (handleActionError(result)) return;
+      showToast(t("tax.markedPaid"), "success");
     });
   }
 
   function handleDelete(taxId: string) {
     startTransition(async () => {
       const result = await deleteTaxAction(propertyId, taxId);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("tax.deleted"), "success"); }
+      if (handleActionError(result)) return;
+      showToast(t("tax.deleted"), "success");
     });
   }
 

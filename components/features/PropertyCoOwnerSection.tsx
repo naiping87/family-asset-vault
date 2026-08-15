@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { FormInput } from "@/components/ui/FormInput";
 import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { addCoOwnerAction, removeCoOwnerAction } from "@/app/dashboard/properties/[id]/co-owner-actions";
 import type { CoOwner } from "@/types/database";
 
@@ -19,23 +20,17 @@ export function PropertyCoOwnerSection({ propertyId, coOwners }: Props) {
   function handleAdd(formData: FormData) {
     startTransition(async () => {
       const result = await addCoOwnerAction(propertyId, formData);
-      if (result?.error) {
-        showToast(result.error, "error");
-      } else {
-        showToast("持有人已添加", "success");
-        setShowForm(false);
-      }
+      if (handleActionError(result)) return;
+      showToast("持有人已添加", "success");
+      setShowForm(false);
     });
   }
 
   function handleRemove(ownerId: string) {
     startTransition(async () => {
       const result = await removeCoOwnerAction(propertyId, ownerId);
-      if (result?.error) {
-        showToast(result.error, "error");
-      } else {
-        showToast("持有人已移除", "success");
-      }
+      if (handleActionError(result)) return;
+      showToast("持有人已移除", "success");
     });
   }
 

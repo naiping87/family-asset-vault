@@ -10,7 +10,7 @@ import { FormInput } from "@/components/ui/FormInput";
 import { DateInput } from "@/components/ui/DateInput";
 import { MapPlaceholder } from "@/components/ui/MapPlaceholder";
 import { FileUpload } from "@/components/ui/FileUpload";
-import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { createPropertyAction } from "@/app/dashboard/properties/new/actions";
 import { updatePropertyAction } from "@/app/dashboard/properties/[id]/edit/actions";
 import type { Property } from "@/types/database";
@@ -38,7 +38,7 @@ export function PropertyForm({ property, mode }: Props) {
   }
 
   useEffect(() => {
-    if (state?.error) { showToast(state.error, "error"); }
+    handleActionError(state);
   }, [state]);
 
   return (

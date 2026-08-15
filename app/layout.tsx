@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { I18nProvider } from "@/lib/i18n/provider";
 import { getLocale } from "@/lib/i18n/server";
+import { SessionGuard } from "@/components/layout/SessionGuard";
 import { ToastContainer } from "@/components/ui/Toast";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body>
         <I18nProvider locale={locale}>
+          <SessionGuard />
           {children}
         </I18nProvider>
         <ToastContainer />

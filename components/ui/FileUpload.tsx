@@ -4,6 +4,7 @@ import { useState, useRef, useCallback } from "react";
 import { useT } from "@/lib/i18n/provider";
 import { createClient } from "@/lib/supabase/client";
 import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 
 export interface UploadedFile {
   id: string;
@@ -68,7 +69,7 @@ export function FileUpload({
     try {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { showToast("请先登录", "error"); return; }
+      if (!user) { handleActionError({ error: "未登录" }); return; }
 
       const bucket = "files";
       const filePath = `${user.id}/${Date.now()}-${file.name}`;

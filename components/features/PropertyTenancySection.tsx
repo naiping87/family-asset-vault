@@ -9,6 +9,7 @@ import { FormInput } from "@/components/ui/FormInput";
 import { DateInput } from "@/components/ui/DateInput";
 import { FileUpload } from "@/components/ui/FileUpload";
 import { showToast } from "@/components/ui/Toast";
+import { handleActionError } from "@/lib/utils/action-error";
 import { formatCurrency } from "@/lib/utils/formatters";
 import { addTenancyAction, editTenancyAction, deleteTenancyAction } from "@/app/dashboard/properties/[id]/tenancy-actions";
 import type { Tenancy } from "@/types/database";
@@ -31,24 +32,24 @@ export function PropertyTenancySection({ propertyId, tenancies }: Props) {
   function handleAdd(formData: FormData) {
     startTransition(async () => {
       const result = await addTenancyAction(propertyId, formData);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("tenancy.added"), "success"); setShowForm(false); }
+      if (handleActionError(result)) return;
+      showToast(t("tenancy.added"), "success"); setShowForm(false);
     });
   }
 
   function handleEdit(tenancyId: string, formData: FormData) {
     startTransition(async () => {
       const result = await editTenancyAction(propertyId, tenancyId, formData);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("tenancy.updated"), "success"); setEditingId(null); }
+      if (handleActionError(result)) return;
+      showToast(t("tenancy.updated"), "success"); setEditingId(null);
     });
   }
 
   function handleDelete(tenancyId: string) {
     startTransition(async () => {
       const result = await deleteTenancyAction(propertyId, tenancyId);
-      if (result?.error) { showToast(result.error, "error"); }
-      else { showToast(t("tenancy.deleted"), "success"); }
+      if (handleActionError(result)) return;
+      showToast(t("tenancy.deleted"), "success");
     });
   }
 
